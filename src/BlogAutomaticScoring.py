@@ -42,7 +42,6 @@ class BlogAutomaticScoring:
         html = req.text
         bf = BeautifulSoup(html)
         contents = bf.find_all("a", href=True)
-        # print(contents)
         urls = set()
         for content in contents:
             if re.match(".*/article/details.*", content.get("href")):
@@ -50,3 +49,19 @@ class BlogAutomaticScoring:
                     continue
                 urls.add(content.get("href"))
         return urls
+
+    @staticmethod
+    def get_main_url(url):
+        """
+        根据url地址返回主页的url地址
+        :param url: 任意url地址
+        :return: 主页的URL地址，如果找不到则返回None
+        """
+        req = requests.get(url=url, headers={'User-Agent': 'Baiduspider'})
+        html = req.text
+        bf = BeautifulSoup(html)
+        contents = bf.find_all("a", href=True)
+        for content in contents:
+            if re.match("https://blog.csdn.net/\\w+", content.get("href")):
+                return content.get("href")
+        return None
