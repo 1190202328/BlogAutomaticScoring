@@ -10,3 +10,5 @@ for student in students:
 print(len(students))
 
 print(BlogAutomaticScoring.get_text(url="https://blog.csdn.net/Louis210/article/details/117415546"))
+
+print(BlogAutomaticScoring.get_urls(main_url="https://blog.csdn.net/Louis210"))

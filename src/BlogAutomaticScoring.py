@@ -13,7 +13,7 @@ class BlogAutomaticScoring:
     def get_text(url):
         """
         根据url地址获取页面内容
-        :param url: URL地址
+        :param url: 页面所在URL地址
         :return: 页面文档
         """
         req = requests.get(url=url, headers={'User-Agent': 'Baiduspider'})
@@ -30,3 +30,23 @@ class BlogAutomaticScoring:
         text = re.sub("[ \t]", "", text)
         text = re.sub("\n+", "\n", text)
         return text
+
+    @staticmethod
+    def get_urls(main_url):
+        """
+        根据学生主页面获取所有博客的url地址
+        :param main_url: 主页面地址
+        :return: 所有博客的ulr地址
+        """
+        req = requests.get(url=main_url, headers={'User-Agent': 'Baiduspider'})
+        html = req.text
+        bf = BeautifulSoup(html)
+        contents = bf.find_all("a", href=True)
+        # print(contents)
+        urls = set()
+        for content in contents:
+            if re.match(".*/article/details.*", content.get("href")):
+                if re.match(".*#comments|.*blogdevteam.*", content.get("href")):
+                    continue
+                urls.add(content.get("href"))
+        return urls
