@@ -65,3 +65,4 @@ class BlogAutomaticScoring:
             if re.match("https://blog.csdn.net/\\w+", content.get("href")):
                 return content.get("href")
         return None
+

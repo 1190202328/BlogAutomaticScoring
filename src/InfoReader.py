@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 
 from src.Student import Student
-from PyPDF2 import PdfFileReader, PdfFileWriter
+
 
 class InfoReader:
     """
@@ -35,20 +35,3 @@ class InfoReader:
             students.add(student)
             i = i + 1
         return students
-
-    @staticmethod
-    def get_text_from_pdf(filename):
-        # 获取一个 PdfFileReader 对象
-        pdf_input = PdfFileReader(open(filename, 'rb'))
-        # 获取 PDF 的页数
-        page_count = pdf_input.getNumPages()
-        print(page_count)
-        # 返回一个 PageObject
-        page = pdf_input.getPage(0)
-        print(page)
-        # 获取一个 PdfFileWriter 对象
-        pdf_output = PdfFileWriter()
-        # 将一个 PageObject 加入到 PdfFileWriter 中
-        pdf_output.addPage(page)
-        # 输出到文件中
-
