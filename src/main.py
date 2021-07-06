@@ -16,4 +16,4 @@ from src.Student import Student
 # print(BlogAutomaticScoring.get_text(url="https://blog.csdn.net/Louis210/article/details/117415546"))
 #
 # doc_clean = SimilarityCalculator.write_clean_corpus_to_file(["软件构造.txt", "计算机系统.txt"], "语料库.txt")
-SimilarityCalculator.ge_lda_model("语料库.txt")
+SimilarityCalculator.get_tfidf_model("语料库.txt")
