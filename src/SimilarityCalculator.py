@@ -1,5 +1,6 @@
 import codecs
 import collections
+from gensim import corpora
 import pprint
 import re
 
@@ -14,30 +15,92 @@ class SimilarityCalculator:
     """
     计算文档主题的一个工具类
     """
+    @staticmethod
+    def get_documents(document_filenames):
+        """
+        从文件中读取文本到内存中
+        :param document_filenames: 文件名称，如："软件构造.txt"。该文档应该存储在/src/text/目录下。
+        :return: 文件列表，每个元素为一个文档
+        """
+        documents = list()
+        for document_filename in document_filenames:
+            f = open("./src/text/" + document_filename, 'r')
+            documents.append(f.read())
+            f.close()
+        return documents
 
     @staticmethod
-    def write_clean_corpus_to_file(input_filenames, output_filename):
+    def clean(documents):
+        """
+        将按列表存储的文档进行清洗
+        :param documents: 按列表存储的文档，列表中一个元素为一个文档
+        :return: 清洗好的文档，二维列表，一行为一个文档的清洗后的词
+        """
         stopwords_file = open("./src/text/stopwords.txt")
         stopwords_string = stopwords_file.read()
         stopwords_file.close()
         my_stopwords = stopwords_string.split("\n")
-        out_f = open("./src/text/" + output_filename, 'w')
-        clean_txt = set()
-        for input_filename in input_filenames:
-            f = open("./src/text/" + input_filename, 'r')
-            doc_complete = f.read()
-            f.close()
-            txt = jieba.lcut(doc_complete)
-            for word in txt:
+        texts = list()
+        for document in documents:
+            text = list()
+            for word in jieba.cut(document):
                 word = word.strip()
                 word = word.lower()
                 if (word in my_stopwords) or re.match("\\s", word):
                     continue
-                clean_txt.add(word)
-            for word in clean_txt:
-                out_f.write(word + " ")
-            out_f.write("\n")
-        out_f.close()
+                text.append(word)
+            texts.append(text)
+        # 删除频率<=1的词
+        frequency = collections.defaultdict(int)
+        for text in texts:
+            for token in text:
+                frequency[token] += 1
+        texts = [
+            [token for token in text if frequency[token] > 1]
+            for text in texts
+        ]
+        return texts
+
+    @staticmethod
+    def save_dictionary(texts, dictionary_name):
+        """
+        清洗好的文档（二维列表，一行为一个文档的清洗后的词）添加到字典中并以(dictionary_name.dict)为名字保存在/src/text下
+        :param texts: 清洗好的文档
+        :param dictionary_name: 字典名
+        :return: 无
+        """
+        dictionary = corpora.Dictionary(texts)
+        dictionary.save("./src/text/"+dictionary_name+".dict")  # store the dictionary, for future reference
+
+    @staticmethod
+    def get_dictionary(dictionary_name):
+        """
+        获得存储好的词典
+        :param dictionary_name: 词典名称，如："测试词典"（不含后缀）
+        :return: 该词典
+        """
+        return corpora.Dictionary.load("./src/text/"+dictionary_name+".dict")
+
+    @staticmethod
+    def save_corpus(texts, dictionary, corpus_name):
+        """
+        将词典转换为词袋向量，并以(corpus_name.mm)为名字保存在/src/text下
+        :param texts: 清洗好的文档（二维列表，一行为一个文档的清洗后的词）
+        :param dictionary: 词典
+        :param corpus_name: 词袋向量
+        :return: 无
+        """
+        corpus = [dictionary.doc2bow(text) for text in texts]
+        corpora.MmCorpus.serialize("./src/text/"+corpus_name+".mm", corpus)  # store to disk, for later use
+
+    @staticmethod
+    def get_corpus(corpus_name):
+        """
+        获得存储好的词袋向量
+        :param corpus_name: 词袋向量文件名字，例如："测试词袋向量"（不含后缀）
+        :return: 词袋向量
+        """
+        return corpora.MmCorpus("./src/text/"+corpus_name+".mm")
 
     @staticmethod
     def get_tfidf_model(corpus_filename):
