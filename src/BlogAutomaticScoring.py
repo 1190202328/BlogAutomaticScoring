@@ -3,6 +3,8 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+from src.SimilarityCalculator import SimilarityCalculator
+
 
 class BlogAutomaticScoring:
     """
@@ -66,3 +68,34 @@ class BlogAutomaticScoring:
                 return content.get("href")
         return None
 
+    @staticmethod
+    def calculate_score(student, limit):
+        """
+        自动打分,如果文章与软件构造的相似度在limit以下，则略过该文章
+        :param limit: 相似度限制
+        :param student: 学生
+        :return: 分数
+        """
+        path = "./src/text/"
+        scores = list()
+        score = 0
+        model_related_filename = "最终"
+        dictionary = SimilarityCalculator.get_dictionary(path, model_related_filename)
+        corpus = SimilarityCalculator.get_corpus(path, model_related_filename)
+        index = SimilarityCalculator.get_lsi_index(path, model_related_filename)
+        lsi = SimilarityCalculator.get_lsi_model(corpus, dictionary, 2)
+        urls = BlogAutomaticScoring.get_urls(BlogAutomaticScoring.get_main_url(student.url))
+        for url in urls:
+            document = BlogAutomaticScoring.get_text(url)
+            if SimilarityCalculator.get_similarity(index, document, dictionary, lsi, limit):
+                scores.append(5)
+            else:
+                scores.append(0)
+        scores.sort(reverse=True)
+        print(scores)
+        for i in range(10):
+            print(i)
+            if i == len(scores):
+                break
+            score += scores[i]*((10-i)/10.0)
+        return score

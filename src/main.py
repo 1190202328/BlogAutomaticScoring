@@ -15,14 +15,10 @@ from src.Student import Student
 #     print(student)
 # print(len(students))
 #
-# print(BlogAutomaticScoring.get_text(url="https://blog.csdn.net/Louis210/article/details/117415546"))
-#
-# doc_clean = SimilarityCalculator.write_clean_corpus_to_file(["软件构造.txt", "计算机系统.txt"], "语料库.txt")
-# SimilarityCalculator.get_tfidf_model("语料库.txt")
-# documents = SimilarityCalculator.get_documents(["软件构造.txt", "计算机系统.txt"])
-# texts = SimilarityCalculator.clean(documents)
-# SimilarityCalculator.save_dictionary(texts, "测试词典")
-# dictionary = SimilarityCalculator.get_dictionary("测试词典")
-# SimilarityCalculator.save_corpus(texts, dictionary, "测试词袋向量")
-corpus = SimilarityCalculator.get_corpus("测试词袋向量")
-print(corpus)
+# path = "./src/text/"
+# document_filenames = ["软件构造.txt", "计算机系统.txt"]
+# model_related_filename = "最终"
+# SimilarityCalculator.train_lsi_model(path, document_filenames, model_related_filename)
+limit = 0.6
+jiang_jing = Student("1190202328", "江经", "https://blog.csdn.net/Louis210/article/details/117415546")
+print(BlogAutomaticScoring.calculate_score(jiang_jing, limit))
