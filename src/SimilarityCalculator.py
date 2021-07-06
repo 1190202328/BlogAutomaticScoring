@@ -159,7 +159,7 @@ class SimilarityCalculator:
         dictionary = SimilarityCalculator.get_dictionary(path, model_related_filename)
         SimilarityCalculator.save_corpus(texts, dictionary, path, model_related_filename)
         corpus = SimilarityCalculator.get_corpus(path, model_related_filename)
-        SimilarityCalculator.save_lsi_index(corpus, dictionary, 2, path, model_related_filename)
+        SimilarityCalculator.save_lsi_index(corpus, dictionary, len(document_filenames), path, model_related_filename)
 
     @staticmethod
     def get_similarity(index, document, dictionary, lsi, limit):
@@ -179,7 +179,7 @@ class SimilarityCalculator:
         for i, s in enumerate(sims):
             similarity = s
             break
-        print("相似度为：{0}".format(similarity))
+        # print("相似度为：{0}".format(similarity))
         if similarity < limit:
             return False
         return True

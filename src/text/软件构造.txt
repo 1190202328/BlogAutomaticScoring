@@ -13303,3 +13303,491 @@ rainy.wang@gmail.com
 Software Construction
 预祝各位期末考试取得好成绩！
 June 23, 2021
+Java String equals() 方法
+Java String类Java String类
+equals() 方法用于将字符串与指定的对象比较。
+String 类中重写了 equals() 方法用于比较两个字符串的内容是否相等。
+语法
+public boolean equals(Object anObject)
+参数
+anObject -- 与字符串进行比较的对象。
+返回值
+如果给定对象与字符串相等，则返回 true；否则返回 false。
+实例
+实例
+public class Test {
+    public static void main(String args[]) {
+        String Str1 = new String("runoob");
+        String Str2 = Str1;
+        String Str3 = new String("runoob");
+        boolean retVal;
+
+        retVal = Str1.equals( Str2 );
+        System.out.println("返回值 = " + retVal );
+
+        retVal = Str1.equals( Str3 );
+        System.out.println("返回值 = " + retVal );
+    }
+}
+以上程序执行结果为：
+返回值 = true
+返回值 = true
+使用 == 和 equals() 比较字符串。
+String 中 == 比较引用地址是否相同，equals() 比较字符串的内容是否相同：
+String s1 = "Hello";              // String 直接创建
+String s2 = "Hello";              // String 直接创建
+String s3 = s1;                   // 相同引用
+String s4 = new String("Hello");  // String 对象创建
+String s5 = new String("Hello");  // String 对象创建
+ 
+s1 == s1;         // true, 相同引用
+s1 == s2;         // true, s1 和 s2 都在公共池中，引用相同
+s1 == s3;         // true, s3 与 s1 引用相同
+s1 == s4;         // false, 不同引用地址
+s4 == s5;         // false, 堆中不同引用地址
+ 
+s1.equals(s3);    // true, 相同内容
+s1.equals(s4);    // true, 相同内容
+s4.equals(s5);    // true, 相同内容
+
+Java String类Java String类
+indexOf() 方法有以下四种形式：
+public int indexOf(int ch): 返回指定字符在字符串中第一次出现处的索引，如果此字符串中没有这样的字符，则返回 -1。
+public int indexOf(int ch, int fromIndex): 返回从 fromIndex 位置开始查找指定字符在字符串中第一次出现处的索引，如果此字符串中没有这样的字符，则返回 -1。
+int indexOf(String str): 返回指定字符在字符串中第一次出现处的索引，如果此字符串中没有这样的字符，则返回 -1。
+int indexOf(String str, int fromIndex): 返回从 fromIndex 位置开始查找指定字符在字符串中第一次出现处的索引，如果此字符串中没有这样的字符，则返回 -1。
+语法
+public int indexOf(int ch )
+
+或
+
+public int indexOf(int ch, int fromIndex)
+
+或
+
+int indexOf(String str)
+
+或
+
+int indexOf(String str, int fromIndex)
+参数
+ch -- 字符，Unicode 编码。
+fromIndex -- 开始搜索的索引位置，第一个字符是 0 ，第二个是 1 ，以此类推。
+str -- 要搜索的子字符串。
+
+返回值
+查找字符串，或字符 Unicode 编码在字符串出现的位置:
+实例 1
+public class Main {
+    public static void main(String args[]) {
+        String string = "aaa456ac";  
+        //查找指定字符是在字符串中的下标。在则返回所在字符串下标；不在则返回-1.  
+        System.out.println(string.indexOf("b")); // indexOf(String str); 返回结果：-1，"b"不存在  
+ 
+        // 从第四个字符位置开始往后继续查找，包含当前位置  
+        System.out.println(string.indexOf("a",3));//indexOf(String str, int fromIndex); 返回结果：6  
+ 
+        //（与之前的差别：上面的参数是 String 类型，下面的参数是 int 类型）参考数据：a-97,b-98,c-99  
+ 
+        // 从头开始查找是否存在指定的字符  
+        System.out.println(string.indexOf(99));//indexOf(int ch)；返回结果：7  
+        System.out.println(string.indexOf('c'));//indexOf(int ch)；返回结果：7  
+ 
+        //从fromIndex查找ch，这个是字符型变量，不是字符串。字符a对应的数字就是97。  
+        System.out.println(string.indexOf(97,3));//indexOf(int ch, int fromIndex); 返回结果：6  
+        System.out.println(string.indexOf('a',3));//indexOf(int ch, int fromIndex); 返回结果：6  
+    }
+}
+输出结果为：
+-1
+6
+7
+7
+6
+6
+指定子字符串在字符串中第一次出现处的索引，从指定的索引开始。
+实例 2
+public class Test {
+    public static void main(String args[]) {
+        String Str = new String("菜鸟教程:www.runoob.com");
+        String SubStr1 = new String("runoob");
+        String SubStr2 = new String("com");
+ 
+        System.out.print("查找字符 o 第一次出现的位置 :" );
+        System.out.println(Str.indexOf( 'o' ));
+        System.out.print("从第14个位置查找字符 o 第一次出现的位置 :" );
+        System.out.println(Str.indexOf( 'o', 14 ));
+        System.out.print("子字符串 SubStr1 第一次出现的位置:" );
+        System.out.println( Str.indexOf( SubStr1 ));
+        System.out.print("从第十五个位置开始搜索子字符串 SubStr1 第一次出现的位置 :" );
+        System.out.println( Str.indexOf( SubStr1, 15 ));
+        System.out.print("子字符串 SubStr2 第一次出现的位置 :" );
+        System.out.println(Str.indexOf( SubStr2 ));
+    }
+}
+以上程序执行结果为：
+查找字符 o 第一次出现的位置 :12
+从第14个位置查找字符 o 第一次出现的位置 :17
+子字符串 SubStr1 第一次出现的位置:9
+从第十五个位置开始搜索子字符串 SubStr1 第一次出现的位置 :-1
+子字符串 SubStr2 第一次出现的位置 :16
+Java String类Java String类
+java中contains方法是判断是否存在包含关系，比如说a =[1,2,3,4], b=1那么a就包含b
+
+contains返回的是布尔类型true 和false，包含的话就返回true，不包含的话就返回false
+
+复制代码
+public class pratise {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        String a = "l love feng ye";
+        String b = "love";
+        boolean c = a.contains(b);
+        System.out.println(a.contains(b));
+        //assertEquals(a.contains(b), "true");
+        assert(c)=true;//加断言
+    }
+}
+
+输出结果是true
+ava String contains() 方法
+Java String类Java String类
+contains() 方法用于判断字符串中是否包含指定的字符或字符串。
+语法
+public boolean contains(CharSequence chars)
+参数
+chars -- 要判断的字符或字符串。
+返回值
+如果包含指定的字符或字符串返回 true，否则返回 false。
+实例
+以下实例判断 Runoob 中是否包含字符或字符系列：
+实例
+public class Main {
+    public static void main(String[] args) {
+        String myStr = "Runoob";
+        System.out.println(myStr.contains("Run"));
+        System.out.println(myStr.contains("o"));
+        System.out.println(myStr.contains("s"));
+    }
+}
+以上程序执行结果为：
+true
+true
+false
+Java String类Java String类
+List：允许元素重复.（JDK1.2）
+
+允许添加null，且允许添加多个null。
+
+相对于Collation加入了以下两个常用方法：
+        get()  --> 根据索引取得元素
+        set()  --> 修改指定索引元素的内，返回修改前内容
+
+ArrayList （JDK1.2）
+
+底层为数组,线程同步不安全。
+
+其本质为对象动态数组。
+
+默认容量为10，当数据超过当前容量会进行自动扩容，扩容规则为：
+
+newCapacity = oldCapacity + (oldCapacity >> 1);
+
+即：每次扩容原数组的1/2 。
+
+简单实例：
+
+import java.util.ArrayList;
+import java.util.List;
+ 
+public class TestCollection {
+	public static void main(String[] args) {
+		List<Integer> list = new ArrayList<>();// 在创建一个ArrayList对象时一般将其向上转型为List，
+		// 在定义时,建议加上泛型
+		list.add(9);
+		list.add(5);
+		list.add(2);
+		list.set(2, 7);// List 独有方法 ,将下标为2的元素修改为7.
+		System.out.println(list.get(1));
+	}
+}
+LinkedList （JDK1.2）
+
+底层为双向链表，线程同步不安全。
+
+简单实例：
+
+import java.util.LinkedList;
+import java.util.List;
+ 
+public class TestCollection {
+	public static void main(String[] args) {
+		List<Integer> list = new LinkedList<>();// 在创建一个LinkedList对象时一般将其向上转型为List，
+		// 在定义时,建议加上泛型
+		list.add(9);
+		list.add(5);
+		list.add(2);
+		list.set(2, 7);// List 独有方法 ,将下标为2的元素修改为7.
+		System.out.println(list.get(1));
+	}
+}
+Vector(JDK1.0)
+
+底层为数组，线程同步安全。但是，但是效率低一般不常用。
+
+简单实例：
+
+import java.util.List;
+import java.util.Vector;
+ 
+public class TestCollection {
+	public static void main(String[] args) {
+		List<Integer> list = new Vector<>();// 在创建一个Vector对象时一般将其向上转型为List，
+		// 在定义时,建议加上泛型
+		list.add(9);
+		list.add(5);
+		list.add(2);
+		list.set(2, 7);// List 独有方法 ,将下标为2的元素修改为7.
+		System.out.println(list.get(1));
+	}
+}
+ 
+
+可以看到，ArrayList , LinkedList , Vector 在使用上的差别并不大。因此我们根据自己的需要选择合适的存储结构，比如插入删除比较多的时候就选用LinkedList , 如果随机访问比较多就使用ArrayList  , 如果要求线程安全就选用Vector 。
+
+ 
+
+ArrayList和Vector的区别：
+
+1.Vector 从JDK1.0开始，ArrayList从JDK1.2开始
+
+2.加载方式：Vercor 底层基于数组，在实例化的时候会直接创建一个数组，ArrayList是懒加载机制，在第一次添加数据的时候在会创建数组;
+
+3.扩容方式：Vector默认容量为10，扩容机制为newCapacity=2*oldCapacity，ArrayList的默认容量为10，扩容机制为newCapacity=oldCapacity+oldCapacity>>1;
+
+4.输出方式：Vector多支持Enumeration输出方式。
+
+3.Vector线程安全，ArrrayList线程不安全。
+
+4.Vector同步处理，性能较低，ArrayList 异步处理，性能较高。
+
+ArrayList和LinkedList的区别：
+
+LinkedList和ArrayList的差别主要来自于Array和LinkedList数据结构的不同。
+
+1) 因为Array是基于索引(index)的数据结构，它使用索引在数组中搜索和读取数据是很快的。Array获取数据的时间复杂度是O(1),但是要删除数据却是开销很大的，因为这需要重排数组中的所有数据。
+
+2) 相对于ArrayList，LinkedList插入是更快的。因为LinkedList不像ArrayList一样，不需要改变数组的大小，也不需要在数组装满的时候要将所有的数据重新装入一个新的数组，这是ArrayList最坏的一种情况，时间复杂度是O(n)，而LinkedList中插入或删除的时间复杂度仅为O(1)。ArrayList在插入数据时还需要更新索引（除了插入数组的尾部）。
+
+3) 类似于插入数据，删除数据时，LinkedList也优于ArrayList。
+
+4) LinkedList需要更多的内存，因为ArrayList的每个索引的位置是实际的数据，而LinkedList中的每个节点中存储的是实际的数据和前后节点的位置。
+
+如果List需要存储引用类型,并且使用到 .remove() , contains() 等方法，建议复写该引用类型的   .equals() 方法。
+
+以下为复写 .equals()  的完整Student 实例
+
+import java.util.ArrayList;
+import java.util.List;
+ 
+class Student {
+	public int id;
+	public String name;
+ 
+	public Student(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+ 
+	@Override
+	public String toString() {
+		return "id : " + id + "   name : " + name;
+	}
+ 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;//如果传进来的对象就是当前对象就直接返回true
+		}
+		if (obj instanceof Student) {
+			Student stu = (Student) obj;
+			if (this.id == stu.id) {
+				if (this.name.equals(stu.name)) {
+					return true;
+				}
+				return false;
+			}
+			return false;
+		}
+		return false;
+	}
+ 
+}
+ 
+public class TestCollection {
+	public static void main(String[] args) {
+		List<Student> stu = new ArrayList<>();
+		stu.add(new Student(1, "andy"));
+		stu.add(new Student(2, "john"));
+		stu.add(new Student(3, "jack"));
+		Student black = new Student(4, "black");
+		stu.add(black);
+		System.out.println("stu是否包含这个对象："+stu.contains(new Student(3, "jack")));
+		stu.remove(new Student(1, "andy"));
+		System.out.println(stu.get(0));//id=1 的 andy 被成功删除
+	}
+}
+打印结果：
+
+stu是否包含这个对象：true
+id : 2   name : john     //原来的第一个Student对象andy被成功删除
+
+那出现这个现象的原因是什么呢？
+点击 此处 查看详细原因。
+
+ 
+
+Set：不允许元素重复.（JDK1.2）  ----  本质为没有value的Map
+
+HashSet（JDK1.2）
+
+底层为数组（Hash表），实际上就是HashMap。
+
+允许为null，不能重复，元素乱序存储。
+
+ 
+
+Set不允许元素重复，那么在存储这个元素时会判断这个元素是否重复，因为他的底层就是用了一个HashMap来实现，因此他怎么判断重复，后面的map会详细说。
+
+
+ 
+
+
+TreeSet（JDK1.2）
+
+底层为红黑二叉树，实际上就是TreeMap.
+不允许为null，不能重复，有序存储（顺序可以自定义）//存储空会报错
+TreeSet的有序存储，存储元素时会判断他是否重复，并且自动排序，判断重复元素由compareTo()方法来实现。因此自定义类要使用TreeSet必须覆写Comparable接口。具体的排序规则可以由我们自己来定。
+ 
+
+自定义类实现Comparable接口实例：
+
+import java.util.HashSet;
+import java.util.Set;
+ 
+class Person implements Comparable<Person> {
+	public String name;
+	public String school;
+	private int age;
+ 
+	public Person(String name, String school, int age) {
+		this.name = name;
+		this.school = school;
+		this.age = age;
+	}
+ 
+	public String toString() {
+		return "[name: " + this.name + "    school: " + this.school + "    age: " + age + "]";
+	}
+ 
+	/*
+	 * 复写 .compareTo() 的规定： 当前对象大于传入对象，返回一个正数 当前对象等于传入对象，返回一个0 当前对象小于传入对象，返回一个负数
+	 */
+	@Override
+	public int compareTo(Person o) {
+		if (this.age > o.age) {
+			return 1;
+		} else if (this.age < o.age) {
+			return -1;
+		} else {
+			int i = this.name.compareTo(o.name);
+			if (i != 0) {
+				return i;
+			}
+			return this.school.compareTo(school);
+		}
+	}
+ 
+}
+ 
+public class Test {
+	public static void main(String[] args) {
+		Set<Person> list = new HashSet<>();
+		Person per1 = new Person("andy", "XUST", 21);
+		list.add(per1);
+		list.add(per1);
+		list.add(new Person("hjj", "XUST", 22));
+		list.add(new Person("zgd", "XUST", 23));
+		for (Person person : list) {
+			System.out.println(person);
+		}
+	}
+}
+Map（JDK1.2）
+
+针对键值对,可以通过key值找到value。key不可重复，value可以重复。
+
+常用方法：
+    put(k,v);存储元素
+    get(k);取出元素
+    keySet();返回所有key信息保存在set接口（key值不能重复）
+    Values();返回所有values信息保存在Collection集合中（value可以重复）
+    entrySet();将Map集合转变成Set集合
+
+HashMap（JDK1.2）
+
+允许key，value为空，value允许多个空
+内部实现：数组+链表
+HashMap的初始化和扩容：
+
+HashMap为懒加载机制，当创建HashMap的实例化对象的时候，HashMap并不会直接分配存储空间，当第一次添加元素的时候才会真正分配空间。默认容量为16，默认负载因子为0.75，当当前元素的个数大于或等于阈值（即当前数组大小*负载因子）的时候就会扩容为原大小的2倍。
+
+HashMap一共有4个构造方法：
+
+HashMap();  -->默认容量，默认负载因子
+
+HashMap(int initalCapacity) -->指定容量，但是指定容量必须是2的倍数，如果不是2的倍数系统会自动将这个数转成大于这个数且最接近这个数且是二的倍数的一个数。
+
+HashMap(int initalCapacity,float) -->指定容量，指定负载因子（一般情况下负载因子不建议指定）
+
+HashMap(Map< ? extends Key,? extends Value>map ） 利用这个Map再构造一个HashMap对象
+
+HashMap底层可以看作是数组（Node[] table）和链表结合组成的复合结构，数组被分为一个个桶（bucket），通过哈希值决定了键值对在这个数组的寻址；哈希值相同的键值对，则以链表形式存储，这里需要注意的是，如果链表大小超过阈值
+
+HashMap是以<K,V>的形式存储数据，当输入一个Key值会自动生成一个Hash值，再用（HashMap数组的大小-1）&这个Hash值就是元素的存储位置，如果插入的值这个位置已经有元素了那么就会忘链表的后面插入元素，当一个链表中的元素超过八个元素并且总元素的个数超过了64个就会将这个链表树化。如果链表中元素的个数减少到6个，就又会变成链表。
+
+TreeMap（JDK1.2）
+
+底层实现为红黑树，Key不可重复，且key不为null，输入null会抛出NullPointerException。
+
+运用此类需要复写Comparable接口。
+
+HashTable（JDK1.0）
+
+HashTable 是最早实现这种二元偶对象数据结构，后期的设计只是将其实现了Map接口。
+
+HashTable和HashMap的区别：
+
+
+ConcurrentHashMap（JDK1.2）
+
+ConcurrentHashMap 特点：线程安全，并且效率高，相当于HashMap 和HashTable的结合改良版。
+
+JDK 1.7和JDK1.8的ConcurretHashMap实现原理的对比：
+
+分离锁，也就是将内部进行分段（Segment），里面则是HashEntry 的数组，和 HashMap类似，哈希相同的条目也是以链表形式存放。
+HashEntry 内部使用 volatile 的 value 字段来保证可见性，也利用了不可变对象的机制以改进利用 Unsafe 提供的底层能力，比如 volatile access，去直接完成部分操作，以最优化性能，毕竟 Unsafe 中的很多操作都是 JVM intrinsic 优化过的。
+
+实现方式：其核心是利用分段设计，在进行并发操作的时候， 只需要锁定相应段，这样就有效避免了类似 Hashtable 整体同步的问题，大大提高了性能。
+由于老师上课的时候讲到了ArrayList LinkList效率不同，于是课下查找资料，并写了一个二者效率对比的小代码。
+
+首先通过查找资料我了解到：1. LinkedList和ArrayList的差别主要来自于Array和LinkedList数据结构的不同。ArrayList是基于数组实现的，LinkedList是基于双链表实现的。另外LinkedList类不仅是List接口的实现类，可以根据索引来随机访问集合中的元素，除此之外，LinkedList还实现了Deque接口，它代表一个双向队列，因此LinkedList可以作为双向队列 ，栈和List集合使用。
+
+2. 因为Array是基于索引的数据结构，它使用索引在数组中搜索和读取数据是很快的，可以直接返回数组中index位置的元素，因此在随机访问集合元素上有较好的性能。Array获取数据的时间复杂度是O(1),但是要插入、删除数据却是开销很大的，因为这需要移动数组中插入位置之后的的所有元素。
+
+3. 相对于ArrayList，LinkedList的随机访问集合元素时性能较差，因为需要在双向列表中找到要index的位置，再返回；但在插入，删除操作是更快的。因为LinkedList不像ArrayList一样，不需要改变数组的大小，也不需要在数组装满的时候要将所有的数据重新装入一个新的数组，这是ArrayList最坏的一种情况，时间复杂度是O(n)，而LinkedList中插入或删除的时间复杂度仅为O(1)。ArrayList在插入数据时还需要更新索引。
+
+4. LinkedList需要更多的内存，因为ArrayList的每个索引的位置是实际的数据，而LinkedList中的每个节点中存储的是实际的数据和前后节点的位置。
+
+首先我们测试ArrayList LinkList增加新的内容时效率上的区别。代码如下：

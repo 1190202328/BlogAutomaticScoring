@@ -25,4 +25,4 @@ class Student:
         return self.__score
 
     def __str__(self):
-        return "id={0}\tname={1}\turl={2}".format(self.__id, self.__name, self.__url)
+        return "id={0}\tname={1}".format(self.__id, self.__name)
