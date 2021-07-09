@@ -162,7 +162,7 @@ class SimilarityCalculator:
         SimilarityCalculator.save_lsi_index(corpus, dictionary, len(document_filenames), path, model_related_filename)
 
     @staticmethod
-    def get_similarity(index, document, dictionary, lsi, limit):
+    def get_similarity(index, document, dictionary, lsi):
         """
         得到文档的相似度
         :param limit: 相似度限制（在0-1之间）
@@ -180,6 +180,4 @@ class SimilarityCalculator:
             similarity = s
             break
         # print("相似度为：{0}".format(similarity))
-        if similarity < limit:
-            return False
-        return True
+        return similarity

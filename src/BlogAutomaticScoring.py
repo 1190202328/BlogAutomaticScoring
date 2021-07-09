@@ -1,10 +1,11 @@
 import re
 from datetime import date
 
-import requests
 import xlsxwriter
 from bs4 import BeautifulSoup
-
+import json
+import requests
+from lxml import etree
 from src.SimilarityCalculator import SimilarityCalculator
 
 
@@ -37,6 +38,31 @@ class BlogAutomaticScoring:
         for content in contents:
             upload_date = date.fromisoformat(content.text[0:10])
             return text, upload_date
+
+    @staticmethod
+    def get_related_txt(txt_head, number):
+        """
+        根据标题在百度搜索相关文章，取出前number篇文章的url地址
+        :param number: 需要相关文章的篇数
+        :param txt_head: 文章标题
+        :return: number篇文章的url的列表
+        """
+        req = requests.get(url="https://www.baidu.com/s?wd=" + txt_head + "&lm=1",
+                           headers={'User-Agent': 'Baiduspider'})
+        r = req.text
+        html = etree.HTML(r, etree.HTMLParser)
+        r1 = html.xpath('//h3')
+        r2 = html.xpath('//*[@class="c-abstract"]')
+        r3 = html.xpath('//*[@class="t"]/a/@href')
+        for i in range(number):
+            r11 = r1[i].xpath('string(.)')
+            r22 = r2[i].xpath('string(.)')
+            r33 = r3[i]
+            print(r11, end='\n')
+            print('------------------------')
+            print(r22, end='\n')
+            print(r33)
+        return 1
 
     @staticmethod
     def get_urls(main_url):
@@ -97,15 +123,15 @@ class BlogAutomaticScoring:
         num = 0
         for student in students:
             num += 1
-            print("正在评分第{0}个学生:\t".format(num)+student.__str__())
+            print("正在评分第{0}个学生:\t".format(num) + student.__str__())
             scores = list()
             score = 0.0
             if student.url is None:
-                student_info_dict[student] = "url地址为空。"
+                student_info_dict[student] = "url地址为空\t"
                 student_score_dict[student] = 0.0
                 continue
             if not re.match(".*csdn.*", student.url):
-                student_info_dict[student] = "不是csdn博客。"
+                student_info_dict[student] = "不是csdn博客\t"
                 student_score_dict[student] = 0.0
                 continue
             urls = BlogAutomaticScoring.get_urls(BlogAutomaticScoring.get_main_url(student.url))
@@ -113,7 +139,13 @@ class BlogAutomaticScoring:
                 document, upload_date = BlogAutomaticScoring.get_text(url)
                 if upload_date < start_date or upload_date > end_date:
                     continue
-                if SimilarityCalculator.get_similarity(index, document, dictionary, lsi, limit):
+                similarity = SimilarityCalculator.get_similarity(index, document, dictionary, lsi)
+                if student_info_dict.get(student) is None:
+                    student_info_dict[student] = url + "\t相似度:" + similarity.__str__() + "\t"
+                else:
+                    student_info_dict[student] = student_info_dict.get(student) + url \
+                                                 + "\t相似度:" + similarity.__str__() + "\t"
+                if similarity > limit:
                     scores.append(5.0)
                 else:
                     scores.append(0.0)
@@ -131,9 +163,10 @@ class BlogAutomaticScoring:
         return student_score_dict, student_info_dict
 
     @staticmethod
-    def save_scores_to_xlsx(students, student_score_dict, student_info_dict, path, xlsx_name):
+    def save_scores_to_xlsx(students, student_score_dict, student_info_dict, path, xlsx_name, limit):
         """
         将成绩信息写入xlsx文档
+        :param limit: 相似度限制
         :param students: 学生列表
         :param student_score_dict: 成绩词典
         :param student_info_dict: 得分信息词典
@@ -142,6 +175,9 @@ class BlogAutomaticScoring:
         :return: 无
         """
         workbook = xlsxwriter.Workbook(path + xlsx_name)
+        red_style = workbook.add_format({
+            "font_color": "red"
+        })
         worksheet = workbook.add_worksheet("sheet1")
         worksheet.write(0, 0, "学号")
         worksheet.write(0, 1, "姓名")
@@ -154,6 +190,20 @@ class BlogAutomaticScoring:
             worksheet.write(i, 1, student.name)
             worksheet.write(i, 2, student.url)
             worksheet.write(i, 3, student_score_dict.get(student))
-            worksheet.write(i, 4, student_info_dict.get(student))
+            student_info = student_info_dict.get(student)
+            if student_info is None:
+                i += 1
+                continue
+            student_infos = student_info.split("\t")
+            j = 4
+            for student_information in student_infos:
+                if re.match("相似度:0\\.\\d*", student_information):
+                    student_information_detail = student_information.split(":")
+                    if float(student_information_detail[1]) < limit:
+                        worksheet.write(i, j, student_information, red_style)
+                        j += 1
+                        continue
+                worksheet.write(i, j, student_information)
+                j += 1
             i += 1
         workbook.close()
