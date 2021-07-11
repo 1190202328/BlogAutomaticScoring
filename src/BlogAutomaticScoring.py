@@ -3,7 +3,6 @@ from datetime import date
 
 import xlsxwriter
 from bs4 import BeautifulSoup
-import json
 import requests
 from lxml import etree
 from src.SimilarityCalculator import SimilarityCalculator
@@ -24,14 +23,13 @@ class BlogAutomaticScoring:
         req = requests.get(url=url, headers={'User-Agent': 'Baiduspider'})
         html = req.text
         text = ""
-        pattern = "</p>|<p(.*)>|\\n"
         bf = BeautifulSoup(html, "html.parser")
-        contents = bf.find_all("div", class_="blog-content-box")
+        contents = bf.find_all("h1", class_="title-article")
         for content in contents:
-            if content.class_ == ("blog-tags-box" or "bar-content"):
-                continue
-            if (content.tag == "p" or "h1" or "ul") and not content.text.isspace():
-                text += re.sub(pattern, "\n", content.text, count=0, flags=0) + "\n"
+            text += content.text
+        contents = bf.find_all("div", id="content_views", class_="htmledit_views")
+        for content in contents:
+            text += content.text
         text = re.sub("[ \t]", "", text)
         text = re.sub("\n+", "\n", text)
         contents = bf.find_all("span", class_="time")
@@ -47,21 +45,20 @@ class BlogAutomaticScoring:
         :param txt_head: 文章标题
         :return: number篇文章的url的列表
         """
-        req = requests.get(url="https://www.baidu.com/s?wd=" + txt_head + "&lm=1",
-                           headers={'User-Agent': 'Baiduspider'})
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36"
+        }
+        req = requests.get(url="https://www.baidu.com/s?wd=" + txt_head + "&lm=1", headers=headers)
         r = req.text
-        html = etree.HTML(r, etree.HTMLParser)
+        html = etree.HTML(r, etree.HTMLParser())
         r1 = html.xpath('//h3')
         r2 = html.xpath('//*[@class="c-abstract"]')
         r3 = html.xpath('//*[@class="t"]/a/@href')
-        for i in range(number):
-            r11 = r1[i].xpath('string(.)')
-            r22 = r2[i].xpath('string(.)')
+        for i in range(len(r3)):
             r33 = r3[i]
-            print(r11, end='\n')
             print('------------------------')
-            print(r22, end='\n')
             print(r33)
+        # TODO
         return 1
 
     @staticmethod

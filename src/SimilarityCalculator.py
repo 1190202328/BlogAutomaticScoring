@@ -1,13 +1,8 @@
-import codecs
 import collections
-from gensim import corpora
-import pprint
 import re
 
-import jieba
 import gensim
-import lda
-import numpy as np
+import jieba
 from gensim import corpora
 
 
@@ -74,6 +69,15 @@ class SimilarityCalculator:
         """
         dictionary = corpora.Dictionary(texts)
         dictionary.save(path + dictionary_name + ".dict")  # store the dictionary, for future reference
+
+    @staticmethod
+    def generate_dictionary(texts):
+        """
+        将清洗好的文档（二维列表，一行为一个文档的清洗后的词）添加到字典中
+        :param texts: 清洗好的文档
+        :return: 字典
+        """
+        return corpora.Dictionary(texts)
 
     @staticmethod
     def get_dictionary(path, dictionary_name):
@@ -165,7 +169,6 @@ class SimilarityCalculator:
     def get_similarity(index, document, dictionary, lsi):
         """
         得到文档的相似度
-        :param limit: 相似度限制（在0-1之间）
         :param lsi: lsi模型
         :param dictionary: 词典
         :param index: 索引

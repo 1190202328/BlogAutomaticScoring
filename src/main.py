@@ -1,5 +1,4 @@
-# -*- coding:UTF-8 -*-
-from datetime import date
+# from datetime import date
 from src.BlogAutomaticScoring import BlogAutomaticScoring
 from src.InfoReader import InfoReader
 from src.SimilarityCalculator import SimilarityCalculator
@@ -15,4 +14,11 @@ from src.SimilarityCalculator import SimilarityCalculator
 # xlsx_name = "博客成绩.xlsx"
 # student_score_dict, student_info_dict = BlogAutomaticScoring.calculate_score(students, limit, stat_date, end_date)
 # BlogAutomaticScoring.save_scores_to_xlsx(students, student_score_dict, student_info_dict, path, xlsx_name, limit)
-BlogAutomaticScoring.get_related_txt("粮食", 10)
+
+text, _ = BlogAutomaticScoring.get_text(
+    "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501")
+clean_text = SimilarityCalculator.clean([text])
+print(clean_text)
+dictionary = SimilarityCalculator.generate_dictionary(texts=clean_text)
+print(dictionary)
+print(dictionary.get(1))
