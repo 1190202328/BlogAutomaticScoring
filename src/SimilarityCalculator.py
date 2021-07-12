@@ -1,9 +1,14 @@
 import collections
+import math
 import re
 
 import gensim
 import jieba
 from gensim import corpora
+
+import jieba
+from gensim import corpora, models
+from gensim.similarities import Similarity
 
 
 class SimilarityCalculator:
@@ -27,23 +32,27 @@ class SimilarityCalculator:
         return documents
 
     @staticmethod
-    def clean(documents):
+    def clean(documents, stopwords_set=""):
         """
         将按列表存储的文档进行清洗
+        :param stopwords_set: 可选参数, 如果选上，则表示自己提供停用词
         :param documents: 按列表存储的文档，列表中一个元素为一个文档
         :return: 清洗好的文档，二维列表，一行为一个文档的清洗后的词
         """
-        stopwords_file = open("./src/text/stopwords.txt")
-        stopwords_string = stopwords_file.read()
-        stopwords_file.close()
-        my_stopwords = stopwords_string.split("\n")
+        if stopwords_set:
+            my_stopwords = stopwords_set
+        else:
+            stopwords_file = open("./src/text/stopwords.txt")
+            stopwords_string = stopwords_file.read()
+            stopwords_file.close()
+            my_stopwords = stopwords_string.split("\n")
         texts = list()
         for document in documents:
             text = list()
             for word in jieba.cut(document):
                 word = word.strip()
                 word = word.lower()
-                if (word in my_stopwords) or re.match("\\s", word):
+                if (word in my_stopwords) or re.match("\\s+", word) or re.match("\\d+", word):
                     continue
                 text.append(word)
             texts.append(text)
@@ -184,3 +193,18 @@ class SimilarityCalculator:
             break
         # print("相似度为：{0}".format(similarity))
         return similarity
+
+    @staticmethod
+    def train_tf_idf(document_list, dictionary=""):
+        """
+        根据文档列表获取tf-idf矩阵
+        :param dictionary: 可选，词典
+        :param document_list: 二维列表的文档列表，一个元素为一个文档,文档为已经处理好的单词构成
+        :return: 词典与tf-idf矩阵
+        """
+        if not dictionary:
+            dictionary = corpora.Dictionary(document_list)
+        corpus = [dictionary.doc2bow(text) for text in document_list]
+        tfidf_model = models.TfidfModel(corpus)
+        corpus_tfidf = [tfidf_model[doc] for doc in corpus]
+        return dictionary, corpus_tfidf

@@ -27,7 +27,7 @@ class BlogAutomaticScoring:
         contents = bf.find_all("h1", class_="title-article")
         for content in contents:
             text += content.text
-        contents = bf.find_all("div", id="content_views", class_="htmledit_views")
+        contents = bf.find_all("div", id="content_views")
         for content in contents:
             text += content.text
         text = re.sub("[ \t]", "", text)
@@ -36,6 +36,25 @@ class BlogAutomaticScoring:
         for content in contents:
             upload_date = date.fromisoformat(content.text[0:10])
             return text, upload_date
+
+    @staticmethod
+    def get_all_texts(students):
+        """
+        获得所有博客
+        :param students: 学生列表
+        :return: 文章列表，一个元素为一篇文章
+        """
+        texts = list()
+        for student in students:
+            print(student)
+            if student.url is None or (not re.match(".*csdn.*", student.url)):
+                continue
+            urls = BlogAutomaticScoring.get_urls(BlogAutomaticScoring.get_main_url(student.url))
+            for url in urls:
+                txt, _ = BlogAutomaticScoring.get_text(url)
+                txt = re.sub("(\\s+)|(\\.{3,})|(—+)", " ", txt)
+                texts.append(txt)
+        return texts
 
     @staticmethod
     def get_related_txt(txt_head, number):
