@@ -1,34 +1,23 @@
-# from datetime import date
+from datetime import date
 import re
-
-from sklearn.model_selection import train_test_split
-
+from sklearn.svm import SVC
 from src.BlogAutomaticScoring import BlogAutomaticScoring
 from src.InfoReader import InfoReader
 from src.SimilarityCalculator import SimilarityCalculator
-import pandas as pd
-import numpy as np
-
 from sklearn.metrics import classification_report
-
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
+
 from src.Student import Student
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.naive_bayes import GaussianNB
 
 students = InfoReader.get_student_info("学生个人博客信息.xlsx")
-# path = "./src/text/"
+path = "./src/text/"
 # document_filenames = ["软件构造.txt", "计算机系统.txt", "信息安全.txt"]
 # model_related_filename = "最终"
 # SimilarityCalculator.train_lsi_model(path, document_filenames, model_related_filename)
-# stat_date = date.fromisoformat("2021-04-26")
-# end_date = date.fromisoformat("2021-07-08")
+stat_date = date.fromisoformat("2021-04-26")
+end_date = date.fromisoformat("2021-07-08")
 # limit = 0.6
 # xlsx_name = "博客成绩.xlsx"
 # student_score_dict, student_info_dict = BlogAutomaticScoring.calculate_score(students, limit, stat_date, end_date)
@@ -104,12 +93,24 @@ print('Training done')
 answer_gnb = gnb.predict(x_test)
 print('Prediction done')
 
+# grid = GridSearchCV(SVC(), param_grid={"C": [0.1, 1, 10], "gamma": [1, 0.1, 0.01]}, cv=4)  # 总共有9种参数组合的搜索空间
+# grid.fit(x_train, y_train)
+# print("The best parameters are %s with a score of %0.2f" % (grid.best_params_, grid.best_score_))
+
+print('Start training SVM')
+svm = SVC(C=10, gamma=0.1).fit(x_train, y_train)
+print('Training done')
+answer_svm = svm.predict(x_test)
+print('Prediction done')
+
 print('\n\nThe classification report for knn:')
 print(classification_report(y_test, answer_knn))
 print('\n\nThe classification report for DT:')
 print(classification_report(y_test, answer_dt))
 print('\n\nThe classification report for Bayes:')
 print(classification_report(y_test, answer_gnb))
+print('\n\nThe classification report for SVM:')
+print(classification_report(y_test, answer_svm))
 
 urls = BlogAutomaticScoring.get_urls(BlogAutomaticScoring.get_main_url("https://blog.csdn.net/weixin_46228614/article"
                                                                        "/details/118551962?spm=1001.2014.3001.5501"))
@@ -137,9 +138,11 @@ for items in corpus_tfidf:
             items_feature[item[0]] = item[1]
     feature.append(items_feature)
 print(dt.predict(feature))
+print(svm.predict(feature))
 
 texts = list()
-text, _ = BlogAutomaticScoring.get_text("https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501")
+text, _ = BlogAutomaticScoring.get_text(
+    "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501")
 texts.append(text)
 clean_texts = SimilarityCalculator.clean(texts, stopwords_set=my_stopwords)
 i = 1
@@ -156,3 +159,13 @@ for items in corpus_tfidf:
             items_feature[item[0]] = item[1]
     feature.append(items_feature)
 print(dt.predict(feature))
+print(svm.predict(feature))
+
+students = list()
+students.append(Student("1190201919", "兵王", "https://blog.csdn.net/weixin_46228614"))
+xlsx_name = "测试博客成绩.xlsx"
+limit = 5
+student_score_dict, student_info_dict = BlogAutomaticScoring.calculate_score_by_machine_learning(students, stat_date,
+                                                                                                 end_date, svm,
+                                                                                                 dictionary)
+BlogAutomaticScoring.save_scores_to_xlsx(students, student_score_dict, student_info_dict, path, xlsx_name, limit)

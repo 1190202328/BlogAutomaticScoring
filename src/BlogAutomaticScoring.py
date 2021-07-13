@@ -213,7 +213,7 @@ class BlogAutomaticScoring:
             student_infos = student_info.split("\t")
             j = 4
             for student_information in student_infos:
-                if re.match("相似度:0\\.\\d*", student_information):
+                if re.match(".*:\\d+\\.\\d*", student_information):
                     student_information_detail = student_information.split(":")
                     if float(student_information_detail[1]) < limit:
                         worksheet.write(i, j, student_information, red_style)
@@ -223,3 +223,87 @@ class BlogAutomaticScoring:
                 j += 1
             i += 1
         workbook.close()
+
+    @staticmethod
+    def calculate_score_by_machine_learning(students, start_date, end_date, model="", dictionary=""):
+        """
+        计算学生成绩
+        :param students:学生们
+        :param start_date:开始日期
+        :param end_date:结束日期
+        :param model:模型【可选】
+        :param dictionary:模型中使用到的词典【可选】
+        :return:student_score_dict:索引为学生，值为成绩;student_info_dict:索引为学生，值为备注，备注为url 得分
+        """
+        path = "./src/text/"
+        model_related_filename = "最终版本"
+        stopwords_file = open("./src/text/stopwords.txt")
+        stopwords_string = stopwords_file.read()
+        stopwords_file.close()
+        my_stopwords = stopwords_string.split("\n")
+
+        if not dictionary:
+            dictionary = SimilarityCalculator.get_dictionary(path, model_related_filename)
+        if not model:
+            # TODO
+            a = 0
+        student_score_dict = dict()
+        student_info_dict = dict()
+        print("共{0}个学生".format(len(students)))
+        num = 0
+        for student in students:
+            num += 1
+            print("正在评分第{0}个学生:\t".format(num) + student.__str__())
+            scores = list()
+            score = 0.0
+            if student.url is None:
+                student_info_dict[student] = "url地址为空\t"
+                student_score_dict[student] = 0.0
+                continue
+            if not re.match(".*csdn.*", student.url):
+                student_info_dict[student] = "不是csdn博客\t"
+                student_score_dict[student] = 0.0
+                continue
+            urls = BlogAutomaticScoring.get_urls(BlogAutomaticScoring.get_main_url(student.url))
+
+            texts = list()
+            valid_urls = list()
+            for url in urls:
+                text, upload_date = BlogAutomaticScoring.get_text(url)
+                if upload_date < start_date or upload_date > end_date:
+                    continue
+                valid_urls.append(url)
+                texts.append(text)
+            clean_texts = SimilarityCalculator.clean(texts, stopwords_set=my_stopwords)
+            i = 1
+            _, corpus_tfidf = SimilarityCalculator.train_tf_idf(clean_texts, dictionary=dictionary)
+            feature = list()
+            for items in corpus_tfidf:
+                items_feature = [0] * len(dictionary)
+                for item in items:
+                    if dictionary.get(item[0]) is not None:
+                        items_feature[item[0]] = item[1]
+                feature.append(items_feature)
+            result = model.predict(feature)
+            for i in range(len(valid_urls)):
+                if result[i] == 0:
+                    scores.append(5.0)
+                else:
+                    scores.append(0.0)
+                if student_info_dict.get(student) is None:
+                    student_info_dict[student] = valid_urls[i] + "\t得分:" + ((1-result[i]) * 5.0).__str__() + "\t"
+                else:
+                    student_info_dict[student] = student_info_dict.get(student) + valid_urls[i] + "\t得分:" + \
+                                                 ((1-result[i]) * 5.0).__str__() + "\t"
+            scores.sort(reverse=True)
+            # print(scores)
+            for i in range(10):
+                # print(i)
+                if i == len(scores):
+                    break
+                score += scores[i] * ((10 - i) / 10.0)
+                if score >= 5:
+                    score = 5.0
+                    break
+            student_score_dict[student] = score
+        return student_score_dict, student_info_dict
