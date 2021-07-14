@@ -3,12 +3,16 @@ import math
 import re
 
 import gensim
+import pickle
+import numpy as np
 import jieba
 from gensim import corpora
 
 import jieba
 from gensim import corpora, models
 from gensim.similarities import Similarity
+from sklearn.model_selection import GridSearchCV
+from sklearn.svm import SVC
 
 
 class SimilarityCalculator:
@@ -208,3 +212,59 @@ class SimilarityCalculator:
         tfidf_model = models.TfidfModel(corpus)
         corpus_tfidf = [tfidf_model[doc] for doc in corpus]
         return dictionary, corpus_tfidf
+
+    @staticmethod
+    def save_dataset(path, filename, data, target):
+        """
+        将数据与标签分别以.data,.target文件存储
+        :param target: 标签
+        :param data: 数据
+        :param path: 文件路径
+        :param filename: 文件名(不含后缀)
+        :return: 无
+        """
+        np.savetxt(path + filename + "_data.txt", data, delimiter=',')
+        np.savetxt(path + filename + "_target.txt", target, delimiter=',')
+
+    @staticmethod
+    def load_dataset(path, filename):
+        """
+        从文件载入数据集
+        :param path: 路径名称
+        :param filename: 文件名称(不含后缀)
+        :return: data:数据集 ;target:标签集;
+        """
+        data = np.loadtxt(path + filename + "_data.txt", delimiter=',')
+        target = np.loadtxt(path + filename + "_target.txt", delimiter=',')
+        new_target = list()
+        for tar in target:
+            new_target.append(int(tar))
+        return data, new_target
+
+    @staticmethod
+    def generate_dataset(path, source_filename):
+        stopwords_file = open("./src/text/stopwords.txt")
+        stopwords_string = stopwords_file.read()
+        stopwords_file.close()
+        my_stopwords = stopwords_string.split("\n")
+        source = open(path + source_filename, mode="r")
+        texts = list()
+        target = list()
+        for line in source.readlines():
+            if re.match("第(\\d+)篇文章\\[\\d*\\]", line):
+                if re.match("第(\\d+)篇文章\\[1\\]", line):
+                    target.append([1])
+                    continue
+                target.append(0)
+                continue
+            texts.append(line)
+        clean_texts = SimilarityCalculator.clean(texts, stopwords_set=my_stopwords)
+        dictionary, corpus_tfidf = SimilarityCalculator.train_tf_idf(clean_texts)
+        data = list()
+        for items in corpus_tfidf:
+            items_feature = [0] * len(dictionary)
+            for item in items:
+                if dictionary.get(item[0]) is not None:
+                    items_feature[item[0]] = item[1]
+            data.append(items_feature)
+        return data, target, dictionary

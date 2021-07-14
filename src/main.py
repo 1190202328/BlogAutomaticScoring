@@ -1,5 +1,7 @@
 from datetime import date
 import re
+
+from pandas.core.common import random_state
 from sklearn.svm import SVC
 from src.BlogAutomaticScoring import BlogAutomaticScoring
 from src.InfoReader import InfoReader
@@ -8,164 +10,198 @@ from sklearn.metrics import classification_report
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import train_test_split
+import sklearn.datasets
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import classification_report
+from sklearn.svm import SVC
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import svm, datasets, preprocessing
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import average_precision_score
+from sklearn.preprocessing import label_binarize
+from sklearn.multiclass import OneVsRestClassifier
 
 from src.Student import Student
 
 students = InfoReader.get_student_info("学生个人博客信息.xlsx")
 path = "./src/text/"
-# document_filenames = ["软件构造.txt", "计算机系统.txt", "信息安全.txt"]
-# model_related_filename = "最终"
-# SimilarityCalculator.train_lsi_model(path, document_filenames, model_related_filename)
 stat_date = date.fromisoformat("2021-04-26")
 end_date = date.fromisoformat("2021-07-08")
-# limit = 0.6
-# xlsx_name = "博客成绩.xlsx"
-# student_score_dict, student_info_dict = BlogAutomaticScoring.calculate_score(students, limit, stat_date, end_date)
-# BlogAutomaticScoring.save_scores_to_xlsx(students, student_score_dict, student_info_dict, path, xlsx_name, limit)
+
 stopwords_file = open("./src/text/stopwords.txt")
 stopwords_string = stopwords_file.read()
 stopwords_file.close()
 my_stopwords = stopwords_string.split("\n")
-source = open("./src/text/texts.txt", mode="r")
-# target_file = open("./src/text/formed_texts.txt", mode="r")
-texts = list()
-targets = list()
-for line in source.readlines():
-    if re.match("第(\\d+)篇文章\\[\\d*\\]", line):
-        if re.match("第(\\d+)篇文章\\[1\\]", line):
-            targets.append(1)
-            continue
-        targets.append(0)
-        continue
-    texts.append(line)
-clean_texts = SimilarityCalculator.clean(texts, stopwords_set=my_stopwords)
-print(len(texts))
-print(len(targets))
-print(len(clean_texts))
-print(texts[11])
-print(clean_texts[11])
-print(targets[11])
-dictionary, corpus_tfidf = SimilarityCalculator.train_tf_idf(clean_texts)
-# i = 1
-# for items in corpus_tfidf:
-#     print("第{}个文档".format(i))
-#     i += 1
-#     for item in items:
-#         print("{0}:{1}".format(dictionary.get(item[0]), item[1]))
-#     print("\n")
-print(texts[546])
-print(clean_texts[546])
-print(targets[546])
 
-feature = list()
-for items in corpus_tfidf:
-    items_feature = [0] * len(dictionary)
-    for item in items:
-        if dictionary.get(item[0]) is not None:
-            items_feature[item[0]] = item[1]
-    feature.append(items_feature)
-x_train = list()
-y_train = list()
-x_test = list()
-y_test = list()
-for i in range(400):
-    x_train.append(feature[i])
-    y_train.append(targets[i])
-lenth = len(targets)
-for i in range(400, lenth):
-    x_test.append(feature[i])
-    y_test.append(targets[i])
-print('Start training knn')
-knn = KNeighborsClassifier().fit(x_train, y_train)
-print('Training done')
-answer_knn = knn.predict(x_test)
-print('Prediction done')
+source_filename = "texts.txt"
+# data, target, dictionary = SimilarityCalculator.generate_dataset(path, source_filename)
+dictionary_name = "博客数据"
+# dictionary.save(path + dictionary_name + ".dict")
+dictionary = SimilarityCalculator.get_dictionary(path, dictionary_name)
+filename = "博客数据"
+# SimilarityCalculator.save_dataset(path, filename, data, target)
+data, target = SimilarityCalculator.load_dataset(path, filename)
+target = label_binarize(target, classes=[0, 1, 2])
+target1 = target[:, 0]
+target2 = target[:, 1]
+target = np.c_[target1, target2]
+x_train, x_test, y_train, y_test = train_test_split(data, target, test_size=0.5, random_state=0)
 
-print('Start training DT')
-dt = DecisionTreeClassifier().fit(x_train, y_train)
-print('Training done')
-answer_dt = dt.predict(x_test)
-print('Prediction done')
-
-print('Start training Bayes')
-gnb = GaussianNB().fit(x_train, y_train)
-print('Training done')
-answer_gnb = gnb.predict(x_test)
-print('Prediction done')
-
-# grid = GridSearchCV(SVC(), param_grid={"C": [0.1, 1, 10], "gamma": [1, 0.1, 0.01]}, cv=4)  # 总共有9种参数组合的搜索空间
-# grid.fit(x_train, y_train)
-# print("The best parameters are %s with a score of %0.2f" % (grid.best_params_, grid.best_score_))
+# print('Start training knn')
+# knn = KNeighborsClassifier().fit(x_train, y_train)
+# print('Training done')
+# answer_knn = knn.predict(x_test)
+# print('Prediction done')
+#
+# print('Start training DT')
+# dt = DecisionTreeClassifier().fit(x_train, y_train)
+# print('Training done')
+# answer_dt = dt.predict(x_test)
+# print('Prediction done')
+#
+# print('Start training Bayes')
+# gnb = GaussianNB().fit(x_train, y_train)
+# print('Training done')
+# answer_gnb = gnb.predict(x_test)
+# print('Prediction done')
+#
+# # Set the parameters by cross-validation
+# tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-1, 1e-2, 1e-3], 'C': [1, 10, 100, 1000]},
+#                     {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+#
+# scores = ['precision', 'recall']
+# for score in scores:
+#     print("# Tuning hyper-parameters for %s" % score)
+#     print('%s_weighted' % score)
+#     grid = GridSearchCV(SVC(), tuned_parameters, cv=5,
+#                         scoring='%s_weighted' % score)  # 1/5作为验证集
+#     # 用前一半train数据再做5折交叉验证，因为之前train_test_split已经分割为2份了
+#
+#     grid_result = grid.fit(x_train, y_train)
+#
+#     print("Best parameters set found on development set:")
+#     print(grid.best_params_)
+#     print("Grid scores on development set:")
+#
+#     means = grid_result.cv_results_['mean_test_score']
+#     params = grid_result.cv_results_['params']
+#     for mean, param in zip(means, params):
+#         print("%f  with:   %r" % (mean, param))
+#
+#     print("Detailed classification report:")
+#     print("The model is trained on the full development set.")
+#     print("The scores are computed on the full evaluation set.")
+#     y_true, y_pred = y_test, grid.predict(x_test)
+#     print(classification_report(y_true, y_pred))
 
 print('Start training SVM')
-svm = SVC(C=10, gamma=0.1).fit(x_train, y_train)
+classifier = OneVsRestClassifier(SVC(C=10, gamma=0.1, probability=True))
+svm = classifier.fit(x_train, y_train)
+# svm = SVC(C=10, gamma=0.1, probability=True).fit(x_train, y_train)
 print('Training done')
 answer_svm = svm.predict(x_test)
 print('Prediction done')
 
-print('\n\nThe classification report for knn:')
-print(classification_report(y_test, answer_knn))
-print('\n\nThe classification report for DT:')
-print(classification_report(y_test, answer_dt))
-print('\n\nThe classification report for Bayes:')
-print(classification_report(y_test, answer_gnb))
+# print('\n\nThe classification report for knn:')
+# print(classification_report(y_test, answer_knn))
+# print('\n\nThe classification report for DT:')
+# print(classification_report(y_test, answer_dt))
+# print('\n\nThe classification report for Bayes:')
+# print(classification_report(y_test, answer_gnb))
 print('\n\nThe classification report for SVM:')
 print(classification_report(y_test, answer_svm))
 
-urls = BlogAutomaticScoring.get_urls(BlogAutomaticScoring.get_main_url("https://blog.csdn.net/weixin_46228614/article"
-                                                                       "/details/118551962?spm=1001.2014.3001.5501"))
-texts = list()
-for url in urls:
-    text, _ = BlogAutomaticScoring.get_text(url)
-    texts.append(text)
-urls = BlogAutomaticScoring.get_urls(BlogAutomaticScoring.get_main_url("https://blog.csdn.net/Louis210?spm=1000.2115"
-                                                                       ".3001.5343"))
-for url in urls:
-    text, _ = BlogAutomaticScoring.get_text(url)
-    texts.append(text)
-clean_texts = SimilarityCalculator.clean(texts, stopwords_set=my_stopwords)
-i = 1
-for clean_text in clean_texts:
-    print("第{}个文档".format(i))
-    print(clean_text)
-    i += 1
-_, corpus_tfidf = SimilarityCalculator.train_tf_idf(clean_texts, dictionary=dictionary)
-feature = list()
-for items in corpus_tfidf:
-    items_feature = [0] * len(dictionary)
-    for item in items:
-        if dictionary.get(item[0]) is not None:
-            items_feature[item[0]] = item[1]
-    feature.append(items_feature)
-print(dt.predict(feature))
-print(svm.predict(feature))
+y_score = svm.decision_function(x_test)
+n_classes = 2
+y_score = svm.decision_function(x_test)
+precision = dict()
+recall = dict()
+average_precision = dict()
+for i in range(n_classes):
+    precision[i], recall[i], _ = precision_recall_curve(y_test[:, i], y_score[:, i])
+    average_precision[i] = average_precision_score(y_test[:, i], y_score[:, i])  # 切片，第i个类的分类结果性能
 
-texts = list()
-text, _ = BlogAutomaticScoring.get_text(
-    "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501")
-texts.append(text)
-clean_texts = SimilarityCalculator.clean(texts, stopwords_set=my_stopwords)
-i = 1
-for clean_text in clean_texts:
-    print("第{}个文档".format(i))
-    print(clean_text)
-    i += 1
-_, corpus_tfidf = SimilarityCalculator.train_tf_idf(clean_texts, dictionary=dictionary)
-feature = list()
-for items in corpus_tfidf:
-    items_feature = [0] * len(dictionary)
-    for item in items:
-        if dictionary.get(item[0]) is not None:
-            items_feature[item[0]] = item[1]
-    feature.append(items_feature)
-print(dt.predict(feature))
-print(svm.predict(feature))
+# Compute micro-average curve and area. ravel()将多维数组降为一维
+precision["micro"], recall["micro"], _ = precision_recall_curve(y_test.ravel(), y_score.ravel())
+average_precision["micro"] = average_precision_score(y_test, y_score,
+                                                     average="micro")
+# Plot Precision-Recall curve for each class
+plt.clf()  # clf 函数用于清除当前图像窗口
+plt.plot(recall["micro"], precision["micro"],
+         label='micro-average Precision-recall curve (area = {0:0.2f})'.format(average_precision["micro"]))
+for i in range(n_classes):
+    plt.plot(recall[i], precision[i],
+             label='Precision-recall curve of class {0} (area = {1:0.2f})'.format(i, average_precision[i]))
 
-students = list()
-students.append(Student("1190201919", "兵王", "https://blog.csdn.net/weixin_46228614"))
-xlsx_name = "测试博客成绩.xlsx"
-limit = 5
-student_score_dict, student_info_dict = BlogAutomaticScoring.calculate_score_by_machine_learning(students, stat_date,
-                                                                                                 end_date, svm,
-                                                                                                 dictionary)
-BlogAutomaticScoring.save_scores_to_xlsx(students, student_score_dict, student_info_dict, path, xlsx_name, limit)
+plt.xlim([0.0, 1.05])
+plt.ylim([0.0, 1.05])  # xlim、ylim：分别设置X、Y轴的显示范围。
+plt.xlabel('Recall', fontsize=16)
+plt.ylabel('Precision', fontsize=16)
+plt.title('Extension of Precision-Recall curve to multi-class', fontsize=16)
+plt.legend(loc="lower right")  # legend 是用于设置图例的函数
+plt.show()
+
+#
+# urls = BlogAutomaticScoring.get_urls(BlogAutomaticScoring.get_main_url("https://blog.csdn.net/weixin_46228614/article"
+#                                                                        "/details/118551962?spm=1001.2014.3001.5501"))
+# texts = list()
+# for url in urls:
+#     text, _ = BlogAutomaticScoring.get_text(url)
+#     texts.append(text)
+# urls = BlogAutomaticScoring.get_urls(BlogAutomaticScoring.get_main_url("https://blog.csdn.net/Louis210?spm=1000.2115"
+#                                                                        ".3001.5343"))
+# for url in urls:
+#     text, _ = BlogAutomaticScoring.get_text(url)
+#     texts.append(text)
+# clean_texts = SimilarityCalculator.clean(texts, stopwords_set=my_stopwords)
+# i = 1
+# for clean_text in clean_texts:
+#     print("第{}个文档".format(i))
+#     print(clean_text)
+#     i += 1
+# _, corpus_tfidf = SimilarityCalculator.train_tf_idf(clean_texts, dictionary=dictionary)
+# feature = list()
+# for items in corpus_tfidf:
+#     items_feature = [0] * len(dictionary)
+#     for item in items:
+#         if dictionary.get(item[0]) is not None:
+#             items_feature[item[0]] = item[1]
+#     feature.append(items_feature)
+# print(svm.predict(feature))
+#
+# texts = list()
+# text, _ = BlogAutomaticScoring.get_text(
+#     "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501")
+# texts.append(text)
+# clean_texts = SimilarityCalculator.clean(texts, stopwords_set=my_stopwords)
+# i = 1
+# for clean_text in clean_texts:
+#     print("第{}个文档".format(i))
+#     print(clean_text)
+#     i += 1
+# _, corpus_tfidf = SimilarityCalculator.train_tf_idf(clean_texts, dictionary=dictionary)
+# feature = list()
+# for items in corpus_tfidf:
+#     items_feature = [0] * len(dictionary)
+#     for item in items:
+#         if dictionary.get(item[0]) is not None:
+#             items_feature[item[0]] = item[1]
+#     feature.append(items_feature)
+# print(svm.predict(feature))
+
+# students = list()
+# students.append(Student("1190201919", "兵王", "https://blog.csdn.net/weixin_46228614"))
+# xlsx_name = "测试博客成绩.xlsx"
+# limit = 5
+# student_score_dict, student_info_dict = BlogAutomaticScoring.calculate_score_by_machine_learning(students, stat_date,
+#                                                                                                  end_date, svm,
+#                                                                                                  dictionary)
+# BlogAutomaticScoring.save_scores_to_xlsx(students, student_score_dict, student_info_dict, path, xlsx_name, limit)
+
+# urls = BlogAutomaticScoring.get_related_txt("粮食", 10)
+# for i in range(len(urls)):
+#     url = urls[i]
+#     print('------------------------')
+#     print(url)

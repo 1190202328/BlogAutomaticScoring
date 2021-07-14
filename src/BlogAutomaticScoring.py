@@ -70,15 +70,25 @@ class BlogAutomaticScoring:
         req = requests.get(url="https://www.baidu.com/s?wd=" + txt_head + "&lm=1", headers=headers)
         r = req.text
         html = etree.HTML(r, etree.HTMLParser())
-        r1 = html.xpath('//h3')
-        r2 = html.xpath('//*[@class="c-abstract"]')
-        r3 = html.xpath('//*[@class="t"]/a/@href')
-        for i in range(len(r3)):
-            r33 = r3[i]
-            print('------------------------')
-            print(r33)
-        # TODO
-        return 1
+        urls = html.xpath('//*[@class="t"]/a/@href')
+        total_urls = list()
+        count = 0
+        while True:
+            if count + len(urls) >= number:
+                for j in range(number - len(total_urls)):
+                    total_urls.append(urls[j])
+                break
+            if count + len(urls) < number:
+                count += len(urls)
+                total_urls += urls
+                bf = BeautifulSoup(r, "html.parser")
+                next_page_urls = bf.find_all("a", class_="n",href=True)
+                print(next_page_urls)
+                req = requests.get(next_page_urls[0].get("href"), headers=headers)
+                r = req.text
+                html = etree.HTML(r, etree.HTMLParser())
+                urls = html.xpath('//*[@class="t"]/a/@href')
+        return total_urls
 
     @staticmethod
     def get_urls(main_url):
@@ -291,10 +301,10 @@ class BlogAutomaticScoring:
                 else:
                     scores.append(0.0)
                 if student_info_dict.get(student) is None:
-                    student_info_dict[student] = valid_urls[i] + "\t得分:" + ((1-result[i]) * 5.0).__str__() + "\t"
+                    student_info_dict[student] = valid_urls[i] + "\t得分:" + ((1 - result[i]) * 5.0).__str__() + "\t"
                 else:
                     student_info_dict[student] = student_info_dict.get(student) + valid_urls[i] + "\t得分:" + \
-                                                 ((1-result[i]) * 5.0).__str__() + "\t"
+                                                 ((1 - result[i]) * 5.0).__str__() + "\t"
             scores.sort(reverse=True)
             # print(scores)
             for i in range(10):
