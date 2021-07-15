@@ -64,13 +64,15 @@ class BlogAutomaticScoring:
         :param txt_head: 文章标题
         :return: number篇文章的url的列表
         """
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36"
-        }
-        req = requests.get(url="https://www.baidu.com/s?wd=" + txt_head + "&lm=1", headers=headers)
+        # TODO
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'}
+        req = requests.get(url="https://so.csdn.net/so/search?q=" + txt_head + "&t=&u=", headers=headers)
         r = req.text
-        html = etree.HTML(r, etree.HTMLParser())
-        urls = html.xpath('//*[@class="t"]/a/@href')
+        print(r)
+        bf = BeautifulSoup(r, "html.parser")
+        results = bf.find_all("a", class_="block-title", href=True)
+        print(results)
+        return 1
         total_urls = list()
         count = 0
         while True:
@@ -82,12 +84,8 @@ class BlogAutomaticScoring:
                 count += len(urls)
                 total_urls += urls
                 bf = BeautifulSoup(r, "html.parser")
-                next_page_urls = bf.find_all("a", class_="n",href=True)
-                print(next_page_urls)
-                req = requests.get(next_page_urls[0].get("href"), headers=headers)
-                r = req.text
-                html = etree.HTML(r, etree.HTMLParser())
-                urls = html.xpath('//*[@class="t"]/a/@href')
+                next_page_urls = bf.find_all("a", class_="n", href=True)
+                req = requests.get("https://www.baidu.com" + next_page_urls[0].get("href"), headers=headers)
         return total_urls
 
     @staticmethod

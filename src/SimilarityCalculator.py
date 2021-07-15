@@ -1,18 +1,9 @@
 import collections
-import math
 import re
-
 import gensim
-import pickle
 import numpy as np
 import jieba
-from gensim import corpora
-
-import jieba
 from gensim import corpora, models
-from gensim.similarities import Similarity
-from sklearn.model_selection import GridSearchCV
-from sklearn.svm import SVC
 
 
 class SimilarityCalculator:
