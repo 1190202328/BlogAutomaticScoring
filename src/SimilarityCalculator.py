@@ -234,6 +234,12 @@ class SimilarityCalculator:
 
     @staticmethod
     def generate_dataset(path, source_filename):
+        """
+        通过文档来生成数据集
+        :param path: 文件路径
+        :param source_filename: 文件名
+        :return: data:数据集, target:标签集, dictionary:词典
+        """
         stopwords_file = open("./src/text/stopwords.txt")
         stopwords_string = stopwords_file.read()
         stopwords_file.close()
@@ -241,12 +247,17 @@ class SimilarityCalculator:
         source = open(path + source_filename, mode="r")
         texts = list()
         target = list()
+        pattern = re.compile("\\d+")
         for line in source.readlines():
             if re.match("第(\\d+)篇文章\\[\\d*\\]", line):
-                if re.match("第(\\d+)篇文章\\[1\\]", line):
-                    target.append([1])
+                result = pattern.findall(line)
+                if len(result) == 1:
+                    target.append([0])
                     continue
-                target.append(0)
+                if int(result[1]) in [2, 4, 7, 8]:
+                    target.append([9])
+                    continue
+                target.append([int(result[1])])
                 continue
             texts.append(line)
         clean_texts = SimilarityCalculator.clean(texts, stopwords_set=my_stopwords)
