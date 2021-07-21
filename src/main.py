@@ -3,8 +3,11 @@ import re
 
 import gensim
 import jieba
+import tensorflow
 from pandas.core.common import random_state
 from sklearn.svm import SVC
+from tensorflow import keras
+
 from src.BlogAutomaticScoring import BlogAutomaticScoring
 from src.InfoReader import InfoReader
 from src.SimilarityCalculator import SimilarityCalculator
@@ -24,7 +27,6 @@ from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import average_precision_score
 from sklearn.preprocessing import label_binarize
 from sklearn.multiclass import OneVsRestClassifier
-
 from src.Student import Student
 
 students = InfoReader.get_student_info("学生个人博客信息.xlsx")
@@ -37,37 +39,37 @@ stopwords_string = stopwords_file.read()
 stopwords_file.close()
 my_stopwords = stopwords_string.split("\n")
 
-source_filename = "texts.txt"
+# source_filename = "texts.txt"
 # data, target, dictionary = SimilarityCalculator.generate_dataset(path, source_filename)
-dictionary_name = "博客数据"
+# dictionary_name = "博客数据"
 # dictionary.save(path + dictionary_name + ".dict")
-dictionary = SimilarityCalculator.get_dictionary(path, dictionary_name)
-filename = "博客数据"
+# dictionary = SimilarityCalculator.get_dictionary(path, dictionary_name)
+# filename = "博客数据"
 # SimilarityCalculator.save_dataset(path, filename, data, target)
-data, target = SimilarityCalculator.load_dataset(path, filename)
+# data, target = SimilarityCalculator.load_dataset(path, filename)
 # target = label_binarize(target, classes=[0, 1, 3, 5, 6, 9])  # 0或者未标记:软件构造;1:计算机系统;2:信息安全;3:数据结构与算法;4:概率论;5:无效文章6:自学笔记;7:数字逻辑;8:C语言;9:其他课程(将2,4,7,8合并)
 # target1 = target[:, 0]
 # target2 = target[:, 1]
 # target = np.c_[target1, target2]
-x_train, x_test, y_train, y_test = train_test_split(data, target, test_size=0.4, random_state=0)
-
-print('Start training knn')
-knn = KNeighborsClassifier().fit(x_train, y_train)
-print('Training done')
-answer_knn = knn.predict(x_test)
-print('Prediction done')
-
-print('Start training DT')
-dt = DecisionTreeClassifier().fit(x_train, y_train)
-print('Training done')
-answer_dt = dt.predict(x_test)
-print('Prediction done')
-
-print('Start training Bayes')
-gnb = GaussianNB().fit(x_train, y_train)
-print('Training done')
-answer_gnb = gnb.predict(x_test)
-print('Prediction done')
+# x_train, x_test, y_train, y_test = train_test_split(data, target, test_size=0.4, random_state=0)
+#
+# print('Start training knn')
+# knn = KNeighborsClassifier().fit(x_train, y_train)
+# print('Training done')
+# answer_knn = knn.predict(x_test)
+# print('Prediction done')
+#
+# print('Start training DT')
+# dt = DecisionTreeClassifier().fit(x_train, y_train)
+# print('Training done')
+# answer_dt = dt.predict(x_test)
+# print('Prediction done')
+#
+# print('Start training Bayes')
+# gnb = GaussianNB().fit(x_train, y_train)
+# print('Training done')
+# answer_gnb = gnb.predict(x_test)
+# print('Prediction done')
 
 # Set the parameters by cross-validation
 # tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-1, 1e-2, 1e-3], 'C': [1, 10, 100, 1000]},
@@ -106,6 +108,11 @@ print('Training done')
 answer_svm = svm.predict(x_test)
 print('Prediction done')
 
+# model = tensorflow.keras.Sequential([tensorflow.keras.layers.Dense(units=1, input_shape=[10960])])
+# model.compile(optimizer='sgd', loss='mean_squared_error')
+# model.fit(x_train, y_train, epochs=5)
+# answer_tf = model.predict(x_test)
+
 print('\n\nThe classification report for knn:')
 print(classification_report(y_test, answer_knn))
 print('\n\nThe classification report for DT:')
@@ -114,6 +121,8 @@ print('\n\nThe classification report for Bayes:')
 print(classification_report(y_test, answer_gnb))
 print('\n\nThe classification report for SVM:')
 print(classification_report(y_test, answer_svm))
+# print('\n\nThe classification report for TF :')
+# print(classification_report(y_test, answer_tf))
 #
 # y_score = svm.decision_function(x_test)
 # n_classes = 2

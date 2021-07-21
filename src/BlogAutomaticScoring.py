@@ -1,11 +1,12 @@
 import re
 from datetime import date
+from pprint import pprint
 
 import xlsxwriter
 from bs4 import BeautifulSoup
 import requests
-from lxml import etree
 from src.SimilarityCalculator import SimilarityCalculator
+from baiduspider import BaiduSpider
 
 
 class BlogAutomaticScoring:
@@ -25,8 +26,10 @@ class BlogAutomaticScoring:
         text = ""
         bf = BeautifulSoup(html, "html.parser")
         contents = bf.find_all("h1", class_="title-article")
+        head = ""
         for content in contents:
             text += content.text
+            head = content.text
         contents = bf.find_all("div", id="content_views")
         for content in contents:
             text += content.text
@@ -35,7 +38,7 @@ class BlogAutomaticScoring:
         contents = bf.find_all("span", class_="time")
         for content in contents:
             upload_date = date.fromisoformat(content.text[0:10])
-            return text, upload_date
+            return text, upload_date, head
 
     @staticmethod
     def get_all_texts(students):
@@ -64,28 +67,22 @@ class BlogAutomaticScoring:
         :param txt_head: 文章标题
         :return: number篇文章的url的列表
         """
-        # TODO
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'}
-        req = requests.get(url="https://so.csdn.net/so/search?q=" + txt_head + "&t=&u=", headers=headers)
-        r = req.text
-        print(r)
-        bf = BeautifulSoup(r, "html.parser")
-        results = bf.find_all("a", class_="block-title", href=True)
-        print(results)
-        return 1
         total_urls = list()
         count = 0
+        pn = 0
         while True:
-            if count + len(urls) >= number:
-                for j in range(number - len(total_urls)):
-                    total_urls.append(urls[j])
+            results = BaiduSpider().search_web(txt_head, pn=pn, exclude=['tieba', 'related', 'video']).get('results')
+            for result in results:
+                if count >= number:
+                    break
+                if result.get('title') is None:
+                    continue
+                if re.match(".*CSDN博客.*", result.get('title')):
+                    total_urls.append(result.get('url'))
+                    count += 1
+            if count >= number:
                 break
-            if count + len(urls) < number:
-                count += len(urls)
-                total_urls += urls
-                bf = BeautifulSoup(r, "html.parser")
-                next_page_urls = bf.find_all("a", class_="n", href=True)
-                req = requests.get("https://www.baidu.com" + next_page_urls[0].get("href"), headers=headers)
+            pn += 1
         return total_urls
 
     @staticmethod
