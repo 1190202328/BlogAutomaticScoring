@@ -116,41 +116,41 @@ class SimilarityCalculator:
         """
         return corpora.MmCorpus(path + corpus_name + ".mm")
 
-    @staticmethod
-    def save_lsi_index(corpus, dictionary, num_topics, path, index_name):
-        """
-        获得lsi的索引，并以(index_name.index)为名字保存在/src/text下
-        :param path: 路径名，如："./src/text/"
-        :param num_topics: 主题数量
-        :param index_name: 索引名字
-        :param corpus: 处理好的词袋向量
-        :param dictionary: 处理好的词典
-        :return: 无
-        """
-        lsi = gensim.models.LsiModel(corpus, id2word=dictionary, num_topics=num_topics)
-        index = gensim.similarities.MatrixSimilarity(lsi[corpus])  # 将语料转换到LSI空间并建立索引
-        index.save(path + index_name + ".index")
+    # @staticmethod
+    # def save_lsi_index(corpus, dictionary, num_topics, path, index_name):
+    #     """
+    #     获得lsi的索引，并以(index_name.index)为名字保存在/src/text下
+    #     :param path: 路径名，如："./src/text/"
+    #     :param num_topics: 主题数量
+    #     :param index_name: 索引名字
+    #     :param corpus: 处理好的词袋向量
+    #     :param dictionary: 处理好的词典
+    #     :return: 无
+    #     """
+    #     lsi = gensim.models.LsiModel(corpus, id2word=dictionary, num_topics=num_topics)
+    #     index = gensim.similarities.MatrixSimilarity(lsi[corpus])  # 将语料转换到LSI空间并建立索引
+    #     index.save(path + index_name + ".index")
 
-    @staticmethod
-    def get_lsi_model(corpus, dictionary, num_topics):
-        """
-        获得一个lsi模型
-        :param dictionary: 处理好的词典
-        :param corpus: 处理好的词袋向量
-        :param num_topics: 主题数量
-        :return:lsi模型
-        """
-        return gensim.models.LsiModel(corpus, id2word=dictionary, num_topics=num_topics)
+    # @staticmethod
+    # def get_lsi_model(corpus, dictionary, num_topics):
+    #     """
+    #     获得一个lsi模型
+    #     :param dictionary: 处理好的词典
+    #     :param corpus: 处理好的词袋向量
+    #     :param num_topics: 主题数量
+    #     :return:lsi模型
+    #     """
+    #     return gensim.models.LsiModel(corpus, id2word=dictionary, num_topics=num_topics)
 
-    @staticmethod
-    def get_lsi_index(path, index_name):
-        """
-        获得存储好的lsi索引
-        :param path: 路径名，如："./src/text/"
-        :param index_name: 词袋向量文件名字，例如："测试索引"（不含后缀）
-        :return: 索引
-        """
-        return gensim.similarities.MatrixSimilarity.load(path + index_name + ".index")
+    # @staticmethod
+    # def get_lsi_index(path, index_name):
+    #     """
+    #     获得存储好的lsi索引
+    #     :param path: 路径名，如："./src/text/"
+    #     :param index_name: 词袋向量文件名字，例如："测试索引"（不含后缀）
+    #     :return: 索引
+    #     """
+    #     return gensim.similarities.MatrixSimilarity.load(path + index_name + ".index")
 
     @staticmethod
     def train_lsi_model(path, document_filenames, model_related_filename):

@@ -68,22 +68,32 @@ class BlogAutomaticScoring:
         :return: number篇文章的url的列表
         """
         total_urls = list()
+        total_titles = list()
         count = 0
-        pn = 0
+        pn = 1
         while True:
-            results = BaiduSpider().search_web(txt_head, pn=pn, exclude=['tieba', 'related', 'video']).get('results')
+            results = BaiduSpider().search_web(txt_head, pn=pn, exclude=['all']).get('results')
+            print("pn = {}".format(pn))
+            pn += 1
             for result in results:
+                print(result)
                 if count >= number:
                     break
                 if result.get('title') is None:
                     continue
-                if re.match(".*CSDN博客.*", result.get('title')):
-                    total_urls.append(result.get('url'))
-                    count += 1
+                # if re.match(".*CSDN博客.*", result.get('title')):
+                title = result.get('title').split("_")
+                if len(title) == 1:
+                    title = result.get('title').split("-")
+                if (result.get('url') in total_urls) or (title in total_titles):
+                    continue
+                total_titles.append(title[0])
+                total_urls.append(result.get('url'))
+                print("count = {}".format(count))
+                count += 1
             if count >= number:
                 break
-            pn += 1
-        return total_urls
+        return total_urls, total_titles
 
     @staticmethod
     def get_urls(main_url):
