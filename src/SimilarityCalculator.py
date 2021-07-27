@@ -63,6 +63,32 @@ class SimilarityCalculator:
         return texts
 
     @staticmethod
+    def clean_with_low_frequency(documents, stopwords_set=""):
+        """
+        将按列表存储的文档进行清洗
+        :param stopwords_set: 可选参数, 如果选上，则表示自己提供停用词
+        :param documents: 按列表存储的文档，列表中一个元素为一个文档
+        :return: 清洗好的文档，二维列表，一行为一个文档的清洗后的词
+        """
+        if stopwords_set:
+            my_stopwords = stopwords_set
+        else:
+            stopwords_file = open("./src/text/stopwords.txt")
+            stopwords_string = stopwords_file.read()
+            stopwords_file.close()
+            my_stopwords = stopwords_string.split("\n")
+        texts = list()
+        for document in documents:
+            text = list()
+            for word in jieba.cut(document):
+                word = word.lower().strip()
+                if (word in my_stopwords) or re.match("\\s+", word) or re.match("\\d+", word):
+                    continue
+                text.append(word)
+            texts.append(text)
+        return texts
+
+    @staticmethod
     def save_dictionary(texts, path, dictionary_name):
         """
         清洗好的文档（二维列表，一行为一个文档的清洗后的词）添加到字典中并以(dictionary_name.dict)为名字保存在/src/text下
