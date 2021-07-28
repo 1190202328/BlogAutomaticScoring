@@ -1,8 +1,12 @@
+from pprint import pprint
+
 from bs4 import BeautifulSoup
 import requests
 import re
 from datetime import date
 from baiduspider import BaiduSpider
+
+from src.demo import get_EDUs
 
 
 class Pretreatment:
@@ -29,7 +33,7 @@ class Pretreatment:
         bf = BeautifulSoup(html, "html.parser")
         contents = bf.find_all("h1", class_="title-article")
 
-        print(bf.get_text())
+        # print(bf.get_text())
 
         head = contents[0].text
         main_content_html = bf.find("div", id="content_views")
@@ -42,7 +46,8 @@ class Pretreatment:
             elif child.string is None:
                 continue
             else:
-                paragraphs.append(child.string)
+                if child.string != '\n':
+                    paragraphs.append(child.string)
         contents = bf.find_all("span", class_="time")
         update_date = date.fromisoformat(contents[0].text[0:10])
         result['head'] = head
@@ -50,6 +55,8 @@ class Pretreatment:
         result['sentences'] = sentences
         result['codes'] = codes
         result['date'] = update_date
+        text = "".join(paragraphs)
+        result['text'] = text
         return result
 
     @staticmethod
@@ -142,13 +149,59 @@ class Pretreatment:
                 return content.get("href")
         return None
 
+    @staticmethod
+    def get_related_sentences(original_sentence, number):
+        """
+        在百度上获取相关的句子
+        :param original_sentence: 源句子
+        :param number: 获取数量
+        :return: 相关句子的列表
+        """
+        sentences = list()
+        urls = list()
+        headers = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, compress',
+            'Accept-Language': 'en-us;q=0.5,en;q=0.3',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive',
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
+        }
+        baidu_url = 'http://www.baidu.com'
+        url = 'http://www.baidu.com.cn/s?wd=' + original_sentence + '&cl=3'
+        html = requests.get(url=url, headers=headers).text
+        print(html)
+        bf = BeautifulSoup(html, "html.parser")
+        contents = bf.find("div", id="content_left")
+        for content in contents:
+            print(content)
+            # if child.class_ == "result c-container new-pmd":
+            #     for ch in child.chilren:
+            #         if ch.name == "h3":
+            #             for c in ch.children:
+            #                 urls.append(c.get_href)
+        print(urls)
+        return sentences
+
 
 if __name__ == '__main__':
+    # result = Pretreatment.split_txt("https://blog.csdn.net/Louis210/article/details/117415546")
+    # print(result['head'])
+    # for paragraph in result['paragraphs']:
+    #     print(paragraph)
+    # # print(result['sentences'])
+    # for code in result['codes']:
+    #     print(code)
+    # print(result['date'])
+
+    # original_sentence = "java的contains"
+    # number = 1
+    # sentences = Pretreatment.get_related_sentences(original_sentence, number)
+    # print(sentences)
+
     result = Pretreatment.split_txt("https://blog.csdn.net/Louis210/article/details/117415546")
-    print(result['head'])
-    for paragraph in result['paragraphs']:
-        print(paragraph)
-    # print(result['sentences'])
-    for code in result['codes']:
-        print(code)
-    print(result['date'])
+    text = "据统计，这些城市去年完成国内生产总值一百九十多亿元，比开放前的一九九一年增长九成多。国务院于一九九二年先后批准了黑河、凭祥、珲春、伊宁、瑞丽等十四个边境城市为对外开放城市，同时还批准这些城市设立十四个边境经济合作区。三年多来，这些城市社会经济发展迅速，地方经济实力明显增强；经济年平均增长百分之十七，高于全国年平均增长速度。以下是来测试测试这个代码的程序。 "
+    text = result['text']
+    print(text)
+    EDUs = get_EDUs(text)
+    pprint(EDUs)
