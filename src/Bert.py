@@ -79,22 +79,22 @@ stopwords_string = stopwords_file.read()
 stopwords_file.close()
 my_stopwords = stopwords_string.split("\n")
 
-sentences = list()
-# sentences.append(source_sentence)
-targets = list()
-source = open(path + fileName, mode="r")
-pattern = re.compile("\\d+")
-i = 0
-j = 0
-for line in source.readlines():
-    if re.match("第(\\d+)篇文章(\\[)\\d*\\]", line):
-        result = pattern.findall(line)
-        if len(result) == 1:
-            targets.append([0])
-            continue
-        targets.append([int(result[1])])
-        continue
-    sentences.append(line)
+# sentences = list()
+# # sentences.append(source_sentence)
+# targets = list()
+# source = open(path + fileName, mode="r")
+# pattern = re.compile("\\d+")
+# i = 0
+# j = 0
+# for line in source.readlines():
+#     if re.match("第(\\d+)篇文章(\\[)\\d*\\]", line):
+#         result = pattern.findall(line)
+#         if len(result) == 1:
+#             targets.append([0])
+#             continue
+#         targets.append([int(result[1])])
+#         continue
+#     sentences.append(line)
 # source_sentence = sentences[0]
 # clean_sentences = list()
 # for sentence in sentences:
@@ -134,11 +134,11 @@ for line in source.readlines():
 # similarity2[0][290] = 0
 # print(max(similarity2[0]))
 
-bc = BertClient()
-clean_sentences = SimilarityCalculator.clean_with_low_frequency(sentences, my_stopwords)
-sentences = [" ".join(clean_sentence) for clean_sentence in clean_sentences]
-print(len(sentences))
-print(sentences[0])
+# bc = BertClient()
+# clean_sentences = SimilarityCalculator.clean_with_low_frequency(sentences, my_stopwords)
+# sentences = [" ".join(clean_sentence) for clean_sentence in clean_sentences]
+# print(len(sentences))
+# print(sentences[0])
 # vectors = bc.encode(sentences)
 # limit2 = 0.92
 # similarity2 = cosine_similarity(vectors)
@@ -154,4 +154,12 @@ print(sentences[0])
 #     else:
 #         result2.append(1)
 # print(classification_report(targets, result2))
+
+
+
+# bc = BertClient()
+# sentences = ["有一次使用到了contains和indexOf方法", "那什么时候使用Contains的上述方法", " contains方法的源码中其实是使用了IndexOf方法的,但效率还是有差别的", "contains和indexof都可以作为判断是否包含的方法"]
+# clean_sentences = SimilarityCalculator.clean_with_low_frequency(sentences, my_stopwords)
+# sentences = [" ".join(clean_sentence) for clean_sentence in clean_sentences]
+# print(cosine_similarity(bc.encode(sentences)))
 

@@ -1,12 +1,9 @@
 from pprint import pprint
-
 from bs4 import BeautifulSoup
 import requests
 import re
 from datetime import date
 from baiduspider import BaiduSpider
-
-from src.demo import get_EDUs
 
 
 class Pretreatment:
@@ -50,6 +47,8 @@ class Pretreatment:
                     paragraphs.append(child.string)
         contents = bf.find_all("span", class_="time")
         update_date = date.fromisoformat(contents[0].text[0:10])
+        for paragraph in paragraphs:
+            sentences += re.split("[,.，。]", paragraph)
         result['head'] = head
         result['paragraphs'] = paragraphs
         result['sentences'] = sentences
@@ -84,7 +83,7 @@ class Pretreatment:
         根据标题在百度搜索相关文章，取出前number篇文章的url地址
         :param number: 需要相关文章的篇数
         :param txt_head: 文章标题
-        :return: number篇文章的url的列表
+        :return: number篇文章的url的列表,number篇文章的标题
         """
         total_urls = list()
         total_titles = list()
@@ -150,15 +149,96 @@ class Pretreatment:
         return None
 
     @staticmethod
-    def get_related_sentences(original_sentence, number):
+    def get_related_urls(query, number):
         """
-        在百度上获取相关的句子
+        根据query在百度搜索，取出前number篇csdn文章的url地址
+        :param number: 需要相关文章的篇数
+        :param query: 搜索字符串
+        :return: number个csdn的url地址
+        """
+        total_urls = list()
+        count = 0
+        pn = 1
+        while True:
+            results = BaiduSpider().search_web(query, pn=pn, exclude=['all']).get('results')
+            print("pn = {}".format(pn))
+            pn += 1
+            for result in results:
+                if count >= number:
+                    break
+                if result.get('title') is None:
+                    continue
+                if re.match(".*CSDN博客.*", result.get('title')):
+                    total_urls.append(result.get('url'))
+                    count += 1
+                    print("count = {}".format(count))
+            if count >= number:
+                break
+        return total_urls
+
+    @staticmethod
+    def get_related_sentences(original_sentence, number=5):
+        """
+        在百度上获取相关的句子(目前仅限于csdn博客)
         :param original_sentence: 源句子
-        :param number: 获取数量
+        :param number: 获取的数量
         :return: 相关句子的列表
         """
-        sentences = list()
-        urls = list()
+        i = 0
+        pn = 0
+        count = 0
+        related_sentences = set()
+        while True:
+            if count >= number:
+                break
+            url = 'http://www.baidu.com.cn/s?wd=' + original_sentence + '&cl=3' + "&pn=" + str(pn * 10)
+            print(pn)
+            pn += 1
+            html = Pretreatment.get_raw_html(url)
+            bf = BeautifulSoup(html, "html.parser")
+            contents = bf.find_all("div", class_="result c-container new-pmd")
+            urls = list()
+            for content in contents:
+                temp = dict()
+                url = ""
+                red_strings = set()
+                for child in content.children:
+                    for c in child.children:
+                        if c.name == "a" and c.parent.name == "h3":
+                            url = c.attrs['href']
+                real_url = requests.get(url)
+                patten = "https://blog\\.csdn\\.net/.+"
+                if not re.match(patten, real_url.url):
+                    continue
+                for child in content.descendants:
+                    if child.name == "em":
+                        red_strings.add(child.string)
+                temp["url"] = real_url.url
+                temp["red_strings"] = red_strings
+                urls.append(temp)
+                count += 1
+                if count >= number:
+                    break
+            print(len(urls))
+            print(urls)
+
+            for dictionary in urls:
+                print("第{}篇文章".format(i+1))
+                print("句子如下：")
+                i += 1
+                url = dictionary['url']
+                result = Pretreatment.split_txt(url)
+                sentences = result['sentences']
+                for sentence in sentences:
+                    for substring in dictionary['red_strings']:
+                        if sentence.find(substring) != -1:
+                            related_sentences.add(sentence)
+                pprint(related_sentences)
+        pprint(related_sentences)
+        return related_sentences
+
+    @staticmethod
+    def get_raw_html(url):
         headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Encoding': 'gzip, deflate, compress',
@@ -167,41 +247,17 @@ class Pretreatment:
             'Connection': 'keep-alive',
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
         }
-        baidu_url = 'http://www.baidu.com'
-        url = 'http://www.baidu.com.cn/s?wd=' + original_sentence + '&cl=3'
-        html = requests.get(url=url, headers=headers).text
-        print(html)
-        bf = BeautifulSoup(html, "html.parser")
-        contents = bf.find("div", id="content_left")
-        for content in contents:
-            print(content)
-            # if child.class_ == "result c-container new-pmd":
-            #     for ch in child.chilren:
-            #         if ch.name == "h3":
-            #             for c in ch.children:
-            #                 urls.append(c.get_href)
-        print(urls)
-        return sentences
+        try:
+            r = requests.get(url=url, headers=headers, timeout=10)
+            r.raise_for_status()
+            return r.text
+        except requests.ConnectionError as e:
+            print(e.args)
 
 
 if __name__ == '__main__':
-    # result = Pretreatment.split_txt("https://blog.csdn.net/Louis210/article/details/117415546")
-    # print(result['head'])
-    # for paragraph in result['paragraphs']:
-    #     print(paragraph)
-    # # print(result['sentences'])
-    # for code in result['codes']:
-    #     print(code)
-    # print(result['date'])
+    original_sentence = "有一次使用到了contains和indexOf方法"
+    Pretreatment.get_related_sentences(original_sentence)
 
-    # original_sentence = "java的contains"
-    # number = 1
-    # sentences = Pretreatment.get_related_sentences(original_sentence, number)
-    # print(sentences)
 
-    result = Pretreatment.split_txt("https://blog.csdn.net/Louis210/article/details/117415546")
-    text = "据统计，这些城市去年完成国内生产总值一百九十多亿元，比开放前的一九九一年增长九成多。国务院于一九九二年先后批准了黑河、凭祥、珲春、伊宁、瑞丽等十四个边境城市为对外开放城市，同时还批准这些城市设立十四个边境经济合作区。三年多来，这些城市社会经济发展迅速，地方经济实力明显增强；经济年平均增长百分之十七，高于全国年平均增长速度。以下是来测试测试这个代码的程序。 "
-    text = result['text']
-    print(text)
-    EDUs = get_EDUs(text)
-    pprint(EDUs)
+

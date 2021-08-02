@@ -9,7 +9,7 @@ import sys
 from tqdm import tqdm
 from collections import deque
 from torch.utils.data import Dataset
-from dataset import EDUDataset, TransDataset, RlatDataset, AugDataset
+from src.dataset import EDUDataset, TransDataset, RlatDataset, AugDataset
 from pytorch_pretrained_bert.tokenization import BertTokenizer, BasicTokenizer
 
 class Preprocessor():

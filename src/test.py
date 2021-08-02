@@ -13,7 +13,7 @@ from pytorch_pretrained_bert.tokenization import BertTokenizer
 from pytorch_pretrained_bert.modeling import BertModel
 from pytorch_pretrained_bert.optimization import BertAdam
 
-from anytree import Node,AnyNode,RenderTree,find,findall,LevelOrderIter
+from anytree import Node, AnyNode, RenderTree, find, findall, LevelOrderIter
 from anytree.exporter import DotExporter
 
 from sklearn.metrics import precision_recall_fscore_support
@@ -28,10 +28,10 @@ import time
 import math
 import argparse
 
-from preprocessor import Preprocessor
-from model_dir.model_edu_crf import NetEDU
-from model_dir.model_oracle_trans import NetTrans
-from model_dir.model_rlat_uda import NetRlat
+from src.preprocessor import Preprocessor
+from src.model_dir.model_edu_crf import NetEDU
+from src.model_dir.model_oracle_trans import NetTrans
+from src.model_dir.model_rlat_uda import NetRlat
 
 try:
     torch.multiprocessing.set_start_method("spawn")
@@ -40,21 +40,23 @@ except RuntimeError:
 
 preprocessor = Preprocessor()
 
-tag_to_ix_1 = { "shift":0,"reduce":1}
-tag_to_ix_center = {'1':0,'2':1,'3':2,'4':3}
-tag_to_ix_relation = {'causality':0,'coordination':1,'transition':2,'explanation':3} 
+tag_to_ix_1 = {"shift": 0, "reduce": 1}
+tag_to_ix_center = {'1': 0, '2': 1, '3': 2, '4': 3}
+tag_to_ix_relation = {'causality': 0, 'coordination': 1, 'transition': 2, 'explanation': 3}
+
 
 def createLeaf(p, info):
     leafnode_name_list = []
     for idx in range(len(p)):
-        leafnode_name_list.append("s"+str(idx))
+        leafnode_name_list.append("s" + str(idx))
 
     leafnode_list = []
     for idx in range(len(p)):
         leafnode_list.append(Node(leafnode_name_list[idx],
-            relation="",center="",leaf=True,pos=str(idx),sent=p[idx],is_edu=True))
+                                  relation="", center="", leaf=True, pos=str(idx), sent=p[idx], is_edu=True))
 
     return leafnode_list
+
 
 def createPredictLeaf(p, tokenizer, model_3):
     tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
@@ -70,18 +72,18 @@ def createPredictLeaf(p, tokenizer, model_3):
         flag = True
 
     for i in range(0, len(data), 512):
-        done = False # to make sure all tokens have been converted to ids
+        done = False  # to make sure all tokens have been converted to ids
         # boundary checking
-        if i+512 > len(data):
+        if i + 512 > len(data):
             j = len(data)
         else:
-            j = i+512
+            j = i + 512
         while not done:
             try:
-                data[i:j] = tokenizer.convert_tokens_to_ids(data[i:j]) 
+                data[i:j] = tokenizer.convert_tokens_to_ids(data[i:j])
                 # data = tokenizer.convert_tokens_to_ids(data)                    
                 done = True
-                #print(X[count])
+                # print(X[count])
             except KeyError as error:
                 # print('x'*100)
                 err = error.args[0]
@@ -89,17 +91,17 @@ def createPredictLeaf(p, tokenizer, model_3):
                 # print(idx)
                 data[idx] = '[UNK]'
 
-    data_torch = torch.tensor(data,dtype=torch.long).cpu()
+    data_torch = torch.tensor(data, dtype=torch.long).cpu()
 
     logits, path = model_3(data_torch.view(1, -1))
 
     stack = []
     count = 1
     for j in range(1, len(path[0])):
-        if(path[0][j] != 1 and path[0][j] != 2):
-            max_score, idx = torch.max(logits[:,j,1:3], -1)
-            path[0][j] = idx.item()+1
-        if (j != 1) and (path[0][j] == 2 or j == len(path[0])-1):
+        if (path[0][j] != 1 and path[0][j] != 2):
+            max_score, idx = torch.max(logits[:, j, 1:3], -1)
+            path[0][j] = idx.item() + 1
+        if (j != 1) and (path[0][j] == 2 or j == len(path[0]) - 1):
             stack.append(''.join(ans[count:j]))
             count = j
         else:
@@ -112,26 +114,29 @@ def createPredictLeaf(p, tokenizer, model_3):
     # create node name for them
     leafnode_name_list = []
     for idx in range(len(stack)):
-        leafnode_name_list.append("s"+str(idx))
+        leafnode_name_list.append("s" + str(idx))
     # convert EDUs to anytree type
     leafnode_list = []
     for idx in range(len(stack)):
-        leafnode_list.append(Node(leafnode_name_list[idx],relation="",center="",leaf=True,pos="",sent=stack[idx],is_edu=True))
+        leafnode_list.append(
+            Node(leafnode_name_list[idx], relation="", center="", leaf=True, pos="", sent=stack[idx], is_edu=True))
 
     leafnode_sent = []
     for i in range(len(leafnode_list)):
         leafnode_sent.append(leafnode_list[i].sent)
 
-    return leafnode_sent,leafnode_list
+    return leafnode_sent, leafnode_list
 
-def buildPredictTree(p, tokenizer, model_1, model_2, model_3, gold_edu, s_list=None, info=None, netG=None, trans_netG=None):
+
+def buildPredictTree(p, tokenizer, model_1, model_2, model_3, gold_edu, s_list=None, info=None, netG=None,
+                     trans_netG=None):
     """
         build a predict tree based on predicted EDUs
     """
     # [v1 from stack, v2 from stack, v3 from queue ] -> label(shift or reduce)
-    model_1.eval() # Transition 'shift' or 'reduce'
-    model_2.eval() # Relation
-    model_3.eval() # EDU
+    model_1.eval()  # Transition 'shift' or 'reduce'
+    model_2.eval()  # Relation
+    model_3.eval()  # EDU
     # netG.eval()
     # trans_netG.eval()
 
@@ -139,11 +144,11 @@ def buildPredictTree(p, tokenizer, model_1, model_2, model_3, gold_edu, s_list=N
         # golden leaf nodes sentence
         leafnode_sent = copy.deepcopy(p)
         # golden edu
-        leafnode_list = createLeaf(leafnode_sent,info)
+        leafnode_list = createLeaf(leafnode_sent, info)
     else:
         # end-to-end segemented edu 
         # when testing self-segmented performance
-        leafnode_sent,leafnode_list = createPredictLeaf(p,tokenizer,model_3)
+        leafnode_sent, leafnode_list = createPredictLeaf(p, tokenizer, model_3)
 
     node_list = []
     result = []
@@ -155,8 +160,8 @@ def buildPredictTree(p, tokenizer, model_1, model_2, model_3, gold_edu, s_list=N
         terminal += s
     # name of internal nodes
     node_name_list = []
-    for idx in range(len(leafnode_sent)-1):
-        node_name_list.append("n"+str(idx))
+    for idx in range(len(leafnode_sent) - 1):
+        node_name_list.append("n" + str(idx))
 
     # terminal condition
     count = 0
@@ -171,39 +176,39 @@ def buildPredictTree(p, tokenizer, model_1, model_2, model_3, gold_edu, s_list=N
             if queue == deque([]):
                 # predict their relation type directly cuz they will reduce to a node anyways
                 # prepare 2 sentences for model input
-                sent1 = tokenizer.tokenize(stack[len(stack)-2])
-                sent2 = tokenizer.tokenize(stack[len(stack)-1])
+                sent1 = tokenizer.tokenize(stack[len(stack) - 2])
+                sent2 = tokenizer.tokenize(stack[len(stack) - 1])
                 # insert [CLS] and [SEP] to the sentence
-                sent1.insert(0,'[CLS]')
+                sent1.insert(0, '[CLS]')
                 sent1.append('[SEP]')
-                sent2.insert(0,'[CLS]')
+                sent2.insert(0, '[CLS]')
                 sent2.append('[SEP]')
                 # convert to bert idx
                 for i in range(0, len(sent1), 512):
                     # boundary checking
-                    if i+512 > len(sent1):
+                    if i + 512 > len(sent1):
                         j = len(sent1)
                     else:
-                        j = i+512
-                    sent1[i:j] = tokenizer.convert_tokens_to_ids(sent1[i:j]) 
+                        j = i + 512
+                    sent1[i:j] = tokenizer.convert_tokens_to_ids(sent1[i:j])
                 for i in range(0, len(sent2), 512):
                     # boundary checking
-                    if i+512 > len(sent2):
+                    if i + 512 > len(sent2):
                         j = len(sent2)
                     else:
-                        j = i+512
-                    sent2[i:j] = tokenizer.convert_tokens_to_ids(sent2[i:j]) 
-                # sent1 = tokenizer.convert_tokens_to_ids(sent1)
+                        j = i + 512
+                    sent2[i:j] = tokenizer.convert_tokens_to_ids(sent2[i:j])
+                    # sent1 = tokenizer.convert_tokens_to_ids(sent1)
                 # sent2 = tokenizer.convert_tokens_to_ids(sent2)
 
-                v1_torch = torch.tensor(sent1,dtype=torch.long).cpu()
-                v2_torch = torch.tensor(sent2,dtype=torch.long).cpu()
+                v1_torch = torch.tensor(sent1, dtype=torch.long).cpu()
+                v2_torch = torch.tensor(sent2, dtype=torch.long).cpu()
 
-                center,relation = model_2(v1_torch.view(1,-1),v2_torch.view(1,-1))
+                center, relation = model_2(v1_torch.view(1, -1), v2_torch.view(1, -1))
                 # pooled = model_2(v1_torch.view(1,-1), v2_torch.view(1,-1),)
                 # center, relation = netG(pooled)
-                rev_tag_to_ix_center = {v:k for k,v in tag_to_ix_center.items()}  
-                rev_tag_to_ix_relation = {v:k for k,v in tag_to_ix_relation.items()}
+                rev_tag_to_ix_center = {v: k for k, v in tag_to_ix_center.items()}
+                rev_tag_to_ix_relation = {v: k for k, v in tag_to_ix_relation.items()}
 
                 max_score, idx = torch.max(center, 1)
                 predict_tag_center = rev_tag_to_ix_center[idx.item()]
@@ -214,50 +219,52 @@ def buildPredictTree(p, tokenizer, model_1, model_2, model_3, gold_edu, s_list=N
                 if predict_tag_relation != 'coordination' and predict_tag_center == '4':
                     predict_tag_center = '3'
 
-                label = predict_tag_relation+'_'+predict_tag_center
+                label = predict_tag_relation + '_' + predict_tag_center
 
                 node1 = node2 = None
                 # if child(node1,node2) of this node is internal node
                 for node in node_list:
-                    if node.sent == stack[len(stack)-2]:
+                    if node.sent == stack[len(stack) - 2]:
                         node1 = node
-                    elif node.sent == stack[len(stack)-1]:
+                    elif node.sent == stack[len(stack) - 1]:
                         node2 = node
                 # if child(node1,node2) of this node is internal node
                 for node in leafnode_list:
-                    if node.sent == stack[len(stack)-2]:
+                    if node.sent == stack[len(stack) - 2]:
                         node1 = node
-                    elif node.sent == stack[len(stack)-1]:
+                    elif node.sent == stack[len(stack) - 1]:
                         node2 = node
 
-                if node1.leaf == True and node2.leaf == True: 
+                if node1.leaf == True and node2.leaf == True:
                     pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[0]
-                elif node1.leaf == True: 
+                elif node1.leaf == True:
                     pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[1]
-                elif node2.leaf == True: 
+                elif node2.leaf == True:
                     pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[0]
                 else:
                     pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[1]
 
-                node_list.append(Node(node_name_list[count],children=[node1,node2],relation=label.split("_")[0],center=label.split("_")[1],leaf=False,pos=pos,sent=node1.sent+node2.sent,is_edu=False))
+                node_list.append(Node(node_name_list[count], children=[node1, node2], relation=label.split("_")[0],
+                                      center=label.split("_")[1], leaf=False, pos=pos, sent=node1.sent + node2.sent,
+                                      is_edu=False))
 
                 count += 1
                 stack.pop()
                 stack.pop()
-                stack.append(node1.sent+node2.sent)
+                stack.append(node1.sent + node2.sent)
 
             else:
                 # predict shift or reduce
                 # prepare 3 sentences for model input
-                sent1 = tokenizer.tokenize(stack[len(stack)-2])
-                sent2 = tokenizer.tokenize(stack[len(stack)-1])
+                sent1 = tokenizer.tokenize(stack[len(stack) - 2])
+                sent2 = tokenizer.tokenize(stack[len(stack) - 1])
                 sent3 = tokenizer.tokenize(queue[0])
                 # insert [CLS] and [SEP] to the sentence
-                sent1.insert(0,'[CLS]')
+                sent1.insert(0, '[CLS]')
                 sent1.append('[SEP]')
-                sent2.insert(0,'[CLS]')
+                sent2.insert(0, '[CLS]')
                 sent2.append('[SEP]')
-                sent3.insert(0,'[CLS]')
+                sent3.insert(0, '[CLS]')
                 sent3.append('[SEP]')
                 # convert to bert idx
                 # sent1 = tokenizer.convert_tokens_to_ids(sent1)
@@ -266,32 +273,32 @@ def buildPredictTree(p, tokenizer, model_1, model_2, model_3, gold_edu, s_list=N
 
                 for i in range(0, len(sent1), 512):
                     # boundary checking
-                    if i+512 > len(sent1):
+                    if i + 512 > len(sent1):
                         j = len(sent1)
                     else:
-                        j = i+512
-                    sent1[i:j] = tokenizer.convert_tokens_to_ids(sent1[i:j]) 
+                        j = i + 512
+                    sent1[i:j] = tokenizer.convert_tokens_to_ids(sent1[i:j])
                 for i in range(0, len(sent2), 512):
                     # boundary checking
-                    if i+512 > len(sent2):
+                    if i + 512 > len(sent2):
                         j = len(sent2)
                     else:
-                        j = i+512
-                    sent2[i:j] = tokenizer.convert_tokens_to_ids(sent2[i:j]) 
+                        j = i + 512
+                    sent2[i:j] = tokenizer.convert_tokens_to_ids(sent2[i:j])
                 for i in range(0, len(sent3), 512):
                     # boundary checking
-                    if i+512 > len(sent3):
+                    if i + 512 > len(sent3):
                         j = len(sent3)
                     else:
-                        j = i+512
-                    sent3[i:j] = tokenizer.convert_tokens_to_ids(sent3[i:j]) 
-                v1_torch = torch.tensor(sent1,dtype=torch.long).cpu()
-                v2_torch = torch.tensor(sent2,dtype=torch.long).cpu()
-                v3_torch = torch.tensor(sent3,dtype=torch.long).cpu()
+                        j = i + 512
+                    sent3[i:j] = tokenizer.convert_tokens_to_ids(sent3[i:j])
+                v1_torch = torch.tensor(sent1, dtype=torch.long).cpu()
+                v2_torch = torch.tensor(sent2, dtype=torch.long).cpu()
+                v3_torch = torch.tensor(sent3, dtype=torch.long).cpu()
 
-                score = model_1(v1_torch.view(1,-1),v2_torch.view(1,-1),v3_torch.view(1,-1))
+                score = model_1(v1_torch.view(1, -1), v2_torch.view(1, -1), v3_torch.view(1, -1))
 
-                rev_tag_to_ix = {v:k for k,v in tag_to_ix_1.items()}  
+                rev_tag_to_ix = {v: k for k, v in tag_to_ix_1.items()}
 
                 max_score, idx = torch.max(score, 1)
                 action = rev_tag_to_ix[idx.item()]
@@ -301,10 +308,10 @@ def buildPredictTree(p, tokenizer, model_1, model_2, model_3, gold_edu, s_list=N
                     continue
                 elif action == 'reduce':
 
-                    center,relation = model_2(v1_torch.view(1,-1),v2_torch.view(1,-1))
+                    center, relation = model_2(v1_torch.view(1, -1), v2_torch.view(1, -1))
                     # center, relation = netG(pooled)
-                    rev_tag_to_ix_center = {v:k for k,v in tag_to_ix_center.items()}  
-                    rev_tag_to_ix_relation = {v:k for k,v in tag_to_ix_relation.items()}
+                    rev_tag_to_ix_center = {v: k for k, v in tag_to_ix_center.items()}
+                    rev_tag_to_ix_relation = {v: k for k, v in tag_to_ix_relation.items()}
 
                     max_score, idx = torch.max(center, 1)
                     predict_tag_center = rev_tag_to_ix_center[idx.item()]
@@ -315,46 +322,49 @@ def buildPredictTree(p, tokenizer, model_1, model_2, model_3, gold_edu, s_list=N
                     if predict_tag_relation != 'coordination' and predict_tag_center == '4':
                         predict_tag_center = '3'
 
-                    label = predict_tag_relation+'_'+predict_tag_center
+                    label = predict_tag_relation + '_' + predict_tag_center
 
                     node1 = node2 = None
 
                     # if child(node1,node2) of this node is internal node
                     for node in node_list:
-                        if node.sent == stack[len(stack)-2]:
+                        if node.sent == stack[len(stack) - 2]:
                             node1 = node
-                        elif node.sent == stack[len(stack)-1]:
+                        elif node.sent == stack[len(stack) - 1]:
                             node2 = node
                     # if child(node1,node2) of this node is internal node
                     for node in leafnode_list:
-                        if node.sent == stack[len(stack)-2]:
+                        if node.sent == stack[len(stack) - 2]:
                             node1 = node
-                        elif node.sent == stack[len(stack)-1]:
+                        elif node.sent == stack[len(stack) - 1]:
                             node2 = node
 
-                    if node1.leaf == True and node2.leaf == True: 
+                    if node1.leaf == True and node2.leaf == True:
                         pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[0]
-                    elif node1.leaf == True: 
+                    elif node1.leaf == True:
                         pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[1]
-                    elif node2.leaf == True: 
+                    elif node2.leaf == True:
                         pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[0]
                     else:
                         pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[1]
 
-                    node_list.append(Node(node_name_list[count],children=[node1,node2],relation=label.split("_")[0],center=label.split("_")[1],leaf=False,pos=pos,sent=node1.sent+node2.sent,is_edu=False))
+                    node_list.append(Node(node_name_list[count], children=[node1, node2], relation=label.split("_")[0],
+                                          center=label.split("_")[1], leaf=False, pos=pos, sent=node1.sent + node2.sent,
+                                          is_edu=False))
 
                     count += 1
                     stack.pop()
                     stack.pop()
-                    stack.append(node1.sent+node2.sent)
+                    stack.append(node1.sent + node2.sent)
 
-    return node_list,leafnode_list
+    return node_list, leafnode_list
 
-def buildGoldTree(p,s_list,info):
+
+def buildGoldTree(p, s_list, info):
     """
         build gold tree 
     """
-    leafnode_list = createLeaf(p,info)
+    leafnode_list = createLeaf(p, info)
 
     sentences = p.copy()
     relations = s_list.copy()
@@ -363,45 +373,47 @@ def buildGoldTree(p,s_list,info):
 
     node_name_list = []
     for idx in range(len(s_list)):
-        node_name_list.append("n"+str(idx))
+        node_name_list.append("n" + str(idx))
 
-    count = 0 
+    count = 0
 
     while relations != []:
         for relation in relations:
             # bottom up
-            splited_relation = relation.split("|") 
-            if set(splited_relation) <= set(sentences): 
+            splited_relation = relation.split("|")
+            if set(splited_relation) <= set(sentences):
 
                 new_sentence = ""
 
                 for r in splited_relation:
                     new_sentence += r
 
-                sent_info = info[info['Sentence']==relation]
+                sent_info = info[info['Sentence'] == relation]
                 old_label = sent_info['label'].tolist()[0]
-                label = preprocessor.changeRelationCdtb(old_label.split("_")[0])  
+                label = preprocessor.changeRelationCdtb(old_label.split("_")[0])
                 # find all children
                 child_list = []
                 builded_node_list = leafnode_list + node_list
-                for r in splited_relation: 
+                for r in splited_relation:
                     for node in builded_node_list:
                         if node.sent == r:
                             child_list.append(node)
 
                 node1 = child_list[0]
                 node2 = child_list[-1]
-                if node1.leaf == True and node2.leaf == True: 
+                if node1.leaf == True and node2.leaf == True:
                     pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[0]
-                elif node1.leaf == True: 
+                elif node1.leaf == True:
                     pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[1]
-                elif node2.leaf == True: 
+                elif node2.leaf == True:
                     pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[0]
                 else:
                     pos = node1.pos.split("|")[0] + "|" + node2.pos.split("|")[1]
 
-                sentences.insert(sentences.index(splited_relation[-1])+1,new_sentence)
-                node_list.append(Node(node_name_list[count],children=child_list,relation=label,center=old_label.split("_")[1],leaf=False,pos=pos,sent=new_sentence,old_relation=old_label.split("_")[0]))
+                sentences.insert(sentences.index(splited_relation[-1]) + 1, new_sentence)
+                node_list.append(
+                    Node(node_name_list[count], children=child_list, relation=label, center=old_label.split("_")[1],
+                         leaf=False, pos=pos, sent=new_sentence, old_relation=old_label.split("_")[0]))
 
                 count += 1
 
@@ -414,12 +426,12 @@ def buildGoldTree(p,s_list,info):
     return node_list
 
 
-def buildGoldTreeBin(p,s_list,info):
+def buildGoldTreeBin(p, s_list, info):
     """
        build binary version of gold tree
     """
 
-    leafnode_list = createLeaf(p,info) 
+    leafnode_list = createLeaf(p, info)
 
     sentences = p.copy()
     relations = s_list.copy()
@@ -428,15 +440,15 @@ def buildGoldTreeBin(p,s_list,info):
     # name for internal nodes
     node_name_list = []
     for idx in range(len(s_list)):
-        node_name_list.append("n"+str(idx))
+        node_name_list.append("n" + str(idx))
 
-    count = 0 
+    count = 0
 
     while relations != []:
         for relation in relations:
 
-            splited_relation = relation.split("|") 
-            if set(splited_relation) <= set(sentences): 
+            splited_relation = relation.split("|")
+            if set(splited_relation) <= set(sentences):
                 # delete sentences that have been used 
                 # and add representation of internal node
 
@@ -445,7 +457,7 @@ def buildGoldTreeBin(p,s_list,info):
                 for r in splited_relation:
                     new_sentence += r
 
-                sent_info = info[info['Sentence']==relation]
+                sent_info = info[info['Sentence'] == relation]
                 old_label = sent_info['label'].tolist()[0]
 
                 label = preprocessor.changeRelationCdtb(old_label.split("_")[0])
@@ -457,31 +469,35 @@ def buildGoldTreeBin(p,s_list,info):
                         child_list = []
                         builded_node_list = leafnode_list + node_list
 
-                        for r in [tmp_relation[0],tmp_relation[1]]: 
+                        for r in [tmp_relation[0], tmp_relation[1]]:
                             for node in builded_node_list:
                                 if node.sent == r:
                                     child_list.append(node)
 
-                        sent = tmp_relation[0]+tmp_relation[1]
+                        sent = tmp_relation[0] + tmp_relation[1]
                         tmp_relation.pop(1)
                         tmp_relation.pop(0)
-                        tmp_relation.insert(0,sent)
+                        tmp_relation.insert(0, sent)
 
-                        node_list.append(Node('n'+str(count),children=child_list,relation=label,center=old_label.split("_")[1],leaf=False,sent=sent,old_relation=old_label.split("_")[0]))
+                        node_list.append(
+                            Node('n' + str(count), children=child_list, relation=label, center=old_label.split("_")[1],
+                                 leaf=False, sent=sent, old_relation=old_label.split("_")[0]))
 
                 # find all children
                 # recursive add node because we want to build a binary version tree
                 else:
                     child_list = []
                     builded_node_list = leafnode_list + node_list
-                    for r in splited_relation: 
+                    for r in splited_relation:
                         for node in builded_node_list:
                             if node.sent == r:
                                 child_list.append(node)
 
-                    node_list.append(Node('n'+str(count),children=child_list,relation=label,center=old_label.split("_")[1],leaf=False,sent=new_sentence,old_relation=old_label.split("_")[0]))
+                    node_list.append(
+                        Node('n' + str(count), children=child_list, relation=label, center=old_label.split("_")[1],
+                             leaf=False, sent=new_sentence, old_relation=old_label.split("_")[0]))
 
-                sentences.insert(sentences.index(splited_relation[-1])+1,new_sentence)
+                sentences.insert(sentences.index(splited_relation[-1]) + 1, new_sentence)
 
                 count += 1
 
@@ -495,14 +511,14 @@ def buildGoldTreeBin(p,s_list,info):
     return node_list
 
 
-def buildGoldTreeBinRight(p,s_list,info):
+def buildGoldTreeBinRight(p, s_list, info):
     """
        build binary version of gold tree
 
     """
     # create leaf node list for late merging
 
-    leafnode_list = createLeaf(p,info) 
+    leafnode_list = createLeaf(p, info)
 
     sentences = p.copy()
     relations = s_list.copy()
@@ -511,14 +527,14 @@ def buildGoldTreeBinRight(p,s_list,info):
     # name for internal nodes
     node_name_list = []
     for idx in range(len(s_list)):
-        node_name_list.append("n"+str(idx))
+        node_name_list.append("n" + str(idx))
 
-    count = 0 
+    count = 0
 
     while relations != []:
         for relation in relations:
-            splited_relation = relation.split("|") 
-            if set(splited_relation) <= set(sentences): 
+            splited_relation = relation.split("|")
+            if set(splited_relation) <= set(sentences):
                 # delete sentences that have been used 
                 # and add representation of internal node
 
@@ -527,7 +543,7 @@ def buildGoldTreeBinRight(p,s_list,info):
                 for r in splited_relation:
                     new_sentence += r
 
-                sent_info = info[info['Sentence']==relation]
+                sent_info = info[info['Sentence'] == relation]
                 old_label = sent_info['label'].tolist()[0]
 
                 label = preprocessor.changeRelationCdtb(old_label.split("_")[0])
@@ -539,31 +555,35 @@ def buildGoldTreeBinRight(p,s_list,info):
                         child_list = []
                         builded_node_list = leafnode_list + node_list
 
-                        for r in [tmp_relation[-2],tmp_relation[-1]]: 
+                        for r in [tmp_relation[-2], tmp_relation[-1]]:
                             for node in builded_node_list:
                                 if node.sent == r:
                                     child_list.append(node)
 
-                        sent = tmp_relation[-2]+tmp_relation[-1]
+                        sent = tmp_relation[-2] + tmp_relation[-1]
                         tmp_relation.pop()
                         tmp_relation.pop()
                         tmp_relation.insert(len(tmp_relation), sent)
 
-                        node_list.append(Node('n'+str(count),children=child_list,relation=label,center=old_label.split("_")[1],leaf=False,sent=sent,old_relation=old_label.split("_")[0]))
+                        node_list.append(
+                            Node('n' + str(count), children=child_list, relation=label, center=old_label.split("_")[1],
+                                 leaf=False, sent=sent, old_relation=old_label.split("_")[0]))
 
                 # find all children
                 # recursive add node because we want to build a binary version tree
                 else:
                     child_list = []
                     builded_node_list = leafnode_list + node_list
-                    for r in splited_relation: 
+                    for r in splited_relation:
                         for node in builded_node_list:
                             if node.sent == r:
                                 child_list.append(node)
 
-                    node_list.append(Node('n'+str(count),children=child_list,relation=label,center=old_label.split("_")[1],leaf=False,sent=new_sentence,old_relation=old_label.split("_")[0]))
+                    node_list.append(
+                        Node('n' + str(count), children=child_list, relation=label, center=old_label.split("_")[1],
+                             leaf=False, sent=new_sentence, old_relation=old_label.split("_")[0]))
 
-                sentences.insert(sentences.index(splited_relation[-1])+1,new_sentence)
+                sentences.insert(sentences.index(splited_relation[-1]) + 1, new_sentence)
 
                 count += 1
 
@@ -576,7 +596,8 @@ def buildGoldTreeBinRight(p,s_list,info):
 
     return node_list
 
-def F_measure_EDU(test,gold):
+
+def F_measure_EDU(test, gold):
     PUNCs = (u'?', u'”', u'…', u'—', u'、', u'。', u'」', u'！', u'，', u'：', u'；', u'？')
 
     test_boundary = []
@@ -606,19 +627,19 @@ def F_measure_EDU(test,gold):
         elif s in '+':
             gold_boundary.append(1)
 
-    return test_boundary,gold_boundary
+    return test_boundary, gold_boundary
+
 
 def main(args):
-
     model_1 = NetTrans(768, 2, 1).cpu()
     model_2 = NetRlat(768, 4, 4, 1).cpu()
     model_3 = NetEDU(768, 7, 1).cpu()
 
-    model_1.load_state_dict(torch.load("saved_model/pretrained_trans.pkl")) 
+    model_1.load_state_dict(torch.load("saved_model/pretrained_trans.pkl"))
     model_1.eval()
-    model_2.load_state_dict(torch.load("saved_model/pretrained_rlat.pkl")) 
+    model_2.load_state_dict(torch.load("saved_model/pretrained_rlat.pkl"))
     model_2.eval()
-    model_3.load_state_dict(torch.load("saved_model/pretrained_edu.pkl")) 
+    model_3.load_state_dict(torch.load("saved_model/pretrained_edu.pkl"))
     model_3.eval()
 
     tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
@@ -640,14 +661,14 @@ def main(args):
 
     test_count = acc_count = gold_count = 0
 
-    all_files = [f for f in sorted(glob.glob('{}/*.{}'.format('test','csv')))]
+    all_files = [f for f in sorted(glob.glob('{}/*.{}'.format('test', 'csv')))]
     # iterate through all training data(csv)
 
     trange = tqdm(enumerate(all_files),
                   total=len(all_files),
                   desc='testing',
                   ascii=True)
-    for i,file in trange:
+    for i, file in trange:
         trange.set_description("Processing %s" % file)
         df = dataframe = pd.read_csv(file)
 
@@ -656,9 +677,9 @@ def main(args):
         label = df[['label']]
         label = label['label'].tolist()
 
-        for idx in set(df['p_id'].tolist()): 
+        for idx in set(df['p_id'].tolist()):
             # same paragragh
-            same_parent = df[df['p_id']==idx]
+            same_parent = df[df['p_id'] == idx]
             # format : [ 's1|s2', 's3|s4',...... ]
             s_list = same_parent['Sentence'].tolist()
 
@@ -673,15 +694,16 @@ def main(args):
 
             with torch.no_grad():
                 # predict_node_list,predict_leafnode_list = buildPredictTree(cky_edu,tokenizer,model_1,model_2,model_3,s_list,df)
-                predict_node_list,predict_leafnode_list = buildPredictTree(new_p,tokenizer,model_1,model_2,model_3,args.gold_edu,s_list,df)
+                predict_node_list, predict_leafnode_list = buildPredictTree(new_p, tokenizer, model_1, model_2, model_3,
+                                                                            args.gold_edu, s_list, df)
                 # predict_node_list,predict_leafnode_list = buildPredictTree(p,tokenizer,model_1,model_2,model_3,s_list,df)
                 if args.test_macro:
-                    gold_node_list = buildGoldTree_bin_right(p,s_list,df) 
+                    gold_node_list = buildGoldTree_bin_right(p, s_list, df)
                 if args.test_micro:
-                    gold_node_list = buildGoldTree(p,s_list,df) 
+                    gold_node_list = buildGoldTree(p, s_list, df)
                     # gold_node_list = buildGoldTree_bin(p,s_list,df) 
 
-            leafnode_list = createLeaf(p,df)
+            leafnode_list = createLeaf(p, df)
             pred_list = predict_leafnode_list + predict_node_list
             gold_list = leafnode_list + gold_node_list
 
@@ -705,7 +727,7 @@ def main(args):
                             child = child_list[0]
 
                             if child_list[0].relation == 'coordination' and child_list[0].center == '4':
-                                #idx = child_list.index(child)
+                                # idx = child_list.index(child)
                                 child_list[0:0] = list(child_list[0].children)
                                 child_list.remove(child)
 
@@ -756,14 +778,14 @@ def main(args):
                     test_sent += node.sent
                     test_sent = test_sent[:-1]
                     test_sent += "+"
-                    
+
                 for idx, s in enumerate(gold_sent):
                     if test_sent[idx] in '+':
                         test_count += 1
-                    if test_sent[idx] in '+' and s in '+': # correct
+                    if test_sent[idx] in '+' and s in '+':  # correct
                         acc_count += 1
                     if s in '+':
-                        gold_count += 1   
+                        gold_count += 1
 
                 for predict_node in predict_node_list:
                     for gold_node in gold_node_list:
@@ -838,7 +860,8 @@ def main(args):
                 # join
                 for predict_node in predict_node_list:
                     for gold_node in gold_node_list:
-                        if (predict_node.sent == gold_node.sent) and (predict_node.relation == gold_node.relation) and (predict_node.center == gold_node.center):
+                        if (predict_node.sent == gold_node.sent) and (predict_node.relation == gold_node.relation) and (
+                                predict_node.center == gold_node.center):
                             p_join += 1
                             r_join += 1
 
@@ -849,7 +872,7 @@ def main(args):
                             p_merge += 1
                             r_merge += 1
 
-                #macro
+                # macro
                 if len(predict_node_list) != 0 and len(gold_node_list) != 0:
                     tmp_p_score = p_merge / (len(predict_node_list))
                     tmp_r_score = r_merge / (len(gold_node_list))
@@ -869,7 +892,7 @@ def main(args):
                             p_sense += 1
                             r_sense += 1
 
-                #macro
+                # macro
                 if len(predict_node_list) != 0 and len(gold_node_list) != 0:
                     tmp_p_score = p_sense / (len(predict_node_list))
                     tmp_r_score = r_sense / (len(gold_node_list))
@@ -882,7 +905,6 @@ def main(args):
                 p_sense = 0
                 r_sense = 0
 
-
                 # center
                 for predict_node in predict_node_list:
                     for gold_node in gold_node_list:
@@ -890,7 +912,7 @@ def main(args):
                             p_center += 1
                             r_center += 1
 
-                #macro
+                # macro
                 if len(predict_node_list) != 0 and len(gold_node_list) != 0:
                     tmp_p_score = p_center / (len(predict_node_list))
                     tmp_r_score = r_center / (len(gold_node_list))
@@ -906,11 +928,12 @@ def main(args):
                 # join
                 for predict_node in predict_node_list:
                     for gold_node in gold_node_list:
-                        if (predict_node.sent == gold_node.sent) and (predict_node.relation == gold_node.relation) and (predict_node.center == gold_node.center):
+                        if (predict_node.sent == gold_node.sent) and (predict_node.relation == gold_node.relation) and (
+                                predict_node.center == gold_node.center):
                             p_join += 1
                             r_join += 1
 
-                #macro
+                # macro
                 if len(predict_node_list) != 0 and len(gold_node_list) != 0:
                     tmp_p_score = p_join / (len(predict_node_list))
                     tmp_r_score = r_join / (len(gold_node_list))
@@ -929,30 +952,30 @@ def main(args):
         p_score = acc_count / test_count
         r_score = acc_count / gold_count
         # F-score = 2*P*R/(P+R)
-        f_score = 2 * p_score * r_score / (p_score+r_score)
-        print("edu     : f_score = ", round(f_score,5)," %")
+        f_score = 2 * p_score * r_score / (p_score + r_score)
+        print("edu     : f_score = ", round(f_score, 5), " %")
 
         p_score = p_merge / p_total
         r_score = r_merge / r_total
         # F-score = 2*P*R/(P+R)
-        f_score = 2 * p_score * r_score / (p_score+r_score)
-        print("merge   : f_score = ", round(f_score,5)," %")
+        f_score = 2 * p_score * r_score / (p_score + r_score)
+        print("merge   : f_score = ", round(f_score, 5), " %")
         p_score = p_sense / p_total
         r_score = r_sense / r_total
         # F-score = 2*P*R/(P+R)
-        f_score = 2 * p_score * r_score / (p_score+r_score)
-        print("+sense  : f_score = ", round(f_score,5)," %")
+        f_score = 2 * p_score * r_score / (p_score + r_score)
+        print("+sense  : f_score = ", round(f_score, 5), " %")
         p_score = p_center / p_total
         r_score = r_center / r_total
         # F-score = 2*P*R/(P+R)
-        f_score = 2 * p_score * r_score / (p_score+r_score)
-        print("+center : f_score = ", round(f_score,5)," %")
+        f_score = 2 * p_score * r_score / (p_score + r_score)
+        print("+center : f_score = ", round(f_score, 5), " %")
         p_score = p_join / p_total
         r_score = r_join / r_total
         # F-score = 2*P*R/(P+R)
-        f_score = 2 * p_score * r_score / (p_score+r_score)
-        print("overall : f_score = ", round(f_score,5)," %")
-        print('-'*100)
+        f_score = 2 * p_score * r_score / (p_score + r_score)
+        print("overall : f_score = ", round(f_score, 5), " %")
+        print('-' * 100)
         # causality_result = precision_recall_fscore_support(
         #     test_casuality, gold_casuality, average="binary")
         # print("causality    : ", causality_result)
@@ -965,24 +988,26 @@ def main(args):
         # explanation_result = precision_recall_fscore_support(
         #     test_explanation, gold_explanation, average="binary")
         # print("explanation  : ", explanation_result)
-    
+
     if args.test_macro:
         print("macro  : ")
-        print('merge  : ', sum(macro_merge)/len(macro_merge))
-        print('sense  : ', sum(macro_sense)/len(macro_sense))
-        print('center : ', sum(macro_center)/len(macro_center))
-        print('join   : ', sum(macro_join)/len(macro_join))
+        print('merge  : ', sum(macro_merge) / len(macro_merge))
+        print('sense  : ', sum(macro_sense) / len(macro_sense))
+        print('center : ', sum(macro_center) / len(macro_center))
+        print('join   : ', sum(macro_join) / len(macro_join))
 
 
 def parse():
-    parser = argparse.ArgumentParser(description="CDTB Discourse Parsing with shfit reduce method and use RST-DT as augmentation data")
-    parser.add_argument('--test_macro',action='store_true',help='marco_f1 score')
-    parser.add_argument('--test_micro',action='store_true',help='mirco_f1 score')
-    parser.add_argument('--convert_multi',action='store_true',help='convert to multiway tree')
-    parser.add_argument('--gold_edu',action='store_true',help='convert to multiway tree')
+    parser = argparse.ArgumentParser(
+        description="CDTB Discourse Parsing with shfit reduce method and use RST-DT as augmentation data")
+    parser.add_argument('--test_macro', action='store_true', help='marco_f1 score')
+    parser.add_argument('--test_micro', action='store_true', help='mirco_f1 score')
+    parser.add_argument('--convert_multi', action='store_true', help='convert to multiway tree')
+    parser.add_argument('--gold_edu', action='store_true', help='convert to multiway tree')
 
     args = parser.parse_args()
     return args
+
 
 if __name__ == '__main__':
     args = parse()

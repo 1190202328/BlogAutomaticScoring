@@ -1,9 +1,9 @@
 import torch
 from pytorch_pretrained_bert.tokenization import BertTokenizer
-from model_dir.model_edu_crf import NetEDU
-from model_dir.model_oracle_trans import NetTrans
-from model_dir.model_rlat_uda import NetRlat
-from test import buildPredictTree
+from src.model_dir.model_edu_crf import NetEDU
+from src.model_dir.model_oracle_trans import NetTrans
+from src.model_dir.model_rlat_uda import NetRlat
+from src.test import buildPredictTree
 
 try:
     torch.multiprocessing.set_start_method("spawn")
