@@ -5,6 +5,8 @@ import re
 from datetime import date
 from baiduspider import BaiduSpider
 
+from src.BlogAutomaticScoring import BlogAutomaticScoring
+
 
 class Pretreatment:
     """
@@ -19,11 +21,9 @@ class Pretreatment:
         :return: 词典
         """
         result = dict()
-        head = ""
         paragraphs = list()
         sentences = list()
         codes = list()
-        update_date = ""
 
         req = requests.get(url=url, headers={'User-Agent': 'Baiduspider'})
         html = req.text
@@ -258,6 +258,8 @@ class Pretreatment:
 if __name__ == '__main__':
     original_sentence = "有一次使用到了contains和indexOf方法"
     Pretreatment.get_related_sentences(original_sentence)
+
+
 
 
 

@@ -1,16 +1,12 @@
 import pandas
-import numpy
 import json
 import glob
 import copy
 import random
 import math
-import sys
 from tqdm import tqdm
-from collections import deque
-from torch.utils.data import Dataset
 from src.dataset import EDUDataset, TransDataset, RlatDataset, AugDataset
-from pytorch_pretrained_bert.tokenization import BertTokenizer, BasicTokenizer
+from pytorch_pretrained_bert.tokenization import BasicTokenizer
 
 class Preprocessor():
 

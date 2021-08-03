@@ -1,26 +1,12 @@
-import copy
 import os
-import sys
-import glob
-import copy
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
-import numpy as np
-import pandas as pd
-import torch.utils.data as Data
-
-from torch.utils.data import Dataset, TensorDataset, DataLoader, SequentialSampler, SubsetRandomSampler
-from torch.utils.data.distributed import DistributedSampler
-
-from pytorch_pretrained_bert.tokenization import BertTokenizer
+from torch.utils.data import DataLoader
 from pytorch_pretrained_bert.modeling import BertModel
-from pytorch_pretrained_bert.optimization import BertAdam
-
 from tqdm import tqdm
-from preprocessor import Preprocessor
-from dataset import EDUDataset, partition, EDUCollator
+
+from src.dataset import EDUCollator
 
 os.makedirs("saved_model/", exist_ok=True)
 

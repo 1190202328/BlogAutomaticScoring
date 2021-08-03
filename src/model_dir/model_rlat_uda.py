@@ -1,21 +1,12 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
-import torch.utils.data as Data
-import pandas as pd
-import numpy as np
-import math
-import copy
-import csv
 import os
-
 from tqdm import tqdm
-from torch.utils.data import TensorDataset, DataLoader, SequentialSampler, SubsetRandomSampler
-from torch.utils.data.distributed import DistributedSampler
+from torch.utils.data import DataLoader
 from pytorch_pretrained_bert.modeling import BertModel
-from pytorch_pretrained_bert.optimization import BertAdam
-from dataset import partition, RlatCollator, RlatDataset, AugCollator, AugDataset
+
+from src.dataset import RlatCollator, AugCollator
 
 try:
     torch.multiprocessing.set_start_method("spawn")
