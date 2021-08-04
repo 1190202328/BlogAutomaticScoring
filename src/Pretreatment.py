@@ -8,6 +8,11 @@ from baiduspider import BaiduSpider
 from src.BlogAutomaticScoring import BlogAutomaticScoring
 
 
+class OutOfPageLimitError(RuntimeError):
+    def __init__(self, message="超过搜索的最大页码限制！"):
+        self.message = message
+
+
 class Pretreatment:
     """
     预处理类，负责从网页抓取文档，预处理文档。
@@ -16,7 +21,7 @@ class Pretreatment:
     @staticmethod
     def split_txt(url):
         """
-        根据url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；5。date：日期；
+        根据url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；5。date：日期；6。text全文（不含代码段）
         :param url: url地址
         :return: 词典
         """
@@ -77,13 +82,15 @@ class Pretreatment:
                 texts.append(txt)
         return texts
 
+
     @staticmethod
-    def get_related_txt(txt_head, number):
+    def get_related_head(txt_head, number, page_limit=30):
         """
-        根据标题在百度搜索相关文章，取出前number篇文章的url地址
+        根据标题在百度搜索相关文章，取出前number篇文章的标题
+        :param page_limit: 最大页码数
         :param number: 需要相关文章的篇数
         :param txt_head: 文章标题
-        :return: number篇文章的url的列表,number篇文章的标题
+        :return: number篇文章的标题
         """
         total_urls = list()
         total_titles = list()
@@ -93,6 +100,8 @@ class Pretreatment:
             results = BaiduSpider().search_web(txt_head, pn=pn, exclude=['all']).get('results')
             print("pn = {}".format(pn))
             pn += 1
+            if pn > page_limit:
+                return list()
             for result in results:
                 print(result)
                 if count >= number:
@@ -111,7 +120,7 @@ class Pretreatment:
                 count += 1
             if count >= number:
                 break
-        return total_urls, total_titles
+        return total_titles
 
     @staticmethod
     def get_urls(main_url):
@@ -149,7 +158,7 @@ class Pretreatment:
         return None
 
     @staticmethod
-    def get_related_urls(query, number):
+    def get_related_urls(query, number, page_limit=30):
         """
         根据query在百度搜索，取出前number篇csdn文章的url地址
         :param number: 需要相关文章的篇数
@@ -163,13 +172,17 @@ class Pretreatment:
             results = BaiduSpider().search_web(query, pn=pn, exclude=['all']).get('results')
             print("pn = {}".format(pn))
             pn += 1
+            if pn > page_limit:
+                return list()
             for result in results:
                 if count >= number:
                     break
-                if result.get('title') is None:
+                if result.get('url') is None:
                     continue
-                if re.match(".*CSDN博客.*", result.get('title')):
-                    total_urls.append(result.get('url'))
+                real_url = requests.get(result.get('url'))
+                patten = "https://blog\\.csdn\\.net/.+"
+                if re.match(patten, real_url.url):
+                    total_urls.append(real_url.url)
                     count += 1
                     print("count = {}".format(count))
             if count >= number:
@@ -177,7 +190,7 @@ class Pretreatment:
         return total_urls
 
     @staticmethod
-    def get_related_sentences(original_sentence, number=5):
+    def get_related_sentences(original_sentence, number=5, page_limit=30):
         """
         在百度上获取相关的句子(目前仅限于csdn博客)
         :param original_sentence: 源句子
@@ -192,8 +205,10 @@ class Pretreatment:
             if count >= number:
                 break
             url = 'http://www.baidu.com.cn/s?wd=' + original_sentence + '&cl=3' + "&pn=" + str(pn * 10)
-            print(pn)
+            print("第{}页".format(pn))
             pn += 1
+            if pn > page_limit:
+                return list()
             html = Pretreatment.get_raw_html(url)
             bf = BeautifulSoup(html, "html.parser")
             contents = bf.find_all("div", class_="result c-container new-pmd")
@@ -219,11 +234,11 @@ class Pretreatment:
                 count += 1
                 if count >= number:
                     break
-            print(len(urls))
+            print("url共有{}个".format(len(urls)))
             print(urls)
 
             for dictionary in urls:
-                print("第{}篇文章".format(i+1))
+                print("第{}篇文章".format(i + 1))
                 print("句子如下：")
                 i += 1
                 url = dictionary['url']
@@ -235,7 +250,69 @@ class Pretreatment:
                             related_sentences.add(sentence)
                 pprint(related_sentences)
         pprint(related_sentences)
-        return related_sentences
+        return list(related_sentences)
+
+    @staticmethod
+    def get_related_paragraphs(original_sentence, number=5, page_limit=30):
+        """
+        在百度上获取相关的段落(目前仅限于csdn博客)
+        :param original_sentence: 需要查询的句子
+        :param number: 获取的数量
+        :return: 相关段落的列表
+        """
+        i = 0
+        pn = 0
+        count = 0
+        related_paragraphs = set()
+        while True:
+            if count >= number:
+                break
+            url = 'http://www.baidu.com.cn/s?wd=' + original_sentence + '&cl=3' + "&pn=" + str(pn * 10)
+            print("第{}页".format(pn))
+            pn += 1
+            if pn > page_limit:
+                return list()
+            html = Pretreatment.get_raw_html(url)
+            bf = BeautifulSoup(html, "html.parser")
+            contents = bf.find_all("div", class_="result c-container new-pmd")
+            urls = list()
+            for content in contents:
+                temp = dict()
+                url = ""
+                red_strings = set()
+                for child in content.children:
+                    for c in child.children:
+                        if c.name == "a" and c.parent.name == "h3":
+                            url = c.attrs['href']
+                real_url = requests.get(url)
+                patten = "https://blog\\.csdn\\.net/.+"
+                if not re.match(patten, real_url.url):
+                    continue
+                for child in content.descendants:
+                    if child.name == "em":
+                        red_strings.add(child.string)
+                temp["url"] = real_url.url
+                temp["red_strings"] = red_strings
+                urls.append(temp)
+                count += 1
+                if count >= number:
+                    break
+            print("url共有{}个".format(len(urls)))
+            print(urls)
+
+            for dictionary in urls:
+                print("第{}篇文章".format(i + 1))
+                print("句子如下：")
+                i += 1
+                url = dictionary['url']
+                result = Pretreatment.split_txt(url)
+                paragraphs = result['paragraphs']
+                for paragraph in paragraphs:
+                    for substring in dictionary['red_strings']:
+                        if paragraph.find(substring) != -1:
+                            related_paragraphs.add(paragraph)
+                pprint(related_paragraphs)
+        return list(related_paragraphs)
 
     @staticmethod
     def get_raw_html(url):
@@ -258,8 +335,3 @@ class Pretreatment:
 if __name__ == '__main__':
     original_sentence = "有一次使用到了contains和indexOf方法"
     Pretreatment.get_related_sentences(original_sentence)
-
-
-
-
-

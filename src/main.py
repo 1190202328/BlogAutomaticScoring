@@ -1,33 +1,13 @@
 from datetime import date
-import re
-
-import gensim
-import jieba
-import tensorflow
-from pandas.core.common import random_state
-from sklearn.svm import SVC
-from tensorflow import keras
-
-from src.BlogAutomaticScoring import BlogAutomaticScoring
 from src.InfoReader import InfoReader
 from src.SimilarityCalculator import SimilarityCalculator
-from sklearn.metrics import classification_report
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
-import sklearn.datasets
-from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.svm import SVC
-import matplotlib.pyplot as plt
-import numpy as np
-from sklearn import svm, datasets, preprocessing
-from sklearn.metrics import precision_recall_curve
-from sklearn.metrics import average_precision_score
-from sklearn.preprocessing import label_binarize
 from sklearn.multiclass import OneVsRestClassifier
-from src.Student import Student
 
 students = InfoReader.get_student_info("学生个人博客信息.xlsx")
 path = "./src/text/"
@@ -154,39 +134,5 @@ print(classification_report(y_test, answer_svm))
 # plt.legend(loc="lower right")  # legend 是用于设置图例的函数
 # plt.show()
 
-# students = list()
-# students.append(Student("1190201919", "兵王", "https://blog.csdn.net/weixin_46228614"))
-# xlsx_name = "测试博客成绩.xlsx"
-# limit = 5
-# student_score_dict, student_info_dict = BlogAutomaticScoring.calculate_score_by_machine_learning(students, stat_date,
-#                                                                                                  end_date, svm,
-#                                                                                                  dictionary)
-# BlogAutomaticScoring.save_scores_to_xlsx(students, student_score_dict, student_info_dict, path, xlsx_name, limit)
 
-# urls = BlogAutomaticScoring.get_related_txt("git安装", 10)
-# for i in range(len(urls)):
-#     url = urls[i]
-#     print('第{}个网页'.format(i))
-#     print(url)
 
-# test1_url = "https://blog.csdn.net/weixin_45800869/article/details/110439594"
-# test2_url = "https://blog.csdn.net/SO_zxn/article/details/60959367"
-# my_url = "https://blog.csdn.net/Louis210/article/details/117415546"
-# test1_txt, _ = BlogAutomaticScoring.get_text(test1_url)
-# test2_txt, _ = BlogAutomaticScoring.get_text(test2_url)
-# my_txt, _ = BlogAutomaticScoring.get_text(my_url)
-# test_txt = [test1_txt, test2_txt]
-# test_txt_clean = SimilarityCalculator.clean(test_txt)
-# my_txt_clean = SimilarityCalculator.clean([my_txt, test1_txt])
-# dictionary, corpus = SimilarityCalculator.train_tf_idf(test_txt_clean)
-# # corpus = [dictionary.doc2bow(text) for text in test_txt_clean]
-# # print(corpus)
-# lsi = gensim.models.LsiModel(corpus, id2word=dictionary, num_topics=2)
-# index = gensim.similarities.MatrixSimilarity(lsi[corpus])  # 将语料转换到LSI空间并建立索引
-#
-# _, corpus = SimilarityCalculator.train_tf_idf(my_txt_clean)
-# vec_lsi = lsi[corpus[0]]  # 将查询文本转换到LSI模型的向量空间
-# sims = index[vec_lsi]  # 获取查询文本和语料中文本的相似度
-# for i, s in enumerate(sims):
-#     similarity = s
-#     print("相似度为：{0}".format(similarity))
