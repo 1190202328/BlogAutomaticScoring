@@ -4,7 +4,9 @@ import requests
 import re
 from datetime import date
 from baiduspider import BaiduSpider
+import bs4
 
+from src import demo
 from src.BlogAutomaticScoring import BlogAutomaticScoring
 
 
@@ -19,47 +21,83 @@ class Pretreatment:
     """
 
     @staticmethod
-    def split_txt(url):
+    def split_txt(url, EDU=False):
         """
-        根据url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；5。date：日期；6。text全文（不含代码段）
+        根据csdn的url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；5。date：日期；6。text全文（不含代码段）
         :param url: url地址
         :return: 词典
         """
         result = dict()
-        paragraphs = list()
         sentences = list()
         codes = list()
-
-        req = requests.get(url=url, headers={'User-Agent': 'Baiduspider'})
-        html = req.text
+        # head
+        html = Pretreatment.get_raw_html(url)
         bf = BeautifulSoup(html, "html.parser")
         contents = bf.find_all("h1", class_="title-article")
-
-        # print(bf.get_text())
-
         head = contents[0].text
+        # text
         main_content_html = bf.find("div", id="content_views")
+        text = main_content_html.getText()
+        # codes
         for child in main_content_html.children:
-            if child.name == "ul":
-                for string in child.strings:
-                    paragraphs.append(string)
-            elif child.name == "pre":
-                codes.append(child.string)
-            elif child.string is None:
-                continue
-            else:
-                if child.string != '\n':
-                    paragraphs.append(child.string)
-        contents = bf.find_all("span", class_="time")
-        update_date = date.fromisoformat(contents[0].text[0:10])
+            if child.name == "pre":
+                codes.append(child.getText())
+        for code in codes:
+            start = text.find(code)
+            if start != -1:
+                text = text[0:start] + text[start + len(code):]
+        text = re.sub("\n+", "\n", text)
+        # paragraphs
+        paragraphs = text.split("\n")
+        clean_paragraphs = list()
+        clean_text = ""
+        clean_text_for_EDU = list()
+        clean_text_for_EDU_element = ""
+        lenth = 200
         for paragraph in paragraphs:
-            sentences += re.split("[,.，。]", paragraph)
+            if re.match("\\s+", paragraph):
+                continue
+            paragraph = re.sub("\\s+", "", paragraph)
+            if paragraph != "":
+                clean_paragraphs.append(paragraph)
+                if len(clean_text_for_EDU_element) >= lenth:
+                    clean_text_for_EDU.append(clean_text_for_EDU_element)
+                    clean_text_for_EDU_element = ""
+                if paragraph[-1] in [",", ".", "。", "，", ":", "：", "、", "；", ";"]:
+                    clean_text += paragraph
+                    clean_text_for_EDU_element += paragraph
+                else:
+                    clean_text += paragraph + "。"
+                    clean_text_for_EDU_element += paragraph + "。"
+        # date
+        content = bf.find("span", class_="time")
+        update_date = date.fromisoformat(content.text[0:10])
+        # sentences
+        if EDU:
+            if clean_text_for_EDU_element != "":
+                clean_text_for_EDU.append(clean_text_for_EDU_element)
+            total_num = len(clean_text_for_EDU)
+            j = 0
+            for text in clean_text_for_EDU:
+                print("第{}小篇(共{}小篇)".format(j, total_num))
+                j += 1
+                local_sentences = demo.get_EDUs(text)
+                sentences.extend(local_sentences)
+                pprint(local_sentences)
+        else:
+            raw_sentences = re.split("[。]", clean_text)
+            for sentence in raw_sentences:
+                if sentence != "":
+                    if len(sentence) > 30:
+                        sentences.extend(sentence.split("，"))
+                    else:
+                        sentences.append(sentence)
+
         result['head'] = head
-        result['paragraphs'] = paragraphs
+        result['paragraphs'] = clean_paragraphs
         result['sentences'] = sentences
         result['codes'] = codes
         result['date'] = update_date
-        text = "".join(paragraphs)
         result['text'] = text
         return result
 
@@ -81,7 +119,6 @@ class Pretreatment:
                 txt = re.sub("(\\s+)|(\\.{3,})|(—+)", " ", txt)
                 texts.append(txt)
         return texts
-
 
     @staticmethod
     def get_related_head(txt_head, number, page_limit=30):
@@ -325,7 +362,7 @@ class Pretreatment:
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
         }
         try:
-            r = requests.get(url=url, headers=headers, timeout=10)
+            r = requests.get(url=url, headers=headers, timeout=30)
             r.raise_for_status()
             return r.text
         except requests.ConnectionError as e:
@@ -333,5 +370,30 @@ class Pretreatment:
 
 
 if __name__ == '__main__':
-    original_sentence = "有一次使用到了contains和indexOf方法"
-    Pretreatment.get_related_sentences(original_sentence)
+    # original_sentence = "有一次使用到了contains和indexOf方法"
+    # Pretreatment.get_related_sentences(original_sentence)
+
+    # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
+    url = "https://blog.csdn.net/weixin_39664456/article/details/111175043"
+
+    result = Pretreatment.split_txt(url)
+    print("---------head---------")
+    print(result['head'])
+    print("---------text---------")
+    print(result['text'])
+    print("---------paragraphs---------")
+    pprint(result['paragraphs'])
+    print("---------sentences---------")
+    pprint(result['sentences'])
+    print("---------code---------")
+    i = 0
+    for code in result['codes']:
+        print("-----------code{}-----------".format(i))
+        i += 1
+        print(code)
+    print("---------date---------")
+    print(result['date'])
+
+    result = Pretreatment.split_txt(url, EDU=True)
+    print("---------EDU-sentences--------")
+    pprint(result['sentences'])

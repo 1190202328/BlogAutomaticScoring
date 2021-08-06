@@ -4,6 +4,7 @@ from pprint import pprint
 from sklearn.metrics.pairwise import cosine_similarity
 from bert_serving.client import BertClient
 
+from src import demo
 from src.Pretreatment import Pretreatment
 from src.SimilarityCalculator import SimilarityCalculator
 
@@ -30,6 +31,7 @@ class SimilarityFromBERT:
         bc = BertClient(check_length=False)
         clean_sentences = SimilarityCalculator.clean_with_low_frequency(sentences, my_stopwords)
         sentences = [" ".join(clean_sentence) for clean_sentence in clean_sentences]
+        print(sentences)
         return cosine_similarity(bc.encode(sentences))
 
     @staticmethod
@@ -62,15 +64,27 @@ class SimilarityFromBERT:
         # similarity['text'] = SimilarityFromBERT.get_similarity(related_texts)[:1][0][1:]
         # print(similarity['text'])
         # 段落相似度
-        # paragraphs_similarity = []
-        # for paragraph in paragraphs:
-        #     for sentence in re.split("[,.，。]", paragraph):
-        #         if sentence != "" and len(sentence) > sentence_lenth_limit:
-        #             print("开始搜索句子[{}]".format(sentence))
-        #             related_paragraphs = Pretreatment.get_related_paragraphs(sentence, paragraph_number)
-        #             paragraphs_similarity.extend(SimilarityFromBERT.get_similarity([paragraph] + related_paragraphs)[:1][0][1:])
-        #             print(paragraphs_similarity)
-        # similarity['paragraph'] = paragraphs_similarity
+        paragraphs_similarity = []
+        if EDU:
+            for paragraph in paragraphs:
+                for sentence in demo.get_EDUs(paragraph):
+                    if sentence != "" and len(sentence) > sentence_lenth_limit:
+                        print("开始搜索句子[{}]".format(sentence))
+                        related_paragraphs = Pretreatment.get_related_paragraphs(sentence, paragraph_number)
+                        paragraphs_similarity.extend(
+                            SimilarityFromBERT.get_similarity([paragraph] + related_paragraphs)[:1][0][1:])
+                        print(paragraphs_similarity)
+            similarity['paragraph'] = paragraphs_similarity
+        else:
+            for paragraph in paragraphs:
+                for sentence in re.split("[,.，。]", paragraph):
+                    if sentence != "" and len(sentence) > sentence_lenth_limit:
+                        print("开始搜索句子[{}]".format(sentence))
+                        related_paragraphs = Pretreatment.get_related_paragraphs(sentence, paragraph_number)
+                        paragraphs_similarity.extend(
+                            SimilarityFromBERT.get_similarity([paragraph] + related_paragraphs)[:1][0][1:])
+                        print(paragraphs_similarity)
+            similarity['paragraph'] = paragraphs_similarity
         # 句子相似度
         # sentences_similarity = []
         # for sentence in sentences:
@@ -88,9 +102,12 @@ if __name__ == '__main__':
     #              "contains和indexof都可以作为判断是否包含的方法"]
     # print(SimilarityFromBERT.get_similarity(sentences))
 
-    url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
-    head_number = 20
-    text_number = 5
-    paragraph_number = 1
-    sentence_number = 1
-    SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number, sentence_number)
+    # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
+    # head_number = 20
+    # text_number = 5
+    # paragraph_number = 1
+    # sentence_number = 1
+    # SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number, sentence_number, EDU=True)
+
+    url = "https://blog.csdn.net/weixin_39664456/article/details/111175043"  # 待检测
+    SimilarityFromBERT.get_similarity(["好", Pretreatment.split_txt(url)['sentences']])
