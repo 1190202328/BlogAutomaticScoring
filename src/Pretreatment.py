@@ -4,15 +4,7 @@ import requests
 import re
 from datetime import date
 from baiduspider import BaiduSpider
-import bs4
-
 from src import demo
-from src.BlogAutomaticScoring import BlogAutomaticScoring
-
-
-class OutOfPageLimitError(RuntimeError):
-    def __init__(self, message="超过搜索的最大页码限制！"):
-        self.message = message
 
 
 class Pretreatment:
@@ -39,34 +31,92 @@ class Pretreatment:
         clean_text_for_EDU_element = ""
         patten_csdn = "https://blog\\.csdn\\.net/.+"
         patten_cnblogs = "https://www\\.cnblogs\\.com/.+"
-        is_illegal = False
+        patten_github = "https://.+\\.github\\.io/.+"
+        patten_jianshu = "https://www\\.jianshu\\.com/.+"
 
+        is_illegal = False
         url = Pretreatment.get_real_url(txt_url)
         html = Pretreatment.get_raw_html(url)
         bf = BeautifulSoup(html, "html.parser")
+
         if re.match(patten_csdn, url):
             is_illegal = True
             # head
-            contents = bf.find("h1", class_="title-article")
-            if contents is None:
-                print(url)
-            head = contents.text
+            content = bf.find("h1", class_="title-article")
+            if content is None:
+                print("这个url标题有问题：" + txt_url)
+            head = content.text.replace("\n", "")
             # text
-            main_content_html = bf.find("div", id="content_views")
-            text = main_content_html.getText()
+            text = bf.find("div", id="content_views").getText()
             # date
-            content = bf.find("span", class_="time")
-            update_date = date.fromisoformat(content.text[0:10])
+            update_date = date.fromisoformat(bf.find("span", class_="time").text[0:10])
             # codes
-            for child in main_content_html.children:
-                if child.name == "pre":
-                    codes.append(child.getText())
+            contents = bf.find_all("pre")
+            for content in contents:
+                codes.append(content.getText())
+        if re.match(patten_cnblogs, url):
+            is_illegal = True
+            # head
+            content = bf.find("h1", class_="postTitle")
+            if content is None:
+                print("这个url标题有问题：" + txt_url)
+            head = content.text.replace("\n", "")
+            # text
+            text = bf.find("div", id="cnblogs_post_body").getText()
+            # date
+            update_date = date.fromisoformat(bf.find("span", id="post-date").text[0:10])
+            # codes
+            contents = bf.find_all("pre")
+            for content in contents:
+                codes.append(content.getText())
+        if re.match(patten_github, url):
+            is_illegal = True
+            # head
+            content = bf.find("h1", class_="post-title")
+            if content is None:
+                content = bf.find("h1", class_="article-title sea-center")
+                if content is None:
+                    print("这个url标题有问题：" + txt_url)
+            head = content.text.replace("\n", "")
+            # text
+            text = bf.find("div", itemprop="articleBody").getText()
+            # date
+            update_date = date.fromisoformat(bf.find("time").attrs['datetime'][0:10])
+            # codes
+            contents = bf.find_all("pre")
+            digits = list()
+            for content in contents:
+                if re.match("\\d+", content.getText()):
+                    digits.append(content.getText())
+                    continue
+                codes.append(content.getText())
+            for digit in digits:
+                start = text.find(digit)
+                if start != -1:
+                    text = text[0:start] + text[start + len(digit):]
+        if re.match(patten_jianshu, url):
+            is_illegal = True
+            # head
+            content = bf.find("h1", class_="_1RuRku")
+            if content is None:
+                print("这个url标题有问题：" + txt_url)
+            head = content.text.replace("\n", "")
+            # text
+            text = bf.find("article", class_="_2rhmJa").getText()
+            # date
+            update_date = ""
+            # codes
+            contents = bf.find_all("pre")
+            for content in contents:
+                codes.append(content.getText())
+
+        if is_illegal:
             for code in codes:
                 start = text.find(code)
                 if start != -1:
                     text = text[0:start] + text[start + len(code):]
             text = re.sub("\n+", "\n", text)
-            text = re.sub("\\xa0", "", text)
+            text = re.sub("(\\xa0)|(\\u200b)", "", text)
             # paragraphs
             paragraphs = text.split("\n")
             lenth = 200
@@ -103,35 +153,6 @@ class Pretreatment:
                             sentences.extend(sentence.split("，"))
                         else:
                             sentences.append(sentence)
-        if re.match(patten_cnblogs, url):
-            is_illegal = True
-            print("cnblog")
-            # head
-            contents = bf.find("h1", class_="postTitle")
-            if contents is None:
-                print(url)
-            head = contents.text
-            # text
-            main_content_html = bf.find("div", id="cnblogs_post_body")
-            text = main_content_html.getText()
-            # date
-            content = bf.find("span", id="post-date")
-            update_date = date.fromisoformat(content.text[0:10])
-            # codes
-            for child in main_content_html.children:
-                if child.name == "pre":
-                    codes.append(child.getText())
-            for code in codes:
-                start = text.find(code)
-                if start != -1:
-                    text = text[0:start] + text[start + len(code):]
-            text = re.sub("\n+", "\n", text)
-            text = re.sub("\\xa0", "", text)
-            
-
-
-
-        if is_illegal:
             result['head'] = head
             result['paragraphs'] = clean_paragraphs
             result['sentences'] = sentences
@@ -426,13 +447,11 @@ if __name__ == '__main__':
     # original_sentence = "有一次使用到了contains和indexOf方法"
     # Pretreatment.get_related_sentences(original_sentence)
 
-    # # url = "https://blog.csdn.net/weixin_39664456/article/details/111175043"
-    # # url = "https://blog.csdn.net/u012216131/article/details/82500925"
-    # url = "https://blog.csdn.net/huaishu/article/details/95456582"
-    # # url = "https://blog.csdn.net/SpeedMe/article/details/8199418"
-    # url = "https://blog.csdn.net/m0_37577967/article/details/79748482"
-    url = "https://www.cnblogs.com/lllllllm/p/14983929.html"
     url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
+    url = "https://www.cnblogs.com/yuyueq/p/15119512.html"
+    url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
+    url = "https://www.jianshu.com/p/92373a603d42"
+
     result = Pretreatment.split_txt(url)
     print("---------head---------")
     print(result['head'])
@@ -451,9 +470,9 @@ if __name__ == '__main__':
     print("---------date---------")
     print(result['date'])
 
-    result = Pretreatment.split_txt(url, EDU=True)
-    print("---------EDU-sentences--------")
-    pprint(result['sentences'])
+    # result = Pretreatment.split_txt(url, EDU=True)
+    # print("---------EDU-sentences--------")
+    # pprint(result['sentences'])
 
     # original_sentence = "Java中的List类的contains和indexOf方法的区别"
     # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
