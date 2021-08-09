@@ -21,95 +21,136 @@ class Pretreatment:
     """
 
     @staticmethod
-    def split_txt(url, EDU=False):
+    def split_txt(txt_url, EDU=False):
         """
         根据csdn的url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；5。date：日期；6。text全文（不含代码段）
-        :param url: url地址
-        :return: 词典
+        :param txt_url: url地址
+        :return: 词典，如果不满足目的url（1。csdn），则返回None
         """
         result = dict()
         sentences = list()
         codes = list()
-        # head
-        html = Pretreatment.get_raw_html(url)
-        bf = BeautifulSoup(html, "html.parser")
-        contents = bf.find("h1", class_="title-article")
-        if contents is None:
-            print(url)
-        head = contents.text
-        # text
-        main_content_html = bf.find("div", id="content_views")
-        text = main_content_html.getText()
-        # codes
-        for child in main_content_html.children:
-            if child.name == "pre":
-                codes.append(child.getText())
-        for code in codes:
-            start = text.find(code)
-            if start != -1:
-                text = text[0:start] + text[start + len(code):]
-        text = re.sub("\n+", "\n", text)
-        text = re.sub("\\xa0", "", text)
-        # paragraphs
-        paragraphs = text.split("\n")
         clean_paragraphs = list()
         clean_text = ""
+        head = ""
+        text = ""
+        update_date = ""
         clean_text_for_EDU = list()
         clean_text_for_EDU_element = ""
-        lenth = 200
-        for paragraph in paragraphs:
-            paragraph = re.sub("\\s+", "", paragraph)
-            if paragraph != "":
-                clean_paragraphs.append(paragraph)
-                if len(clean_text_for_EDU_element) >= lenth:
-                    clean_text_for_EDU.append(clean_text_for_EDU_element)
-                    clean_text_for_EDU_element = ""
-                if paragraph[-1] in [",", ".", "。", "，", ":", "：", "、", "；", ";"]:
-                    clean_text += paragraph
-                    clean_text_for_EDU_element += paragraph
-                else:
-                    clean_text += paragraph + "。"
-                    clean_text_for_EDU_element += paragraph + "。"
-        # date
-        content = bf.find("span", class_="time")
-        update_date = date.fromisoformat(content.text[0:10])
-        # sentences
-        if EDU:
-            if clean_text_for_EDU_element != "":
-                clean_text_for_EDU.append(clean_text_for_EDU_element)
-            total_num = len(clean_text_for_EDU)
-            j = 1
-            for text in clean_text_for_EDU:
-                print("第{}小篇(共{}小篇)".format(j, total_num))
-                j += 1
-                local_sentences = demo.get_EDUs(text)
-                sentences.extend(local_sentences)
-                pprint(local_sentences)
-        else:
-            raw_sentences = re.split("[。]", clean_text)
-            for sentence in raw_sentences:
-                if sentence != "":
-                    if len(sentence) > 30:
-                        sentences.extend(sentence.split("，"))
-                    else:
-                        sentences.append(sentence)
+        patten_csdn = "https://blog\\.csdn\\.net/.+"
+        patten_cnblogs = "https://www\\.cnblogs\\.com/.+"
+        is_illegal = False
 
-        result['head'] = head
-        result['paragraphs'] = clean_paragraphs
-        result['sentences'] = sentences
-        result['codes'] = codes
-        result['date'] = update_date
-        result['text'] = text
-        return result
+        url = Pretreatment.get_real_url(txt_url)
+        html = Pretreatment.get_raw_html(url)
+        bf = BeautifulSoup(html, "html.parser")
+        if re.match(patten_csdn, url):
+            is_illegal = True
+            # head
+            contents = bf.find("h1", class_="title-article")
+            if contents is None:
+                print(url)
+            head = contents.text
+            # text
+            main_content_html = bf.find("div", id="content_views")
+            text = main_content_html.getText()
+            # date
+            content = bf.find("span", class_="time")
+            update_date = date.fromisoformat(content.text[0:10])
+            # codes
+            for child in main_content_html.children:
+                if child.name == "pre":
+                    codes.append(child.getText())
+            for code in codes:
+                start = text.find(code)
+                if start != -1:
+                    text = text[0:start] + text[start + len(code):]
+            text = re.sub("\n+", "\n", text)
+            text = re.sub("\\xa0", "", text)
+            # paragraphs
+            paragraphs = text.split("\n")
+            lenth = 200
+            for paragraph in paragraphs:
+                paragraph = re.sub("\\s+", "", paragraph)
+                if paragraph != "":
+                    clean_paragraphs.append(paragraph)
+                    if len(clean_text_for_EDU_element) >= lenth:
+                        clean_text_for_EDU.append(clean_text_for_EDU_element)
+                        clean_text_for_EDU_element = ""
+                    if paragraph[-1] in [",", ".", "。", "，", ":", "：", "、", "；", ";"]:
+                        clean_text += paragraph
+                        clean_text_for_EDU_element += paragraph
+                    else:
+                        clean_text += paragraph + "。"
+                        clean_text_for_EDU_element += paragraph + "。"
+            # sentences
+            if EDU:
+                if clean_text_for_EDU_element != "":
+                    clean_text_for_EDU.append(clean_text_for_EDU_element)
+                total_num = len(clean_text_for_EDU)
+                j = 1
+                for text in clean_text_for_EDU:
+                    print("第{}小篇(共{}小篇)".format(j, total_num))
+                    j += 1
+                    local_sentences = demo.get_EDUs(text)
+                    sentences.extend(local_sentences)
+                    pprint(local_sentences)
+            else:
+                raw_sentences = re.split("[。]", clean_text)
+                for sentence in raw_sentences:
+                    if sentence != "":
+                        if len(sentence) > 30:
+                            sentences.extend(sentence.split("，"))
+                        else:
+                            sentences.append(sentence)
+        if re.match(patten_cnblogs, url):
+            is_illegal = True
+            print("cnblog")
+            # head
+            contents = bf.find("h1", class_="postTitle")
+            if contents is None:
+                print(url)
+            head = contents.text
+            # text
+            main_content_html = bf.find("div", id="cnblogs_post_body")
+            text = main_content_html.getText()
+            # date
+            content = bf.find("span", id="post-date")
+            update_date = date.fromisoformat(content.text[0:10])
+            # codes
+            for child in main_content_html.children:
+                if child.name == "pre":
+                    codes.append(child.getText())
+            for code in codes:
+                start = text.find(code)
+                if start != -1:
+                    text = text[0:start] + text[start + len(code):]
+            text = re.sub("\n+", "\n", text)
+            text = re.sub("\\xa0", "", text)
+            
+
+
+
+        if is_illegal:
+            result['head'] = head
+            result['paragraphs'] = clean_paragraphs
+            result['sentences'] = sentences
+            result['codes'] = codes
+            result['date'] = update_date
+            result['text'] = text
+            return result
+        else:
+            return None
 
     @staticmethod
     def get_related_head(txt_head, number, page_limit=10, url=""):
         """
         根据标题在百度搜索相关文章，取出前number篇文章的标题
+        :param url: 可选，源文章第url地址，输入之后不会重复找到该文章，如果找到，则返回find=True
         :param page_limit: 最大页码数
         :param number: 需要相关文章的篇数
         :param txt_head: 文章标题
-        :return: number篇文章的标题
+        :return: number篇文章的标题,find
         """
         total_urls = list()
         total_titles = list()
@@ -131,7 +172,7 @@ class Pretreatment:
                 title = result.get('title').split("_")
                 if len(title) == 1:
                     title = result.get('title').split("-")
-                real_url = requests.get(result.get('url')).url
+                real_url = Pretreatment.get_real_url(result.get('url'))
                 if real_url in total_urls:
                     continue
                 if url.find(real_url) != -1:
@@ -184,9 +225,11 @@ class Pretreatment:
     def get_related_urls(query, number, page_limit=10, url=""):
         """
         根据query在百度搜索，取出前number篇csdn文章的url地址
+        :param page_limit: 百度搜索的最大页码限制
+        :param url: 可选，源文章第url地址，输入之后不会重复找到该文章，如果找到，则返回find=True
         :param number: 需要相关文章的篇数
         :param query: 搜索字符串
-        :return: number个csdn的url地址
+        :return: number个csdn的url地址,find
         """
         total_urls = list()
         find = False
@@ -203,7 +246,7 @@ class Pretreatment:
                     break
                 if result.get('url') is None:
                     continue
-                real_url = requests.get(result.get('url')).url
+                real_url = Pretreatment.get_real_url(result.get('url'))
                 patten = "https://blog\\.csdn\\.net/.+"
                 if real_url in total_urls:
                     continue
@@ -219,151 +262,12 @@ class Pretreatment:
         return total_urls, find
 
     @staticmethod
-    def get_related_sentences(original_sentence, number=5, page_limit=10, url=""):
-        """
-        在百度上获取相关的句子(目前仅限于csdn博客)
-        :param original_sentence: 源句子
-        :param number: 获取的数量
-        :return: 相关句子的列表
-        """
-        i = 0
-        pn = 0
-        count = 0
-        total_urls = list()
-        find = False
-        related_sentences = set()
-        while True:
-            if count >= number:
-                break
-            baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=" + str(
-                pn * 10) + "&oq=" + original_sentence + "&ie=utf-8"
-            print("第{}页".format(pn))
-            pn += 1
-            if pn > page_limit:
-                return list(related_sentences), find
-            html = Pretreatment.get_raw_html(baidu_url)
-            bf = BeautifulSoup(html, "html.parser")
-            contents = bf.find_all("div", class_="result c-container new-pmd")
-            urls = list()
-            for content in contents:
-                temp = dict()
-                article_url = ""
-                red_strings = set()
-                for child in content.children:
-                    for c in child.children:
-                        if c.name == "a" and c.parent.name == "h3":
-                            article_url = c.attrs['href']
-                real_url = requests.get(article_url).url
-                if real_url in total_urls:
-                    continue
-                if url.find(real_url) != -1:
-                    find = True
-                    continue
-                patten = "https://blog\\.csdn\\.net/.+"
-                if not re.match(patten, real_url):
-                    continue
-                for child in content.descendants:
-                    if child.name == "em":
-                        red_strings.add(child.string)
-                temp["url"] = real_url
-                temp["red_strings"] = red_strings
-                urls.append(temp)
-                total_urls.append(real_url)
-                count += 1
-                if count >= number:
-                    break
-            print("url共有{}个".format(len(urls)))
-            print(urls)
-
-            for dictionary in urls:
-                print("第{}篇文章".format(i + 1))
-                print("句子如下：")
-                i += 1
-                url = dictionary['url']
-                result = Pretreatment.split_txt(url)
-                sentences = result['sentences']
-                for sentence in sentences:
-                    for substring in dictionary['red_strings']:
-                        if sentence.find(substring) != -1:
-                            related_sentences.add(sentence)
-                pprint(related_sentences)
-        pprint(related_sentences)
-        pprint(total_urls)
-        return list(related_sentences), find
-
-    @staticmethod
-    def get_related_paragraphs(original_sentence, number=5, page_limit=10, url=""):
-        """
-        在百度上获取相关的段落(目前仅限于csdn博客)
-        :param original_sentence: 需要查询的句子
-        :param number: 获取的数量
-        :return: 相关段落的列表
-        """
-        i = 0
-        pn = 0
-        count = 0
-        related_paragraphs = set()
-        total_urls = list()
-        find = False
-        while True:
-            if count >= number:
-                break
-            baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=" + str(
-                pn * 10) + "&oq=" + original_sentence + "&ie=utf-8"
-            print("第{}页".format(pn))
-            pn += 1
-            if pn > page_limit:
-                return list(related_paragraphs), find
-            html = Pretreatment.get_raw_html(baidu_url)
-            bf = BeautifulSoup(html, "html.parser")
-            contents = bf.find_all("div", class_="result c-container new-pmd")
-            urls = list()
-            for content in contents:
-                temp = dict()
-                article_url = ""
-                red_strings = set()
-                for child in content.children:
-                    for c in child.children:
-                        if c.name == "a" and c.parent.name == "h3":
-                            article_url = c.attrs['href']
-                real_url = requests.get(article_url).url
-                if real_url in total_urls:
-                    continue
-                if url.find(real_url) != -1:
-                    find = True
-                    continue
-                patten = "https://blog\\.csdn\\.net/.+"
-                if not re.match(patten, real_url):
-                    continue
-                for child in content.descendants:
-                    if child.name == "em":
-                        red_strings.add(child.string)
-                temp["url"] = real_url
-                temp["red_strings"] = red_strings
-                urls.append(temp)
-                total_urls.append(real_url)
-                count += 1
-                if count >= number:
-                    break
-            print("url共有{}个".format(len(urls)))
-            print(urls)
-
-            for dictionary in urls:
-                print("第{}篇文章".format(i + 1))
-                print("句子如下：")
-                i += 1
-                url = dictionary['url']
-                result = Pretreatment.split_txt(url)
-                paragraphs = result['paragraphs']
-                for paragraph in paragraphs:
-                    for substring in dictionary['red_strings']:
-                        if paragraph.find(substring) != -1:
-                            related_paragraphs.add(paragraph)
-                pprint(related_paragraphs)
-        return list(related_paragraphs), find
-
-    @staticmethod
     def get_raw_html(url):
+        """
+        根据url获取html文档
+        :param url: url地址
+        :return: html文档
+        """
         headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Encoding': 'gzip, deflate, compress',
@@ -376,21 +280,159 @@ class Pretreatment:
             r = requests.get(url=url, headers=headers, timeout=30)
             r.raise_for_status()
             return r.text
-        except requests.ConnectionError as e:
+        except Exception as e:
             print(e.args)
             return ""
+
+    @staticmethod
+    def get_real_url(url):
+        """
+        根据url获得真实的url地址
+        :param url: 源url地址
+        :return: 真实url地址
+        """
+        headers = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, compress',
+            'Accept-Language': 'en-us;q=0.5,en;q=0.3',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive',
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
+        }
+        try:
+            r = requests.get(url=url, headers=headers, timeout=30)
+            r.raise_for_status()
+            return r.url
+        except Exception as e:
+            print(e.args)
+            return ""
+
+    @staticmethod
+    def get_next_baidu_url(baidu_html):
+        """
+        通过源百度的html获取下一页搜索页面的百度url
+        :param baidu_html: 源百度html
+        :return: 下一页搜索页面的百度url
+        """
+        bf = BeautifulSoup(baidu_html, "html.parser")
+        urls = bf.find_all("a")
+        for url in urls:
+            if url.string == "下一页 >":
+                return "https://www.baidu.com" + url.attrs['href']
+        return ""
+
+    @staticmethod
+    def get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, sentence_number=5, page_limit=10,
+                                             url=""):
+        """
+        在百度上获取相关的句子(目前仅限于csdn博客)
+        :param sentence_number: 需要搜索的相关句子的文章篇数
+        :param paragraph_number: 需要搜索的相关段落的文章篇数
+        :param url: 可选，源文章第url地址，输入之后不会重复找到该文章，如果找到，则返回find=True
+        :param page_limit: 百度搜索的页码限制
+        :param original_sentence: 源句子
+        :return: 相关段落的列表，相关句子的列表，find
+        """
+        pn = 0
+        count = 0
+        total_urls = list()
+        find = False
+        related_sentences = list()
+        related_paragraphs = list()
+        baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&oq=" + original_sentence + "&ie=utf-8"
+        number = max(paragraph_number, sentence_number)
+        urls = list()
+        while True:
+            article_urls = list()
+            if count >= number:
+                break
+            html = Pretreatment.get_raw_html(baidu_url)
+            baidu_url = Pretreatment.get_next_baidu_url(html)
+            print("第{}页".format(pn))
+            pn += 1
+            if baidu_url == "":
+                baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=" + str(
+                    pn * 10) + "&oq=" + original_sentence + "&ie=utf-8"
+            if pn > page_limit:
+                break
+            bf = BeautifulSoup(html, "html.parser")
+            contents = bf.find_all("div", class_="result c-container new-pmd")
+            for content in contents:
+                temp = dict()
+                article_url = ""
+                red_strings = set()
+                for child in content.children:
+                    for c in child.children:
+                        if c.name == "a" and c.parent.name == "h3":
+                            article_url = c.attrs['href']
+                real_url = Pretreatment.get_real_url(article_url)
+                article_urls.append(real_url)
+                if real_url in total_urls:
+                    continue
+                if url.find(real_url) != -1:
+                    find = True
+                    continue
+                patten = "https://blog\\.csdn\\.net/.+"
+                if not re.match(patten, real_url):
+                    continue
+                for child in content.descendants:
+                    if child.name == "em" and child.string != "":
+                        red_strings.add(child.string)
+                temp["url"] = real_url
+                temp["red_strings"] = red_strings
+                urls.append(temp)
+                total_urls.append(real_url)
+                count += 1
+                if count >= number:
+                    break
+            print("url共有{}个".format(len(article_urls)))
+        print(urls)
+        i = 0
+        for num in range(min(paragraph_number, len(urls))):
+            print("第{}篇文章".format(i + 1))
+            print("段落如下：")
+            i += 1
+            article_url = urls[num]['url']
+            article_paragraphs = list()
+            result = Pretreatment.split_txt(article_url)
+            paragraphs = result['paragraphs']
+            for paragraph in paragraphs:
+                for substring in urls[num]['red_strings']:
+                    if paragraph != "" and paragraph.find(substring) != -1:
+                        related_paragraphs.append(paragraph)
+                        article_paragraphs.append(paragraph)
+                        break
+            pprint(article_paragraphs)
+        i = 0
+        for num in range(min(sentence_number, len(urls))):
+            print("第{}篇文章".format(i + 1))
+            print("句子如下：")
+            article_sentences = list()
+            i += 1
+            article_url = urls[num]['url']
+            result = Pretreatment.split_txt(article_url)
+            sentences = result['sentences']
+            for sentence in sentences:
+                for substring in urls[num]['red_strings']:
+                    if sentence != "" and sentence.find(substring) != -1:
+                        related_sentences.append(sentence)
+                        article_sentences.append(sentence)
+                        break
+            pprint(article_sentences)
+        return related_paragraphs, related_sentences, find
 
 
 if __name__ == '__main__':
     # original_sentence = "有一次使用到了contains和indexOf方法"
     # Pretreatment.get_related_sentences(original_sentence)
 
-    url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
     # # url = "https://blog.csdn.net/weixin_39664456/article/details/111175043"
     # # url = "https://blog.csdn.net/u012216131/article/details/82500925"
     # url = "https://blog.csdn.net/huaishu/article/details/95456582"
     # # url = "https://blog.csdn.net/SpeedMe/article/details/8199418"
     # url = "https://blog.csdn.net/m0_37577967/article/details/79748482"
+    url = "https://www.cnblogs.com/lllllllm/p/14983929.html"
+    url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
     result = Pretreatment.split_txt(url)
     print("---------head---------")
     print(result['head'])
@@ -412,7 +454,17 @@ if __name__ == '__main__':
     result = Pretreatment.split_txt(url, EDU=True)
     print("---------EDU-sentences--------")
     pprint(result['sentences'])
+
+    # original_sentence = "Java中的List类的contains和indexOf方法的区别"
     # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
-    # result, find = Pretreatment.get_related_paragraphs("Java中的List类的contains和indexOf方法的区别", number=2, url=url)
-    # pprint(result)
-    # print(find)
+    # baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&oq=" + original_sentence + "&ie=utf-8"
+    # html = Pretreatment.get_raw_html(baidu_url)
+    # # print(Pretreatment.get_next_baidu_url(html))
+    # for i in range(15):
+    #     print("第{}个url".format(i+1))
+    #     print(baidu_url)
+    #     html = Pretreatment.get_raw_html(baidu_url)
+    #     baidu_url = Pretreatment.get_next_baidu_url(html)
+
+    # print(Pretreatment.get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, sentence_number=3,
+    #                                                         url=url))

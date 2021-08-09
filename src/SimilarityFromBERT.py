@@ -43,11 +43,10 @@ class SimilarityFromBERT:
         :return: 字典，head:标题对应相似度。text:全文对应相似度。paragraph:段落对应相似度。sentence:句子对应相似度。code:代码对应相似度
         """
         similarity = dict()
-        result = Pretreatment.split_txt(url, EDU=EDU)
+        result = Pretreatment.split_txt(url)
         head = result['head']
         text = result['text']
         paragraphs = result['paragraphs']
-        sentences = result['sentences']
         # 标题相似度
         related_heads, _ = Pretreatment.get_related_head(head, head_number, url=url)
         similarity['head'] = SimilarityFromBERT.get_similarity([head] + related_heads)[:1][0][1:]
@@ -63,39 +62,31 @@ class SimilarityFromBERT:
         print(related_texts)
         similarity['text'] = SimilarityFromBERT.get_similarity(related_texts)[:1][0][1:]
         print(similarity['text'])
-        # 段落相似度
+        # 段落和句子相似度
         paragraphs_similarity = []
-        if EDU:
-            for paragraph in paragraphs:
-                for sentence in demo.get_EDUs(paragraph):
-                    if sentence != "" and len(sentence) > sentence_lenth_limit:
-                        print("开始搜索句子[{}]".format(sentence))
-                        related_paragraphs, _ = Pretreatment.get_related_paragraphs(sentence, paragraph_number, url=url)
-                        paragraphs_similarity.extend(
-                            SimilarityFromBERT.get_similarity([paragraph] + related_paragraphs)[:1][0][1:])
-                        print(paragraphs_similarity)
-            similarity['paragraph'] = paragraphs_similarity
-        else:
-            for paragraph in paragraphs:
-                for sentence in re.split("[,.，。]", paragraph):
-                    if sentence != "" and len(sentence) > sentence_lenth_limit:
-                        print("开始搜索句子[{}]".format(sentence))
-                        related_paragraphs, _ = Pretreatment.get_related_paragraphs(sentence, paragraph_number, url=url)
-                        paragraphs_similarity.extend(
-                            SimilarityFromBERT.get_similarity([paragraph] + related_paragraphs)[:1][0][1:])
-                        print(paragraphs_similarity)
-            similarity['paragraph'] = paragraphs_similarity
-        # 句子相似度
         sentences_similarity = []
-        for sentence in sentences:
-            if sentence != "" and len(sentence) > sentence_lenth_limit:
-                print("开始搜索句子[{}]".format(sentence))
-                related_sentences, _ = Pretreatment.get_related_sentences(sentence, sentence_number, url=url)
-                sentences_similarity.extend(
-                    SimilarityFromBERT.get_similarity([sentence] + related_sentences)[:1][0][1:])
-                print(sentences_similarity)
+        for paragraph in paragraphs:
+            if EDU:
+                sentences = demo.get_EDUs(paragraph)
+            else:
+                sentences = re.split("[,.，。]", paragraph)
+            for sentence in sentences:
+                if sentence != "" and len(sentence) > sentence_lenth_limit:
+                    print("开始搜索句子[{}]".format(sentence))
+                    related_paragraphs, related_sentences, _ = Pretreatment.get_related_paragraphs_and_sentences(
+                        sentence, paragraph_number=paragraph_number, sentence_number=sentence_number, url=url)
+                    paragraphs_similarity.extend(
+                        SimilarityFromBERT.get_similarity([paragraph] + related_paragraphs)[:1][0][1:])
+                    print("------段落相似度------")
+                    print(paragraphs_similarity)
+                    sentences_similarity.extend(
+                        SimilarityFromBERT.get_similarity([sentence] + related_sentences)[:1][0][1:])
+                    print("------句子相似度------")
+                    print(sentences_similarity)
+        similarity['paragraph'] = paragraphs_similarity
         similarity['sentence'] = sentences_similarity
         return similarity
+
 
 if __name__ == '__main__':
     # # 对句子进行相似度计算
@@ -106,9 +97,10 @@ if __name__ == '__main__':
     url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
     head_number = 20
     text_number = 5
-    paragraph_number = 1
+    paragraph_number = 2
     sentence_number = 1
-    result = SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number, sentence_number)
+    result = SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number, sentence_number,
+                                                    EDU=True)
     print("-----------标题相似度---------")
     pprint(result['head'])
     print("-----------全文相似度---------")
