@@ -1,3 +1,4 @@
+import json
 from pprint import pprint
 from bs4 import BeautifulSoup
 import requests
@@ -15,12 +16,14 @@ url_pattern['csdn'] = pattern_csdn
 url_pattern['cnblogs'] = pattern_cnblogs
 url_pattern['github'] = pattern_github
 url_pattern['jianshu'] = pattern_jianshu
-url_pattern['or'] = pattern_csdn+"|"+pattern_cnblogs+"|"+pattern_github+"|"+pattern_jianshu
+url_pattern['or'] = pattern_csdn + "|" + pattern_cnblogs + "|" + pattern_github + "|" + pattern_jianshu
+
 
 class Pretreatment:
     """
     预处理类，负责从网页抓取文档，预处理文档。
     """
+
     @staticmethod
     def split_txt(txt_url, EDU=False):
         """
@@ -99,7 +102,12 @@ class Pretreatment:
                 if re.match("\\d+", content.getText()):
                     digits.append(content.getText())
                     continue
-                codes.append(content.getText())
+                raw_code = ""
+                for child in content.children:
+                    if child.name == "span":
+                        if child.string is not None:
+                            raw_code += child.string + "\n"
+                codes.append(raw_code)
             for digit in digits:
                 start = text.find(digit)
                 if start != -1:
@@ -461,11 +469,78 @@ class Pretreatment:
             pprint(article_sentences)
         return related_paragraphs, related_sentences, find
 
+    @staticmethod
+    def get_related_codes(code, number, limit=7):
+        """
+        根据code获取相关的code
+        :param limit: 每行代码的最短长度，小于该长度的代码行将会被过滤
+        :param code: 一行源代码
+        :param number: 需要获取相关code的数量，最多100行相关的code
+        :return: 相关code的列表(code中不含中文注释)
+        """
+        print("开始搜索：" + code)
+        count = 0
+        related_codes = []
+        api = "https://searchcode.com/api/codesearch_I/?q=" + code + "&p=0&per_page=100"
+        text = Pretreatment.get_raw_html(api)
+        if text == "":
+            return related_codes
+        api_result = json.loads(text)
+        results = api_result.get('results')
+        if results is None:
+            return related_codes
+        for result in results:
+            lines = result['lines']
+            # print(lines)
+            ids = list()
+            for id in lines:
+                ids.append(id)
+            for i in range(1, len(ids)-1):
+                if int(ids[i])-1 == int(ids[i-1]) and int(ids[i])+1 == int(ids[i+1]):
+                    clean_lines = Pretreatment.clean_code(lines[ids[i]], limit)
+                    for clean_line in clean_lines:
+                        related_codes.append(clean_line)
+                        count += 1
+                        if count >= number:
+                            return related_codes
+        return related_codes
+
+    @staticmethod
+    def clean_code(code, limit=7):
+        """
+        获得干净的codes列表（每一个元素为一行代码）（不含\t，\n，连续2个以上空格，注释）
+        目前注释只支持
+        单行注释：//和#
+        多行注释：/* */和三个'和三个"
+        :param limit: 每行代码的最短长度，小于该长度的代码行将会被过滤
+        :param code: 源代码段
+        :return: codes列表
+        """
+        blank_pattern = "[\\t\\n]+"
+        codes = list()
+        code = re.sub("/(\\*).*?(\\*)/", "", code, flags=re.S)
+        code = re.sub("'''.*?'''", "", code, flags=re.S)
+        code = re.sub('""".*?"""', "", code, flags=re.S)
+        lines = code.split("\n")
+        # print("-------清除之后-------")
+        # pprint(lines)
+        for line in lines:
+            line = re.sub(blank_pattern, "", line)
+            line = re.sub(" +", " ", line)
+            java_start = line.find("//")
+            python_start = line.find("#")
+            if java_start != -1:
+                line = line[0:java_start]
+            if python_start != -1:
+                line = line[0:python_start]
+            line = re.sub(r'[\u4e00-\u9fa5].*[\u4e00-\u9fa5]', "", line, flags=re.S)
+            if len(line) < limit:
+                continue
+            codes.append(line)
+        return codes
+
 
 if __name__ == '__main__':
-    # original_sentence = "有一次使用到了contains和indexOf方法"
-    # Pretreatment.get_related_sentences(original_sentence)
-
     # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
     # url = "https://www.cnblogs.com/yuyueq/p/15119512.html"
     # url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
@@ -493,9 +568,16 @@ if __name__ == '__main__':
     # print("---------EDU-sentences--------")
     # pprint(result['sentences'])
 
-    original_sentence = "Java中的List类的contains和indexOf方法的区别"
     url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
-    print(Pretreatment.get_related_head(original_sentence, url=url))
-
-    # print(Pretreatment.get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, sentence_number=3,
-    #                                                         url=url))
+    # url = "https://www.cnblogs.com/yuyueq/p/15119512.html"x
+    # url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
+    # url = "https://www.jianshu.com/p/92373a603d42"
+    result = Pretreatment.split_txt(url)
+    i = 1
+    for code in result['codes']:
+        codes = Pretreatment.clean_code(code)
+        print("------第{}个代码段------".format(i))
+        i += 1
+        for line in codes:
+            print("开始搜索：" + line)
+            print(Pretreatment.get_related_codes(line, 5))
