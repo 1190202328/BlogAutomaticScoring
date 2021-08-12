@@ -81,7 +81,7 @@ class BlogAutomaticScoring:
                     break
                 if result.get('title') is None:
                     continue
-                # if re.match(".*CSDN博客.*", result.get('title')):
+                # if re.match(".*CSDN博客.*", similarity.get('title')):
                 title = result.get('title').split("_")
                 if len(title) == 1:
                     title = result.get('title').split("-")
