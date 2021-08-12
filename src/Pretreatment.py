@@ -438,7 +438,7 @@ class Pretreatment:
 
     @staticmethod
     def get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, sentence_number=10,
-                                             page_limit=10,
+                                             page_limit=2,
                                              url=""):
         """
         在百度上获取相关的句子
@@ -462,7 +462,7 @@ class Pretreatment:
             article_urls = list()
             html = Pretreatment.get_raw_html(baidu_url)
             baidu_url = Pretreatment.get_next_baidu_url(html)
-            print("第{}页".format(pn))
+            print("第{}页".format(pn+1))
             pn += 1
             if baidu_url == "":
                 baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=" + str(
@@ -504,8 +504,9 @@ class Pretreatment:
                     article_count += 1
                     article_paragraphs = list()
                     result = Pretreatment.split_txt(real_url)
+                    if result is None:
+                        continue
                     paragraphs = result.get('paragraphs')
-                    pprint(paragraphs)
                     if paragraphs is not None:
                         for paragraph in paragraphs:
                             for substring in red_strings:
@@ -514,11 +515,11 @@ class Pretreatment:
                                     related_paragraphs.append(paragraph)
                                     article_paragraphs.append(paragraph)
                                     break
-                    print("段落如下：")
-                    pprint(article_paragraphs)
+                    if article_paragraphs:
+                        print("段落如下：")
+                        pprint(article_paragraphs)
                     article_sentences = list()
                     sentences = result.get('sentences')
-                    pprint(sentences)
                     if sentences is not None:
                         for sentence in sentences:
                             for substring in red_strings:
@@ -527,8 +528,9 @@ class Pretreatment:
                                     related_sentences.append(sentence)
                                     article_sentences.append(sentence)
                                     break
-                    print("句子如下：")
-                    pprint(article_sentences)
+                    if article_sentences:
+                        print("句子如下：")
+                        pprint(article_sentences)
             print("url共有{}个".format(len(article_urls)))
         return related_paragraphs, related_sentences, find
 

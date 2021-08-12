@@ -115,47 +115,59 @@ class SimilarityFromBERT:
 
     @staticmethod
     def get_score(similarity, head_number, text_number, paragraph_number, sentence_number, code_number,
-                  similarity_limit=0.9, is_contribute=0.5):
+                  similarity_limit=0.9, is_contribute=0.3):
         """
         根据5个维度的相似度来评估分数。1。标题 2。全文 3。段落 4。句子 5。代码
         :param similarity: 含有五个维度相似度的词典
         head:标题对应相似度。text:全文对应相似度。paragraph:段落对应相似度。sentence:句子对应相似度。code:代码对应相似度
         :return: 分数0，1，2，3，4，5
         """
-        count = 0
-        for head_similarity in similarity['head']:
-            if head_similarity > similarity_limit:
-                count += 1
-        print("标题原创性占比>>>>>{}".format(count / head_number))
-        count = 0
-        for text_similarity in similarity['text']:
-            if text_similarity > similarity_limit:
-                count += 1
-        print("全文原创性占比>>>>>{}".format(count / text_number))
+        paragraph_ = 0
+        sentence_ = 0
+        code_ = 0
         i = 1
         for paragraph in similarity['paragraph']:
             count = 0
             for paragraph_similarity in paragraph:
-                if paragraph_similarity > similarity_limit:
+                if paragraph_similarity < similarity_limit:
                     count += 1
             print("第{}个段落原创性占比>>>>>{}".format(i, count / paragraph_number))
+            if (count / paragraph_number) > is_contribute:
+                paragraph_ += 1
             i += 1
         i = 1
         for sentence in similarity['sentence']:
             count = 0
             for sentence_similarity in sentence:
-                if sentence_similarity > similarity_limit:
+                if sentence_similarity < similarity_limit:
                     count += 1
             print("第{}个句子原创性占比>>>>>{}".format(i, count / sentence_number))
+            if (count / paragraph_number) > is_contribute:
+                sentence_ += 1
             i += 1
         i = 1
         for code in similarity['code']:
             count = 0
             for code_similarity in code:
-                if code_similarity > similarity_limit:
+                if code_similarity < similarity_limit:
                     count += 1
             print("第{}行code原创性占比>>>>>{}".format(i, count / code_number))
+            if (count / paragraph_number) > is_contribute:
+                code_ += 1
             i += 1
+        count = 0
+        for head_similarity in similarity['head']:
+            if head_similarity < similarity_limit:
+                count += 1
+        print("标题原创性占比>>>>>{}".format(count / head_number))
+        count = 0
+        for text_similarity in similarity['text']:
+            if text_similarity < similarity_limit:
+                count += 1
+        print("全文原创性占比>>>>>{}".format(count / text_number))
+        print("段落原创性占比>>>>>{}".format(paragraph_ / len(similarity['paragraph'])))
+        print("句子原创性占比>>>>>{}".format(sentence_ / len(similarity['sentence'])))
+        print("code原创性占比>>>>>{}".format(code_ / len(similarity['code'])))
 
 
 if __name__ == '__main__':
@@ -167,12 +179,13 @@ if __name__ == '__main__':
     url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
     head_number = 10
     text_number = 5
-    paragraph_number = 2
-    sentence_number = 1
+    paragraph_number = 5
+    sentence_number = 10
     code_number = 5
     result = SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number, sentence_number,
                                                     code_number,
-                                                    EDU=False)
+                                                    EDU=True,
+                                                    )
     print("-----------标题相似度---------")
     pprint(result['head'])
     print("-----------全文相似度---------")
@@ -184,4 +197,21 @@ if __name__ == '__main__':
     print("-----------code相似度---------")
     pprint(result['code'])
 
+    # url = "https://blog.csdn.net/Louis210/article/details/119649950"
+    # result1 = SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number, sentence_number,
+    #                                                  code_number,
+    #                                                  EDU=True,
+    #                                                  )
+    # print("-----------标题相似度---------")
+    # pprint(result1['head'])
+    # print("-----------全文相似度---------")
+    # pprint(result1['text'])
+    # print("-----------段落相似度---------")
+    # pprint(result1['paragraph'])
+    # print("-----------句子相似度---------")
+    # pprint(result1['sentence'])
+    # print("-----------code相似度---------")
+    # pprint(result1['code'])
+
     SimilarityFromBERT.get_score(result, head_number, text_number, paragraph_number, sentence_number, code_number)
+    # SimilarityFromBERT.get_score(result1, head_number, text_number, paragraph_number, sentence_number, code_number)
