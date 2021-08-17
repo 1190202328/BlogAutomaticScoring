@@ -1,1 +1,117 @@
-Java中的List类的contains和indexOf方法的区别 问题： 在对List类的使用中，有一次使用到了contains和indexOf方法，而出现预期以外的错误，考虑到List中的元素都为引用类型，因此想知道List的contains和indexOf方法的结果是否与引用对象相关。 代码实例如下： importjava.util.ArrayList; importjava.util.List; publicclassTemp { publicstaticvoidmain(String[]args)throwsException { List<String>list=newArrayList<String>(); for(inti=0;i<10;i++){ list.add(String.valueOf(i)); } //使用contains System.out.println(list.contains("5")); //使用indexOf System.out.println(list.indexOf("5")); System.out.println(list.indexOf(newString("5"))); List<People>peoples=newArrayList<People>(); Peoplea=newPeople("a"); Peopleb=newPeople("b"); Peoplenewa=newPeople("a"); peoples.add(a); peoples.add(b); //使用contains System.out.println(peoples.contains(newa)); //使用indexOf System.out.println(peoples.indexOf(newa)); } } classPeople{ privateStringname; /** *@paramname */ publicPeople(Stringname){ this.name=name; } @Override publicinthashCode(){ finalintprime=31; intresult=1; result=prime*result+((name==null)?0:name.hashCode()); returnresult; } @Override publicbooleanequals(Objectobj){ if(this==obj) returntrue; if(obj==null) returnfalse; if(getClass()!=obj.getClass()) returnfalse; Peopleother=(People)obj; if(name==null){ if(other.name!=null) returnfalse; }elseif(!name.equals(other.name)) returnfalse; returntrue; } /** *@returnthename */ publicStringgetName(){ returnname; } } 运行结果如下： 由此可见，如果List的泛型重写了equals方法，则contains和indexOf方法都可以正常工作，而不需要要求参数为List中的同一个引用对象，只需要值相同即可。 而将equals去掉之后，其他代码不变，发现结果如下： 发现contains和indexOf方法都判定newa这个对象不在peoples这个List中。 如果再将此行改为： //使用contains System.out.println(peoples.contains(a)); //使用indexOf System.out.println(peoples.indexOf(a)); 运行结果如下： 结果再一次正确。 总结： contains和indexOf方法是一致的。如果希望值相同就可以在List中找到，则需要重写List<L>的L中的equals方法。如果希望引用相同，则不可以重写L中的equals方法。 
+问题：
+
+在对List类的使用中，有一次使用到了contains和indexOf方法，而出现预期以外的错误，考虑到List中的元素都为引用类型，因此想知道List的contains和indexOf方法的结果是否与引用对象相关。
+
+代码实例如下：
+
+import java.util.ArrayList;
+import java.util.List;
+ 
+public class Temp 
+{
+	public static void main(String[] args) throws Exception
+	{
+		List<String> list = new ArrayList<String>();
+		for (int i = 0; i < 10; i++) {
+			list.add(String.valueOf(i));
+		}
+		//使用contains
+		System.out.println(list.contains("5"));
+		//使用indexOf
+		System.out.println(list.indexOf("5"));
+		System.out.println(list.indexOf(new String("5")));
+		
+		List<People> peoples = new ArrayList<People>();
+		People a  = new People("a");
+		People b  = new People("b");
+		People newa  = new People("a");
+		peoples.add(a);
+		peoples.add(b);
+		//使用contains
+		System.out.println(peoples.contains(newa));
+		//使用indexOf
+		System.out.println(peoples.indexOf(newa));
+	}
+}
+class People{
+	private String name;
+	
+	/**
+	 * @param name
+	 */
+	public People(String name) {
+		this.name = name;
+	}
+ 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	So have I heard and do in part believe it.
+But, look, the morn, in russet mantle clad,
+Walks o'er the dew of yon high eastward hill:
+Break we our watch up; and by my advice,
+Let us impart what we have seen to-night
+Unto young Hamlet; for, upon my life,
+This spirit, dumb to us, will speak to him.
+Do you consent we shall acquaint him with it,
+As needful in our loves, fitting our duty?
+ 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		People other = (People) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+ 
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+}
+运行结果如下：
+
+
+
+由此可见，如果List的泛型重写了equals方法，则contains和indexOf方法都可以正常工作，而不需要要求参数为List中的同一个引用对象，只需要值相同即可。
+
+而将equals去掉之后，其他代码不变，发现结果如下：
+
+
+
+发现contains和indexOf方法都判定newa这个对象不在peoples这个List中。
+
+如果再将此行改为：
+
+//使用contains
+System.out.println(peoples.contains(a));
+//使用indexOf
+System.out.println(peoples.indexOf(a));
+运行结果如下：
+
+
+
+结果再一次正确。
+
+总结：
+
+contains和indexOf方法是一致的。
+如果希望值相同就可以在List中找到，则需要重写List<L>的L中的equals方法。
+如果希望引用相同，则不可以重写L中的equals方法。

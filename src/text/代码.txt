@@ -1,0 +1,5758 @@
+${P5ARCH}/auto/
+perl\lib\auto\Archive\Tar\.packlist:backslash
+. auto/feature
+intros s2; case s2; simpl; split; auto.
+apply le_trans with 0; auto; apply div_pos; auto.
+intro H; rewrite H; auto.
+intro H; rewrite H; auto.
+rewrite rinv_l; auto.
+12:52:17: ( 3 , T=P
+12:52:17: ( 3 , T=P
+16:47:42: ( 3 , T=P
+bottom: auto
+msgid "Autorepeat Delay"
+msgstr "Automatische Wiederholung"
+by (induct l) auto
+auto pc = new PanelControl();
+for (const auto& sound : GFunSoundSet)
+auto it = element.Points.begin();
+;; after you select candidate
+auto position3 = getPos();
+auto superList = cNode->Super->getChildren();
+${P5ARCH}/auto/Tk/Frame/autosplit.ix
+${P5ARCH}/auto/
+${P5SITE}/auto/PDF/Reuse/autosplit.ix
+${P5ARCH}/auto/Net/SSLeay/SSLeay.bs
+${P5ARCH}/auto/
+${P5SITE}/Inline/denter.pm
+${P5ARCH}/auto/Sybase/
+${P5ACE}/auto/Ace/
+;; after you select candidate
+auto ic = cast(ImageCell) bg;
+auto e = XNode.create(XML_ROOT_FLAGS_AND_STEPS);
+auto bytes = readBinary(file);
+auto itm = new TableItem(_result, SWT.NONE);
+private void impl() { mixin(S_TRACE);
+auto c = cast(Control) e.widget;
+auto ext = .extension(path);
+auto d = Display.getCurrent();
+auto name = FlagDir.validName(stepName.getText());
+auto data = bytesToXML(e.data);
+auto b = itm.getBounds();
+_autoOpen = _autoOpenTI.getSelection();
+auto itm = parent._items.get(c, null);
+auto cl = new CenterLayout;
+auto comp = new Composite(tabf, SWT.NONE);
+auto s = new ByteArrayInputStream(bytes);
+auto menu = text.getMenu();
+auto skin = _comm.skin;
+auto lEngine = prop.toAppAbs(legacyEngine);
+_automaton.setSelection(_card.automaton);
+auto c = pOwnerCard(card.linkId);
+auto s = _prop.var.etc.bgImageSettings[i - 1];
+auto spAuto = area.spAuto;
+auto c = compType(o1, o2);
+Auto-generated field.
+auto p = rule.lastIndexOf(':');
+(defun ac-set-show-menu-timer ()
+text-autospace:none;
+text-autospace:none;
+<w:wordDocument xmlns:w="http:
+static constexpr auto kIndent = 4;
+constexpr auto MAX_INPUT_NESTING_LEVEL = 64;
+by auto
+apply auto
+by (unfold constrains_def st_set_def, auto)
+apply (auto intro: gen_prefix.prepend)
+qed (auto intro!: pred_eqI)
+by auto
+apply (auto simp: dvd_def mult_assoc)
+by (unfold Restrict_def image_def, auto)
+apply auto
+by auto
+apply(auto simp add: alpha)[1]
+by auto
+apply auto
+by (auto simp: not_Some_eq[THEN iffD1])
+qed auto
+by(induct c arbitrary:X) auto
+apply (auto, case_tac "x=UU",auto)
+by pat_completeness auto
+by (induct "t", auto)
+using WELL order_on_defs[of _ r] by auto
+using WELL order_on_defs[of _ r] by auto
+by(auto simp add: aboveS_def above_def)
+unfolding Field_def by auto
+by (auto simp add: Field_def)
+apply (auto dest: subcls1D)
+apply (auto dest!: tranclD subcls1D)
+by (auto elim: gext_objD)
+by (auto simp: reqm_def)
+by auto
+by (erule pparts.induct, auto)
+case '10' : 
+simple induction 1; eauto with ecoc.
+(defun ac-set-show-menu-timer ()
+Proof. auto. Qed.
+(defun ac-set-show-menu-timer ()
+auto uc = new UseCounter;
+auto sels = _toolTree.getSelection();
+auto b = to!dstring(a);
+jneshort @1@98
+final short[] triangles = this.triangles;
+unsigned shortcmd_id;
+unsigned short dec_id;
+unsigned shortcmd_id;
+unsigned short cmd_id;
+unsigned short dec_id;
+void set_gpio_dir(unsigned, unsigned short);
+void set_gpio_dir(unsigned, unsigned short);
+static short SampRate_Y_H, SampRate_Y_V;
+case 184: 
+unsigned short CPrimalGrid::nDim;
++ typedef unsigned short __kernel_old_uid_t;
+typedef unsigned short ISC_USHORT;
+extern short *Map[WORLD_X];
+extern short max_zone_dim[3];
+short pick_import_town(short which_dlog,short def)
+jsSHORT $LN10@flpydsk_se
+<short></short>
+<short></short>
+this.FailWithError((short)1, (short)0);
+9NOIEshort2133315081 0.75 0.74485075
+"The Extra Girl" was produced by Sennett.
+9NOIEshort2133315081 0.75 YES
+this.video_object_layer_width = (short)width;
+extern short FREAD(short parm1,
+short uk5_;
+extern short testByteKiller_13 ( void );
+</text>
+<value form="short">House ID</value>
+Long The alchemist stands behind the counter.
+Short a large rat~
+static short
+short tmp = (short) (Cycle_Data & 0x01);
+short w_x1;
+this.FailWithError((short)1, (short)0);
+short vRef = (short) store.addVar(var);
+short vRef = (short) scalerStore.addVar(var);
+short[] tmp = (short[])data[z];
+int styleable SearchView_queryHint 4
+int attr queryHint 0x7f01007b
+public static final int queryHint = 0x7f01007b;
+int styleable SearchView_queryHint 4
+int styleable SearchView_queryHint 4
+int anim abc_fade_out 0x7f040001
+int attr dropDownHintAppearance 0x7f010068
+int *i4mat_u1_inverse ( int n, int a[] );
+int i4_uniform ( int a, int b, int *seed );
+int attr dropDownHintAppearance 0x7f01005a
+int string email_hint 0x7f0a0018
+int attr pstsUnderlineHeight 0x7f010073
+int string ecmobile_design_introduction 0x7f060152
+SYS_SOCKETPAIR = 135 
+SYS_SOCKETPAIR = 135 
+SYS_SOCKETPAIR = 135 
+SYS_SOCKETPAIR = 135 
+SYS_SOCKETPAIR = 135 
+SYS_SOCKETPAIR = 135 
+SYS_KDEBUG_TRACE = 180 
+SYS_KDEBUG_TRACE = 180 
+CS_E_SCHEMA_MISMATCH = unchecked((int)0x8004016E),
+int anim abc_fade_out 0x7f040001
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable SwitchCompat_trackTintMode 13
+int styleable SwitchCompat_trackTintMode 13
+int styleable SwitchCompat_trackTintMode 13
+int styleable SwitchCompat_trackTintMode 13
+int attr trackTintMode 0x010104da
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int attr tintMode 0x010103fb
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int attr trackTintMode 0x010104da
+int styleable SwitchCompat_thumbTintMode 10
+int styleable SwitchCompat_thumbTintMode 10
+int styleable SwitchCompat_thumbTintMode 10
+int styleable SwitchCompat_thumbTintMode 10
+int attr trackTintMode 0x010104da
+int attr trackTintMode 0x010104da
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SearchView_defaultQueryHint 7
+int attr trackTintMode 0x010104da
+int styleable SearchView_defaultQueryHint 7
+int styleable SearchView_defaultQueryHint 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int attr trackTintMode 0x010104da
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int attr trackTintMode 0x010104da
+int attr trackTintMode 0x010104da
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable SwitchCompat_trackTintMode 13
+int styleable SearchView_queryHint 6
+int styleable SearchView_defaultQueryHint 7
+int styleable SearchView_defaultQueryHint 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+.long LDIFF_SYM0
+unsigned long pto = (unsigned long) ptep;
+unsigned long val;
+unsigned long *p = (unsigned long *) addr;
+unsigned long SSL_set_mode(SSL *, unsigned long);
+<Tuple2<Long, Long>, Tuple2<Long, Long>, Long> {
+for (long i = 1; i <= my nx; i++) {
+static av_cold float ath(float f, float add)
+-- @return float
+float glossinessFor(float _mip, float _mipCount)
+float m_floats[4];
+BX_CONST_FUNC float easeStep(float _t);
+BX_CONST_FUNC float easeOut(float _t)
+float FxaaLuma (
+float FxaaLuma (
+float FxaaLuma (
+uniform float _DetailNormalMapScale;
+uniform highp float _Bias;
+<DT><A HREF="./processing/core/PMatrix3D.html
+float jumplastposition;
+float Ax,Ay,Bx,By,Cx,Cy,e,d,f; \
+float GetColorz(float x, float y, float z) {
+float *alpha_, float C, float eps, int shrinking)
+static float lerp(float a, float b, float x) {
+float*s= (float*)buffer;
+template<typename Float>
+<DT><A HREF="./processing/core/PMatrix3D.html
+float FloatClamp(float val, float min, float max)
+extern void msgpos(float x, float y);
+float PathMode::Normalize(float state)
+float clamp(float val, float low, float hi);
+static float[] mBoldOffset = new float[]
+static voidSinCos( float a, float &s, float &c );
+float alpha1, float alpha2, float alphaParm,
+float alpha1, float alpha2, float alphaParm,
+float floatData = *((float *)&intData);
+float alpha1, float alpha2, float alphaParm,
+float alpha1, float alpha2, float alphaParm,
+float upx=((float)(x-hx))*mx;
+float timeScale = backEnd.refdef.floatTime;
+float upy=((float)(y-hy))*my;
+float tx = frameWidth * (float)col;
+float timeScale = backEnd.refdef.floatTime;
+float value = float(l.timeValue) * 0.01f * 0.05f;
+float alpha1, float alpha2, float alphaParm,
+float alpha1, float alpha2, float alphaParm,
+float alpha1, float alpha2, float alphaParm,
+float alpha1, float alpha2, float alphaParm,
+float flrand(float min, float max)
+final float radiusB = shapeB.m_radius;
+public float m_referenceAngle;
+DEF_CVT_SCALE_FUNC(32f8u, float, uchar, float)
+float xOut = float.PositiveInfinity;
+float clamp(float val, float low, float hi);
+static av_cold float ath(float f, float add)
+'float square (float x) {',
+<DT><A HREF="./processing/core/PMatrix3D.html
+-- @return float
+-- @return float
+final float radiusB = shapeB.m_radius;
+public float m_referenceAngle;
+public void setHigh (float min, float max) {
+float c4vec_norm_l2 ( int n, complex <float> a[] )
+float r4_uniform ( float a, float b, int *seed )
+float r4_betai ( float x, float pin, float qin );
+float r4_max ( float x, float y )
+-- @return float
+DEF_CVT_SCALE_FUNC(32f8u, float, uchar, float);
+float fastAtan2( float y, float x )
+'float square (float x) {',
+final float cos = FloatMath.cos(angleRad);
+<DT><A HREF="./processing/core/PMatrix3D.html
+-- @return float
+const float fx = (float)x / (float)ibuf->x;
+float **in = (float **)sources;
+float strength;
+float audio_volume;
+copy_v4_v4((float *)self->matrix, (float *)mat);
+float viewdx, viewdy;
+static float f_Rd(float alpha_, float A, float ro)
+<a href="../../processing/core/PGraphics.html
+<a name="lerp(float, float, float, float)">
+<a href="../../processing/core/PGraphics.html
+<a href="../../processing/core/PGraphics.html
+<a name="lerp(float, float, float, float)">
+<a href="../../processing/core/PGraphics.html
+public void setHigh (float min, float max) {
+public void allocParticlesData(int capacity){
+public float apply (float a) {
+final float radiusB = shapeB.m_radius;
+public float m_referenceAngle;
+public void setHigh (float min, float max) {
+public float apply (float a) {
+<p>Supports float, float2, float3, float4. </p>
+float xOut = float.PositiveInfinity;
+float interpolate(float a, float b, float t)
+extern float modff _PARAMS((float, float *));
+extern float modff _PARAMS((float, float *));
+<li><a href="Decimal-float-library-routines.html
+extern float modff _PARAMS((float, float *));
+extern float modff _PARAMS((float, float *));
+extern float modff _PARAMS((float, float *));
+extern float modff _PARAMS((float, float *));
+float x = (float)atof(sx.c_str());
+extern float modff _PARAMS((float, float *));
+extern float modff _PARAMS((float, float *));
+float elasticEaseIn(float time, float period)
+SGString<char>* buf = (SGString<char>*) (*(char**)
+extern char const* const _PREHASH_CharterMember;
+_nunull()),
+_nunull()))),
+_nunull()))),
+njo <char-166><char-187><char-161>
+static const unsigned char gb_chars_ban0 [] = {
+extern const char * const ATTR_ACCOUNTING_GROUP;
+extern char const* const _PREHASH_CharterMember;
+extern const char kAppsPromoCounter[];
+EXT int cfg_key_debug(char *, char *, char *);
+char mbName[MBSYS_NETCDF_ATTRIBUTELEN];
+unsigned char BYTE;
+unsigned char BYTE;
+unsigned char BYTE;
+extern char * _PREHASH_CharterMember;
+extern char const* const _PREHASH_CharterMember;
+extern char const* const _PREHASH_CharterMember;
+char fmtchar, fmtstr[64];
+charop;
+static char *remove_dot(char *s)
+char(63),
+20 long sys_getpid(void);
+20 long sys_getpid(void);
+const char **pinfo, const char **ppem_str,
+const char **pinfo, const char **ppem_str,
+char *tmp_data1 = (char *)malloc(_size1);
+unsigned char CharToWhite(unsigned char ch)
+const char *type, const char *value));
+const char *type, const char *value));
+static int parse_char(char c, const char **str)
+const char *type, const char *value));
+const char **pinfo, const char **ppem_str,
+char[,,] c1 = new Char[4,2,3];
+charop;
+const char *str, int slen, unsigned char *p);
+const char *Left( int len, idStr &result ) const;
+unsigned char CharToBrown(unsigned char ch)
+const char *String_Alloc(const char *p) 
+const char *String_Alloc(const char *p) {
+int(*Font_StrLenChars) (const char *text);
+extern _XtShell_h_Const char XtShellStrings[];
+const char *type, const char *value));
+static char config_sleep_out[2] = {0x11, 0x00};
+const char **pinfo, const char **ppem_str,
+int u8_offset(char *str, int32_t charnum)
+unsigned char SFmacro[16][16]; 
+static const char * const blsp_uart1_groups[] = {
+unsigned char astartc;
+char fmtchar, fmtstr[64];
+static char *remove_dot(char *s)
+extern char *revcomp(char *comp, char *seq);
+SYS___POSIX_RENAME = 270 
+SYS___POSIX_RENAME = 270 
+SYS___POSIX_RENAME = 270 
+static const char *hexchars = "0123456789abcdef";
+extern struct mchar mchar_so, mchar_null;
+const char* data = ((char*) args) + 2; 
+static char *write_str(char *to, char *from)
+static char *write_str(char *to, char *from)
+static char *sec2annotation(const char *s)
+static const char * const audio_pcm_groups[] = {
+static const char * const gpio_groups[] = {
+unsigned char astartc;
+unsigned char byElementID;
+char fmtchar, fmtstr[64];
+static char *remove_dot(char *s)
+(char-upcase (char-upcase (char-downcase 
+char *buf, loff_t pos, size_t count);
+unsigned char file_checksum[4];
+unsigned short addr, unsigned char *data,
+unsigned char *gCfgParamName[] = {
+static char config_sleep_out[2] = {0x11, 0x00};
+char fmtchar, fmtstr[64];
+SYS___POSIX_RENAME = 270 
+SYS___POSIX_RENAME = 270 
+SYS___POSIX_RENAME = 270 
+static char *sec2annotation(const char *s)
+llgtr%r3,%r3
+char[,,] c1 = new Char[4,2,3];
+static const char * const audio_pcm_groups[] = {
+static const char * const gpio_groups[] = {
+unsigned char astartc;
+unsigned char byElementID;
+char fmtchar, fmtstr[64];
+const char **pinfo, const char **ppem_str,
+static char *remove_dot(char *s)
+const char **pinfo, const char **ppem_str,
+const char **pinfo, const char **ppem_str,
+char gdFontGiantData[] = {
+char gdFontLargeData[] = {
+char gdFontMediumBoldData[] = {
+char gdFontSmallData[] = {
+char gdFontTinyData[] = {
+static char display_on[2] = {0x29, 0x00}; 
+static char sw_reset[2] = {0x01, 0x00}; 
+static char led_pwm1[2] = {0x51, 0xFF};
+static char enter_sleep[2] = {0x10, 0x00};
+char max_pktsize[2] = {MIPI_DSI_MRPS, 0x00}; 
+unsigned char reg_addr, unsigned char *data)
+struct HPMHookPoint *HP_atcommand_final_post;
+struct work_structwork;
+struct work_struct i_wb_work; 
+struct _swizzle_base0
+typedef struct RPC RPC;
+identity_destroy(struct pipe_context *_pipe)
+extern struct platform_device asoc_msm_pcm;
+extern struct platform_device asoc_msm_pcm;
+struct nl_cache_ops;
+void (*destructor)(struct stk_command *command);
+struct task_struct *task;
+struct _swizzle_base0
+struct s5p_gpio_bank {
+struct task_struct *task;
+struct t_config_file *weechat_config_file = NULL;
+struct st_gpio
+struct sys_exit_args *p = params;
+struct sys_exit_args *p = params;
+struct inode *ip = VTOI(vp);
+struct task_struct *thread;
+struct task_struct *thread;
+struct __wt_addr;
+typedef struct {int id;} EIF_ANY;
+typedef struct {int id;} EIF_ANY;
+typedef struct {int id;} EIF_ANY;
+typedef struct {int id;} EIF_ANY;
+typedef struct ARRAYA1369744492_struct {
+struct _swizzle_base0
+struct rem_mem_pointer_impl{ typedef T type; };
+struct nfs_writeargsargs;
+%164 = icmp eq %struct.VERTEX* %163, %159; <i1> [
+identity_destroy(struct pipe_context *_pipe)
+struct sys_exit_args *p = params;
+struct uni_ie_connidconnid;
+struct gf_statfs {
+static inline bool tomoyo_same_name_union
+struct task_struct *tsk, struct css_set *newcg)
+int do_index);
+struct task_struct *task;
+struct task_struct *dlm_thread_task;
+struct {
+struct {
+struct _swizzle_base0
+struct _swizzle_base0
+struct nvme_completion *cqe, struct ib_wc *wc)
+static struct clk_pll pll0 = {
+static struct ti_clk_fixed virt_12m_ck_data = {
+.hw.init = &(struct clk_init_data){
+struct hsi_fp_ver_struct {
+struct work_struct vport_change_handler;
+struct work_struct job_done_work;
+struct task_struct *task =
+struct device *dev, struct skl_dev *skl)
+(define-struct struct-siginfo_t
+struct B3 { B3() { printf("B3 = %p\n", this); } };
+typedef struct {
+struct exportinfo *, struct svc_req *, cred_t *);
+typedef struct authsys_parms authsys_parms;
+uint_t pathname4_len;
+struct work_structwork;
+struct work_structclose_work;
+struct workqueue_struct *wq;
+struct napi_struct *napi;
+struct work_struct client_monitors_config_work;
+struct work_struct hotplug_work;
+struct orangefs_obj {
+struct cbq_class *cl = (struct cbq_class *)arg;
+struct workqueue_struct *wq;
+struct work_struct deferred_resume_work;
+typedef struct AUTHUSERCERT AUTHUSERCERT;
+static struct omap_hwmod omap3xxx_dss_hwmod;
+static struct omap_hwmod omap44xx_aess_hwmod;
+struct {
+struct st_bsc {
+struct st_bsc {
+struct sys_exit_args {
+galahad_destroy(struct pipe_context *_pipe)
+struct exportinfo *, struct svc_req *, cred_t *);
+pkg debug/dwarf, type StructField struct
+struct exportinfo *, struct svc_req *, cred_t *);
+typedef struct {
+struct exportinfo *, struct svc_req *, cred_t *);
+struct exportinfo *, struct svc_req *, cred_t *);
+pkg debug/dwarf, type StructField struct
+struct slam_request {
++struct tasklet_struct tasklet;
+struct tasklet_structtasklet;
+struct sd *sd = (struct sd *) gspca_dev;
+struct BPS HUGE *HpbpsIbp();
+extern struct CHP vchpFetch;
+static struct kmem_cache *full_dnode_slab;
+static void q6_fatal_fn(struct work_struct *work)
+static struct msm_gpio qup_i2c_gpios_io[] = {
+struct strbuf expanded_path = STRBUF_INIT;
+struct nfsd3_sattrargs {
+struct lm_lockstruct {
+struct task_struct *commit_task;
+struct ADDJOB_INFO_1A {
+struct rgbvec {
+struct Abc9
+atom apply union 
+extern union good_test x1;
+union {
+union {
+union {
+let f union = match union with
+micro_ceil(union tgsi_exec_channel *dst,
+union AQCSFRC_REG {
+UNION ALL
+typedefunion_INT_SOURCE_CSR_STRUC{
+union st_adcon0 { 
+static union content *comment(char const *);
+union AQCSFRC_REG {
+union sctp_addr peer_addr;
+vs.union rs.union fs.union ns.union))
+union cpt_result cb_expr(union tree* tree);
+union cpt_result cb_expr(union tree* tree);
+extern union good_test x1;
+typedef union _nge_intr_src {
+union __xeno_sem sm, *usm;
+newtype Union f = Union { getUnion :: f }
+STATIC union node *andor(void);
+union node;
+union IND_MTXA
+typedef union
+__DECL__6812B32_H__ volatile union {
+><font color="
+typedef union
+union INTOSC2TRIM_REG {
+union GPA1_REG {
+union INTSEL3N4_REG {
+union() {
+public function testUnionUnion()
+union all
+typedef union 
+public function testUnionUnion()
+-- UNION or UNION ALL
+union INTOSC2TRIM_REG {
+union __anonunion_arg_40 {
+import union._
+union {void (SourceHook::EmptyClass::*mfpnew)();
+typedef union {
+[; ;pic16f707.h: 67: typedef union {
+[; ;pic16f707.h: 160: typedef union {
+typedef union {
+f_pushd2(union argument *x)
+void f_push __PROTO((union argument *x));
+STATIC union node *andor(void);
+f_pushd2(union argument *x)
+UNION: union-1 fixnum float ;
+unionSeq = unionSeqUsingFoldl
+unionoverhead {
+from sympy.mpmath import mpi
+then A5: union X c= union Rank B by ZFMISC_1:95;
+A41: union Gx c= union GX
+A1: union X c= union A by ZFMISC_1:95;
+union arg {
+union opcode_tid {
+union="${work_dir}/union"
+int (*map_alloc_check)(union bpf_attr *attr);
+union region3_table_entry {
+union xfs_btree_ptr*ptr,
+union as10x_set_tune {
+union wrap_top_dir_u {
+union cvmx_mixx_intena mix_intena;
+union firmware_info {
+union all
+POSTHOOK: Output: default@src_union_2
+union all
+STATIC union node *andor(void);
+SELECT 1 AS two UNION SELECT 2 UNION SELECT 2;
+SELECT 1 AS two UNION SELECT 2 UNION SELECT 2;
+typedef union pcicfg_intr_ctl_u {
+union {
+Require Import DisjointUnion.
+union mp_tree;
+union cvmx_mixx_intena mix_intena;
+union firmware_info {
+union iucv_param {
+STATIC union node *andor(void);
+union nfs4_attr_u *na)
+typedef union {
+union if_id {
+static union any_in_addr gwIP6list[MAX_GWS6];
+union nfs4_attr_u *na)
+typedef union _tcam_class_prg_ether_t {
+typedef union _txc_dma_max_burst_t {
+typedef union _rdc_tbl_t {
+argc = ((union convert *)p_data)->tint;
+typedef union {
+typedef union pcicfg_intr_ctl_u {
+argc = ((union convert *)p_data)->tint;
+typedef union pcicfg_intr_ctl_u {
+-- UNION or UNION ALL
+SELECT 'AF', 'AO'UNION ALL
+SELECT c1 FROM t1 WHERE c1='
+SELECT 1, 'a', 'en-US' UNION
+describe "Dataset UNION, EXCEPT, and INTERSECT" do
+union U1 {
+union arg {
+(define-enum CURL_GLOBAL_ALL)
+enum EI_MAG0 = 0;
+enum EI_MAG0 = 0;
+enum EI_NIDENT = 16;
+enum MAXPNAMELEN = 32;
+enum DWORD ENUM_CURRENT_SETTINGS = -1;
+enum SQL_SPEC_MAJOR = 3;
+enum EI_NIDENT = 16;
+enum MAXPNAMELEN = 32;
+: <a class="el" href="xed-error-enum_8h.html
+* ENUMERATION
+enum intf_type {
+PCI_DEV_REG1= 0x40,
+typedef enum rtk_cpu_insert_e
+typedef enum rtk_cpu_insert_e
+enum v4l2_firmware_mode {
+enum intf_type {
+enum msm_bus_bimc_slave_block {
+* ENUMERATION
+* dwarf2.h (enum dwarf_sect): New enum type.
+* demangle.h (enum demangle_component_type): Add
+enum vpfe_isif_vdfc_corr_mode corr_mode;
+enum htc_endpoint_id ep_id;
+static enum vxge_hw_status
+PCI_DEV_REG1= 0x40,
+enum chg_state_flags flags;
+enum byte_sex target_byte_sex)
+enum strip_levels {
+enum TIFFReadDirEntryErr {
+enum : long x; 
+MLX4_MAX_NUM_PF= 16,
+enum vpfe_isif_vdfc_corr_mode corr_mode;
+enum bfa_ioc_event_e event);
+enum bfa_ioim_event {
+enum wmi_network_type {
+enum PrintColorAdjust {
+<tr valign="top" class="odd"><td ><a href="qt.html
+enum fe_stv0900_signal_type {
+enum intf_type {
+enum roffrule rule; 
+typedef enum _D3DLIGHTTYPE {
+typedef enum _D3DLIGHTTYPE {
+typedef enum {
+enum css_properties_e {
+typedef enum 
+˝7 Ť          9   a:1:{s:4:"link";s:32:"http:
+enum metadata_mode {
+enum metadata_mode {
+enum v4l2_firmware_mode {
+enum intf_type {
+enum htc_endpoint_id ep_id;
+enum rpc_loc_sv_system_e_type {
+<li><a href="
+enum mlx5_inline_modes {
+enum i40e_mac_type {
+enum mpd4_bpc {
+enum pc_di_src_sel {
+enum TextureMappingType
+;; sum :: enum a, enum b -> enum (U a b)
+enum mlx5_inline_modes {
+enum i40e_mac_type {
+enum a2xx_sq_ps_vtx_mode {
+enum chg_state_flags flags;
+enum S_IRUSR = 0x100; 
+enum Condition {
+class :foo {
+class :foo {
+typedef enum EAuthSessionResponse
+enum EAvatarSize
+: <a class="el" href="xed-iform-enum_8h.html
+: <a class="el" href="xed-category-enum_8h.html
+enum ast_event_ie_pltype ie_pltype;
+public enum FakeCam
+PCI_DEV_REG1= 0x40,
+enum TIFFReadDirEntryErr {
+enum TIFFReadDirEntryErr {
+enum TIFFReadDirEntryErr {
+typedef enum EAuthSessionResponse
+enum EAvatarSize
+typedef int Enum;
+name()body((ENUM)(0))
+enum Condition {
+extends <a href="http:
+extends <a href="http:
+typedef enum _D3DFORMAT D3DFORMAT;
+typedef enum _D3DFORMAT D3DFORMAT;
+Property: "InheritType", "enum", "",0
+Property: "InheritType", "enum", "",0
+enum ForceType {
+typedef struct _WS_ENUM_VALUE WS_ENUM_VALUE;
+enum enumINKMETRIC_FLAGS
+extends <a href="http:
+typedef enum {
+typedef enum {
+NiftiIntentEnum::NiftiIntentEnum(Enum e, 
+(see <a href="qt.html
+extends <a href="http:
+extends <a href="http:
+extends <a href="http:
+target Enum, level int32, internalformat Enum,
+typedef struct jpeg_buf_t * jpeg_buffer_t;
+typedef signed __int8 cl_char;
+typedef no_specifier value_type;
+typedef char int8_t;
+typedef __INT8_TYPE__ __int8_t;
+typedef void* (*MallocFunc)(size_t);
+typedef struct OMX_JPEG_PARAM_COMPRESSEDMODETYPE{
+typedef enum
+typedef enum
+typedef enum
+typedef std::map <
+typedef UINT8 tBTA_SERVICE_ID;
+typedef void* (* GLADloadproc)(const char *name);
+typedef void* (* GLADloadproc)(const char *name);
+CC_DEPRECATED_ATTRIBUTE typedef Ref CCObject;
+typedef void * RIL_Token;
+typedef struct x509_st X509;
+typedef struct RPC RPC;
+typedef bit_field< 0, 5 > OPCD_field;
+typedef ev_direct ev_mixed;
+typedef struct ExprContext
+typedef signed char BOOL;
+typedef RTreturn_type;\
+typedef WIN32_FIND_DATAAstat_data_type;
+typedef E const&expr_type;
+CC_DEPRECATED_ATTRIBUTE typedef Ref CCObject;
+typedef UINT8 tBTA_DM_ADV_MASK;
+typedef UINT8 tBTA_SERVICE_ID;
+typedef void GLvoid;
+typedef signed __int8 cl_char;
+typedef void (*AddPtFunc)(Point, Point *);
+typedef void *PVOID;
+typedef struct IPersistFolder IPersistFolder;
+typedef void* (* GLADloadproc)(const char *name);
+typedef enum {
+typedef int64_t GpsUtcTime;
+typedef std::basic_string<wchar_t> WString;
+typedef void GLvoid;
+typedef __int64 mlint64;
+typedef struct _KIWI_GENERIC_PRIMARY_CREDENTIAL
+<a href="
+typedef struct
+typedef struct _tagX3DAnchor
+typedef struct _tagAnchor
+typedef char *DOM_String;
+typedef struct
+"..\..\modules\amr_dec\amr_nb\typedef.h"\
+typedef GUID UUID;
+typedef unsigned int __darwin_natural_t;
+typedef unsigned int __darwin_natural_t;
+typedef struct
+typedef struct _tagX3DAnchor
+typedef struct
+typedef int64_t GpsUtcTime;
+typedefwstringCStdStringW;
+typedef struct _XLinearGradient {
+typedef MTPBoxed<MTPresPQ> MTPResPQ;
+typedef UInt16 USBDeviceAddress;
+typedef struct {
+typedef char ALboolean;
+typedef char ALboolean;
+typedef signed __int8 cl_char;
+typedef detail::tmat2x2<float, lowp>lowp_mat2;
+typedef detail::tvec1<float, highp>highp_vec1_t;
+typedef void DLL;
+typedef GLint (APIENTRY *glCreateProgramPROC) ();
+typedef unsigned __int64 COLORDIALOGFLAGS;
+typedef struct _INPUT_RECORD INPUT_RECORD;
+typedef struct _INPUT_RECORD INPUT_RECORD;
+typedef long unsigned int size_t;
+typedef struct zftp_session *Zftp_session;
+typedef long unsigned int size_t;
+typedef long unsigned int size_t;
+typedef long unsigned int size_t;
+typedef long unsigned int size_t;
+typedef long unsigned int size_t;
+typedef long unsigned int size_t;
+typedef unsigned charSQLCHAR;
+typedef NodeListener = Dynamic;
+typedef char TZQThostFtdcTraderIDType[21];
+typedef unsigned int size_t;
+typedef MTPBoxed<MTPresPQ> MTPResPQ;
+typedef struct _cl_platform_id * cl_platform_id;
+typedef ptrdiff_t ssize_t;53,1161
+typedef NS_ENUM(NSInteger, AWSEC2ErrorType) {
+CC_DEPRECATED_ATTRIBUTE typedef Ref CCObject;
+typedef detail::tvec1<float, highp>highp_vec1_t;
+template <bool _Bp, class _If, class _Then>
+typedef unsigned char UCHAR;
+typedef enum _NDIS_802_11_STATUS_TYPE {
+typedef struct GNU_PACKED {
+typedef signed __int8 cl_char;
+typedef char TThostFtdcTraderIDType[21];
+typedef OCIRef ODCIColInfo_ref;
+typedef union {
+typedef union {
+typedef signed char int8_t;
+typedef union 
+typedef struct ExprContext
+typedef PY_LONG_LONG npy_longlong;
+TempoMetric (const Meter& m, const Tempo& t)
+__fips_constseg
+const DI_CHANNEL=1;
+division(const MP_Float & n, const MP_Float & d);
+are_equal(const Facet & f, const Facet & g) const
+is_hidden(const Site_2 &p, const Site_2 &q) const
+bool operator>(const Gmpfr &a,const Gmpz &b){
+has_larger_distance_to_point(const PointH2<R>& p,
+compare_distance_to_point(const PointH3<R>& ,
+const Point& point);
+(const MeshEntity& triangle,
+std::size_t MultiMesh::num_parts() const
+const char *fileName, const FILE_BASIC_INFO *data,
+static const char *dpll3_ck_parent_names[] = {
+forceinline int getValue() const
+forceinline const T MIN (const T a, const T b)
+public const int Err_Cannot_Open_Resource = 1;
++ const char *LinkingOutput) const {
+const item& at(std::size_t pos) const
+const tree_cont_type & tree() const;
+const nana::any * _m_value() const;
+const item& at(std::size_t pos) const
+bool is_hit(const point&) const;
+const nana::string& icon() const;
+bool operator==(const index_pair& r) const
+public const int Err_Cannot_Open_Resource = 1;
+static const char *const SN_sect163k1;
+const item& at(std::size_t pos) const
+const item_proxy& operator*() const;
+int strcmp_opt(const char *s1, const char *s2);
+public const string ACTION_H = "120";
+if(!background)
+X1 const & x1, Y1 const & y1, Z1 const & z1, 
+A const & s, 
+X1 const & x1, Y1 const & y1, Z1 const & z1, 
+U const & a, 
+C const & s2
+X1 const & x1, Y1 const & y1, 
+value_type const & x0, value_type const & y0,
+value_type const & x1, value_type const & y1,
+U const & x1, V const & y1, 
+const WORD,
+const HDXVector3 n = ((b-a)%(c-a)).getNormal();
+const D3DXVECTOR4* getD3DX() const;
+public const int abc_fade_in = 2130968576;
+public const int abc_fade_in = 2130968576;
+const AUTOFILTER_RULETYPE_FILTER= 'filter';
+const AUTOSIZE_METHOD_APPROX= 'approx';
+const QPolygon &QwtPicker::pickedPoints() const
+public const int MvxBind = 2130771968;
+public const int MvxBind = 2130771968;
+extern const char * const kYuvImagesOutputDirPath;
+static const char KEY_SUPPORTED_CAMERAS[];
+int mpz_cmp (const mpz_t, const mpz_t);
+public const string Banner_Name = "Banner_Name";
+template<typename T>
+bool _Equal(const _Myt& _Right) const
+asn_constr_check_f NO_IntegerLowestMax_constraint;
+const IA5String_t *st = (const IA5String_t *)sptr;
+const float delta = dest - speed;
+const CUnit* owner,
+const char* name;
+bool Execute(const UnsyncedAction& action) const {
+const float3& pos3D,
+void CMiniMap::ApplyConstraintsMatrix() const
+const float ctrlVelY = vel.y;
+static const int maxDepth = 16;
+const int unitID = lua_toint(L, index);
+float3 operator/ (const float3& f) const {
+float3 operator/ (const float3& f) const {
+const unsigned short* p,
+const int mipsize = 1024 >> i;
+const spring_time currTime = spring_gettime();
+static const float DEGTORAD = PI / 180.0f;
+else if (opt->flags & PARSE_OPT_OPTARG && !p->opt)
+save(const char *key, const void * proto) {
+const uint32_t * ts = (const uint32_t *)(str + 2);
+const u8 *invite_go_dev_addr;
+static const char * mgmt_stype(u16 stype)
+int Document::LineEndTypesSupported() const {
+const string &StateMachine::StateName() const {
+const size_t __mid = (_M_nstate32 - __lag) / 2;
+typedef const idVec3 &vec3_c; 
+const FLAVOR_DESKTOP = 'QBD';
+int (*symlink) (const char *, const char *);
+.signed-in .aui-tabview-list {
+.signed-in .aui-tabview-list {
+Signed|Any CPU = Signed|Any CPU
+Signed Debug|Any CPU = Signed Debug|Any CPU
+typedef detail::tmat2x2<highp_int>highp_imat2;
+<signed>yes</signed>
+signed __int128 signed *x93; 
+typedef unsigned char ubyte;
+typedef unsigned char ubyte;
+-- -- declare both signed and unsigned versions
+Release-Signed|Any CPU = Release-Signed|Any CPU
+Signed-off-by: Mosè Giordano <mose@gnu.org>
+typedef signed char Int8;
+typedef signed char Int8;
+typedef detail::int8cl_char;
+typedef signed short sb2; 
+typedef detail::int8cl_char;
+write (T &out, signed char v);
+UPCAST2( signed int , signed long , signed int );
+-define(S32(X), X:32/little-signed-integer).
+UPCAST2( signed int , signed long , signed int );
+signed int PutUnsignedInt(
+/*vpkswssVector Pack Signed Word Signed Saturate
+%typemap(out) char, unsigned char, signed char,
+<a href='../S/2395.html
+const long lDateSigned = m_DATE_SIGNED;
+return (this.unsigned >>> rhs.unsigned).signed;
+localparam DATA0 = `PARAM_DATA0;
+Generate a self-signed certificate.
+typedef unsigned int gps_mask_t;
+Signed-off-by: Tassilo Horn <tsdh@gnu.org>
+volatile signed int AccelC[3];
+volatile signed int AccelC[3];
+typedef detail::int8cl_char;
+assertEquals("Signed-off-by", f.getKey());
++ *type = DW_ATE_unsigned;
+* \var typedef unsigned char Uint8
+TYPES += ['signed char', 'unsigned char',
+signed = self.get_signed_presence(msg)
+(** Read an unsigned 8-bit integer. *)
+(** Read an unsigned 8-bit integer. *)
+unsigned short messageIndex;
+msgid "List of users currently signed up."
+msgid "Time when user signed up."
+(** Read an unsigned 8-bit integer. *)
+typedef unsigned int uint32_t;
+Release-Signed|Any CPU = Release-Signed|Any CPU
+end prototypes
++typedef signed char SBYTE; 
+TXBiPFEMAutoDetect = 0 
+TYPES += ['signed char', 'unsigned char',
+TYPES += ['signed char', 'unsigned char',
+TYPES += ['signed char', 'unsigned char',
+typedef signed char Int8;
+signed char *pSignedBits = (signed char *)m_pBits;
+signed char *pSignedBits = (signed char *)m_pBits;
+typedef signed char sbyte;
+`(,(ast-type-spec (car int) "long" "long" 
+((type *)(((unsigned char *)(ptr)) + VM_NINT_ARG))
+-- 02/10/2009 11:33:29 AM
+typedef detail::tmat2x2<highp_int>highp_imat2;
+static unsigned char arc_operand_map_a4[256];
+typedef signed __int8 cl_char;
+INLINE signed int acc_calc(signed int value)
+signed int Kierunek_y = 1; 
+typedef unsigned charUINT8; 
+@item raw PCM signed 8 bit @tab X @tab X
++ unsigned dpl, unsigned ist, unsigned seg)
+SELECT CAST(-19999999999999999999 AS SIGNED);
+'Signed Short serializer' : {
+signed char index_64[] = {
+typedef unsigned __int16 u16; 
+def signed(item):
+@item raw PCM signed 8 bit @tab X @tab X
+typedef unsigned char ub1; 
+externvoid*memset(void*, int, ulong);
+extern statetype s_rocket;
+extern int trust_executable_bit, has_symlinks;
+extern void register_pass (register_pass_info *);
+.extern C( d_zistepu )
+extern int no_external_cmds;
+extern PFNGLACTIVETEXTUREARBPROC glActiveTexture_;
+extern PFNGLCLEARINDEXPROC glClearIndex;
+extern WINDOW _stdscr;
+extern struct cvshows {
+extern struct cvshows {
+extern void (*lang_expand_stmt) PARAMS ((tree));
+extern "C" {
+extern "C" {
+extern struct platform_device asoc_msm_pcm;
+extern struct platform_device asoc_msm_pcm;
+extern void cmyth_dbg_level(int l);
+extern "C" {
+extern int clamp_srid(int srid);
+extern SystemData<unsigned> diAlcPrsULmt;
+externvoid*memccpy(void*, void*, int, ulong);
+extern sview_config_t default_sview_config;
+extern char *curly;
+extern char *curly;
+extern const pm_char STR_MENUWHENDONE[];
+EXTERN long Rows 
+extern char *curly;
+extern void *my_malloc(size_t Size,myf MyFlags);
+extern const char *MIME_FIELD_ACCEPT;
+extern "C"
+extern int sgslai_(integer *index);
+extern PFNGLBINDBUFFERARBPROCglBindBufferARB;
+extern const char *const MatFactorTypes[];
+extern volatile unsigned char TMR0 @ 0x001;
+extern void externalerror(char *); 
+extern "C" void* dll_close();
+extern int trust_executable_bit, has_symlinks;
+extern int trust_executable_bit, has_symlinks;
+extern int main __P((int, char **));
+extern MySignalHandler intTrap(SIGNAL_ARG);
+extern int trust_executable_bit, has_symlinks;
+extern void dbwin(char *fmt, ...);
+intrecovery_blocked; /* for external metadata it
+extern int trust_executable_bit, has_symlinks;
+extern void AddSC_areatrigger_scripts();
+extern PFNGLACTIVETEXTUREARBPROC glActiveTexture_;
+extern int trust_executable_bit, has_symlinks;
+extern PFNGLBINDBUFFERARBPROCglBindBufferARB;
+extern Bool haskell98;
+extern struct _IO_FILE_plus _IO_2_1_stdin_;
+extern PFNGLACTIVETEXTUREARBPROC glActiveTexture_;
+extern short testArcDDataCruncher ( void );
+extern vmCvar_tui_ffa_fraglimit;
+extern t_symbol *ps_key_return;
+extern void AddSC_npc_arena_honor();
+extern ITypeLib *get_msi_typelib( LPWSTR *path );
+extern const char EnableExternalTriggerCruise[];
+extern const int ABN_wnd_spkm_external;
+extern int nouveau_noagp;
+extern int curtime; 
+extern const char * const ATTR_ACCOUNTING_GROUP;
+extern int (*registerProgram) (PROCESS, char *);
+EXTERN intTcl_ExternalToUtf (Tcl_Interp * interp, 
+extern "C" {
+extern int initialiseAlloc(InitArgs *args);
+extern void pbl_memtrace_init( void );
+extern int trust_executable_bit, has_symlinks;
+extern PFNGLACTIVETEXTUREARBPROC glActiveTexture_;
+extern void *my_malloc(size_t Size,myf MyFlags);
+.extern C(d_zistepu)
+extern int trust_executable_bit, has_symlinks;
+_mm_setzero_pd (void)
+extern void warn (__const char *__format, ...)
+extern "C" bool_t xdr_ni_id(XDR *, ni_id*);
+extern double atan _PARAMS((double));
+EXTERN(unsigned int) jpeg_simd_cpu_support(void);
+.extern C(d_zistepu)
+extern int h_errno;
+extern _Decimal32 int32_to_decimal32(int);
+extern int glext_ARB_texture_compression_rgtc;
+extern _detail::Proc_glAccum Accum;
+extern PFNGLACCUMPROC _funcptr_glAccum;
+extern pfn_glFrontFace fp_glFrontFace;
+extern "C" {
+extern "C" {
+EXTERN longRows
+mixin(gshared!(
+extern (C) extern char ** gdk_pixbuf_version;
+extern(C):
+extern(C):
+extern int glext_ARB_vertex_array_object;
+extern int warn_nested_externs;
+extern struct _IO_FILE_plus _IO_2_1_stdin_;
+extern struct _IO_FILE_plus _IO_2_1_stdin_;
+extern struct _IO_FILE_plus _IO_2_1_stdin_;
+extern struct _IO_FILE_plus _IO_2_1_stdin_;
+extern struct _IO_FILE_plus _IO_2_1_stdin_;
+extern struct _IO_FILE_plus _IO_2_1_stdin_;
+extern struct _IO_FILE_plus _IO_2_1_stdin_;
+extern int warn_nested_externs;
+typedef struct 
+u32 iadd;
+u32 prs1;
+uintpowar1; 
+u32 iadd;
+u8 podr_fec0h;
+const Register edi = { kRegister_edi_Code };
+register struct vnode *vp = ap->a_vp;
+typedef struct 
+const Register no_reg = { kRegister_no_reg_Code };
+static const auto PCI_CB_BRIDGE_CTL_PARITY = 0x01;
+register TLispManager*pLispMgr,
+register TLispManager*pLispMgr,
+register TLispMachine*pLM,
+; RMAP=x -CPU Accumulator Register
+; RMAP=x -CPU Accumulator Register
+; RMAP=x -CPU Accumulator Register
+; RMAP=x - CPU Accumulator Register
+; RMAP=0 PAGE=1 - ADC Channel 0 Control Register
+; RMAP=x -CPU Accumulator Register
+; RMAP=x - CPU Accumulator Register
+static $shellLocale = 'en_US.utf8';
+if(def == TYPE_STATIC) 
+static sem_t offline_tran_count;
+static HWNDhwnd;
+public static $routes = array();
+static int PTRFASTCALL
+static Processor prologProcessor;
+static string RootPath(int level);
+<CODE>static&nbsp;<A HREF="http:
+<CODE>static&nbsp;boolean[]</CODE></FONT></TD>
+<CODE>static&nbsp;<A HREF="http:
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<CODE>private static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+private static final String TAG = "Gl";
+private static final String TAG = "Gl";
+static int vfstraceClose(sqlite3_file*);
+static struct {
+static int vfslogClose(sqlite3_file*);
+static struct {
+static int jtClose(sqlite3_file*);
+static int safe_isspace(char c){
+static void async_mutex_enter(int eMutex);
+static const char*sLightType;
+staticTQnode*_qFree0; 
+<CODE>static&nbsp;<A HREF="http:
+<CODE>static&nbsp;int</CODE></FONT></TD>
+static int uhet_create(void);
+public static $routes = array();
+static struct sockaddr_in my_http_addr;
+static int do_bitexact = 0;
+static AVInputFormat *file_iformat;
+static FILE *vstats_file;
+static void pattern 
+static const AVOption options[] = {
+static const AVOption options[] = {
+static int ebml_id_size(unsigned int id)
+static EbmlSyntax ebml_header[] = {
+static const ModeTab mode_11_08 = {
+static VLC huff_vlc[16];
+static av_noinline void OPNAME 
+import static com.atlassian.fugue.Option.none;
+public final static String INSERT_VIEWNODE_QUERY =
+public final static String INSERT_VIEWLINK_QUERY =
+public final static int ACTION_NONE=0;
+private static final int SERVICELOAD= 5;
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<CODE>private static&nbsp;class</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+public static final String NAMESPACE = "http:
+public static final String NAMESPACE = "http:
+public static final String NAMESPACE = "http:
+public static final String NAMESPACE = "http:
+public static enum Action {
+private static final String TYPE = ".type";
+public static final String USER = "user";
+public static final String SPACE = " ";
+public static final byte BOOLEAN = 001;
+/** Assorted static utility routines.
+static final long[] jjbitVec0 = {
+static final long[] jjbitVec0 = {
+static final long[] jjbitVec0 = {
+private static final int LAST_PAPER_SIZE = 89;
+<CODE>static&nbsp;<A HREF="http:
+staticMembers.append("public static final int ");
+static const char cdrom_str[] = "CD-ROM";
+static unsigned
+static Bit8u read_byte();
+static void vperfctr_ihandler(unsigned long pc);
+static void vperfctr_ihandler(unsigned long pc);
+static intRateControlMode = VARIABLE_RATE;
+static void hsschur_aux2x2schur(double* a,
+static void
+static Xextralink *Xextralinkalloc (void);
+static void
+static void
+static void
+static void
+static void
+static void
+static void
+static void
+static int test_cycle_size = 0;
+static void
+static int norm = CC_EUCLIDEAN;
+static void
+static void
+static double sgamma, cgamma;
+static GL2PScontext *gl2ps = NULL;
+static List_T *ListOfTransformedPoints = NULL;
+public static int mapY = 0;
+static int disable_esco;
+static gfp_t saved_gfp_mask;
+static gfp_t htlb_alloc_mask = GFP_HIGHUSER;
+static LIST_HEAD(modules);
+volatile uint32_t fec_id;
+volatile u8mode;
+volatile u8mode;
+typedef volatile struct
+volatile u32mbar;
+asm volatile("movdqa %0,%%xmm7" : : "m" (x0f[0]));
+volatile unsigned long ps; 
+extern volatile struct CoreGlobalRegs {
+volatile unsigned long cr[8];
+volatile uint32_t gotgctl; 
+static void print_fixed (volatile uchar *p);
+volatile uint8 *MuxConfigReg;
+typedef volatile struct
+volatile grstctl_t greset ={ .d32 = 0};
+volatile unsigned long mps_swirn0set; 
+volatile unsigned long clc; 
+volatile uint32_t maca_entry = 0;
+extern volatile uint8_t fcs_mode;
+volatile u32alpha;
+volatile int tec_matrix;
+typedef volatile struct {
+volatile u8 PAR[6];
+volatile ushort cin;
+unsigned intpad1[3];
+extern volatile uint32_t __break_error_detect[3]; 
+;; URL: http:
+${body}}
+volatile u_int32_t dot3StatsAlignmentErrors;
+volatile u_int16_t cb_status;
+volatile unsigned short ev_head;
+inline volatile T* Addr() volatile {return &val;}
+; ...likewise volatile accesses.
+__asm__ __volatile__( \
+volatile unsigned int memstatus;
+volatile uint16_tcsar;
+volatile u32 status_attn_bits_ack;
+VOLATILE char sync_tr[NTARGET];
+volatile __device__ int g_q_offsets[1]={0};
+volatile uint32_t gotgctl;
+*(volatile ulong*)MPC5XXX_CS0_START,
+asm volatile(\
+__asm__ __volatile__("sync;" insn\
+REMAP1(u8, readb, const volatile)
+volatile __u32 DMA_Ctl;
+volatile fec_t*hwp;
+volatile immap_t *immap = (immap_t *)CFG_IMMR;
+__asm__ volatile ("sync");
+typedef volatile struct
+volatile UINT32 UDPHS_EPTCFG; 
+static inline u
++volatile u32 *mcr;
+__asm__ __volatile__(" lg %0,0(%4)\n"\
+REMAP1(u8, readb, const volatile)
+volatile u32 sys_base;
+volatile u32krn_type;
+volatile u8 mcr;
+volatile fec_t*hwp;
+*buf++ = *(volatile unsigned char *)portp;
+*(volatile unsigned char *)portp = b;
+;; URL: http:
+asm volatile("pushfl;"
+typedef void *volatile XchgPtr;
+volatile uint16_t *reg =
+asm volatile("\n\
+volatile structlereg1 *sc_r1;
+extern volatile far BDT ep0Bo; 
+private volatile Destination requestDestination;
+private volatile AbstractJmsChannel channel;
+private volatile Destination requestDestination;
+__asm__ __volatile__ ("" ::: "memory");
+volatile struct ADC_REGS AdcRegs;
+volatile u8 idr[0x8];
+typedef volatile _PN PN;
+volatile u32mbar;
+extern volatile unsigned char TMR0 @ 0x001;
+} STATUSbits_t;
+volatile unsigned int lsr; 
+volatile u8mode;
+asm volatile("rdtsc"); 
+asm volatile("rdtsc"); 
+extern volatile good_test x3;
+extern volatile enum good_test x3;
+extern volatile class good_test x3;
+extern volatile enum good_test x3;
+extern volatile struct good_test x3;
+extern volatile union good_test x3;
+void operator = (const volatile Base& a) volatile
+volatile struct psif_csr_mmu_config *ptr,
+volatile unsigned char INDF @ 0x000;
+extern volatile unsigned char WDMOD;
+extern volatile unsigned char WDMOD;
+asm volatile (\
+static uint8_t __LDREXB(volatile uint8_t *addr)
+set_bit (int nr, volatile void *addr)
+typedef volatile struct mailbox {
+volatile struct scp_struct*scp;
+volatile u16 *ib = (volatile u16 *)dev->mem_start;
+volatile struct lance_regs *ll;
+asm volatile("ocbwb%0"
+volatile __u32*ph_regaddr;
+void **request_buf, void **response_buf)
+static void clean_writequeues(void)
+void ext4_exit_mballoc(void)
+static inline void unregister_as_ext3(void) { }
+void destroy_checkpoint_caches(void);
+void f2fs_balance_fs(struct f2fs_sb_info *sbi)
+static void block_sigs(sigset_t *oldset)
+const void *value;
+static inline void unregister_fuseblk(void)
+void hfsplus_destroy_attr_tree_cache(void);
+static void init_once(void *foo)
+extern void nfs_fs_proc_exit(void);
+static inline void
+static void nfs4_renew_release(void *calldata)
+static void
+int flags, const char *dev_name, void *raw_data);
+void (*exit)(struct net *);
+void nfsd4_put_session(struct nfsd4_session *ses)
+void nfs4_state_init(void);
+extern void nfs4_lock_state(void);
+void __user *argp = (void __user *)arg;
+- (void)viewDidLoad
+void *kaddr;
+TP_PROTO(void *inode, void *file, void *dentry,
+const void*xi_value;
+void dlm_destroy_master_caches(void);
+static void
+void (*detach)(struct acpi_device *dev);
+void acpi_os_free(void *memory);
+prototype;
+void acpi_processor_ppc_init(void);
+u8 *buffer;
+void *priv;
+extern void __audit_syscall_entry(int arch,
+static inline void *bio_data(struct bio *bio)
+void *node_bootmem_map;
+void(*unprepare)(struct clk_hw *hw);
+extern void clockevents_suspend(void);
+void(*unblank)(void);
+extern void context_tracking_user_enter(void);
+static inline void cpu_hotplug_begin(void) {}
+void cpufreq_put_global_kobject(void);
+extern void cpuidle_driver_unref(void);
+void *ptr;
+void dma_issue_pending_all(void);
+void efivar_entry_iter_end(void);
+void *data;
+static inline void freezable_schedule(void)
+static inline void ftrace_stop(void)
+void usbhid_quirks_exit(void);
+void (*callback) (void *context);
+void*chip_data;
+void might_fault(void);
+extern void kgdb_arch_exit(void);
+extern void kmemleak_init(void) __ref;
+void *(*alloc)(void);
+static inline void kvm_irqfd_exit(void)
+ATA_LFLAG_NO_HRST= (1 << 1), 
+extern void lockdep_init(void);
+static inline void mem_cgroup_oom_enable(void)
+void lock_memory_hotplug(void);
+extern void setup_per_cpu_pageset(void);
+void (*exit)(void);
+- (void)reportError_:(NSError *)error {
+void (*flush_branch_stack)(void);
+extern void pm_runtime_enable(struct device *dev);
+static inline void wake_up_klogd(void)
+void rcu_sysidle_force_exit(void);
+static inline void rcu_force_quiescent_state(void)
+void rcu_cpu_stall_reset(void);
+void calc_load_enter_idle(void);
+void __init kmem_cache_init(void);
+void kick_all_cpus_sync(void);
+extern void pm_restore_console(void);
+extern void lru_add_drain(void);
+void*private;
+static inline void tick_nohz_idle_enter(void) { }
+register_trace_
+extern void tty_vhangup_self(void);
+public override void Emit (EmitContext ec)
+void AddModuleCharSet (ResolveContext rc)
+public override void Emit (EmitContext ec)
+public override void Emit ()
+void refresh_zone_stat_thresholds(void);
+void laptop_sync_completion(void);
+static inline void ceph_encode_8(void **p, u8 v)
+void *r_priv; 
+void(*clk_writel)(u32 val, void __iomem *reg);
+void M3::parse(){
+static inline void prcmu_disable_wakeups(void)
+void *buf;
+void *targinfo;
+void*controller_data;
+void __iomem*regs;
+void*(*vaddr)(void *buf_priv);
+void ipv6_addr_label_cleanup(void);
+delegate void EmptyDelegate ();
+void ip_init(void);
+void ip_vs_conn_cleanup(void);
+else if (typeid(*i) == typeid(real_tp_interval)) {
+else return code;
+} else {
+else if ( input < 0x200000 )
+} else {
+} else {
+} else {
+} else {
+} else if (type == "mouseout") {
+} else {
+} else {
+} else {
+} else {
+%\def\replace@commawithbackslash
+else if(25<difficultynum<=50)
+else if(25<difficultynum<=50)
+else if (isset($utf_combining_class[$utf_char]))
+} else if ($_adodb_ver >= 5.0) {
+else if ($h < 10) $h = '0'.$h;
+} else {
+} else {
+else if (prop.equals(UILink.TYPE_PROPERTY)) {
+} else {
+} else if (firstBit == firstBit2) {
+else if (datatype.equals(XMLSchema.INTEGER)) {
+} else {
+else if (localTCKind.equals(TCKind.tk_long))
+else if (localTCKind.equals(TCKind.tk_long))
+else if(getOperation() == Operation.ADD)
+} else {m1=m2=0;mxs=fx;}
+int CClinkern_flipper_init (int ncount, int *cyc)
+} else if (seq_list->head == seq) {
+} else {
+} else {
+} else {
+} else {
+} else {
+} else if (strcmp(s2w, "1") == 0) {
+} else if (!driver->in_busy_2) {
+else if (count < 1048576)
+} else {
+} else {
+} else {
+} else {
+} else {
+} else if (type == "mouseout") {
+else if (ID == 0) 
+} else {
+} else {
+} else if (strcmp(s2w, "1") == 0) {
+} else {
+} else {
+} else {
+} else if ($_adodb_ver >= 5.0) {
+else $retarr[strtoupper($fld->name)] = $fld;
+} else if (strcmp(s2w, "1") == 0) {
+} else if (spec.flags & PLUS) {
+} else {
+} else if (!driver->in_busy_2) {
+else if (expr instanceof UnaryTupleOperator) {
+else if (datatype.equals(XMLSchema.INTEGER)) {
+switch (hubs->dcs_readback_mode) {
+switch (hubs->dcs_readback_mode) {
+switch (reg) {
+.switch.checked > .switch-button {
+switch (hubs->dcs_readback_mode) {
+switch (reg) {
+switch (yych) {
+case Nfs3Ok:
+switch (reg) {
+switch (reg) {
+.has-switch.switch-mini {
+switch ($vowel) {
+.has-switch.switch-mini {
+.switch > .switch-track.switch-info {
+'SLIMBUS_DL_HL Switch':1:1
+'SLIMBUS_DL_HL Switch':1:1
+'SLIMBUS_DL_HL Switch':1:1
+'SLIMBUS_DL_HL Switch':1:1
+'DAC1 Switch':1:1
+'DAC1 Switch':1:1
+'SLIMBUS_DL_HL Switch':1:1
+switch ((yych = *YYCURSOR)) {
+'AFE_PCM_RX Port Mixer INTERNAL_FM_TX':1:0
+yych = *(YYMARKER = ++YYCURSOR);
+.has-switch.switch-mini {
+* Copyright 2011, Big Switch Networks, Inc.
+.has-switch label.switch-small {
+switch(pathInfo.HttpMethod)
+.has-switch span.switch-default[disabled] {
+.has-switch.switch-mini {
+`switch`。
+class SwitchCombinationError(SwitchError):
+'SLIMBUS_DL_HL Switch':1:1
+.ats-switch.switch-mini i.switch-mini-icons {
+.switch.switch-success span.switch-left {
+.switch.switch-mini i.switch-mini-icons {
+unsigned char WMT_MSMPEG4V3_DECODER; 
+-- Title: Fibre Channel Switch MIB.
+switch((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
+Mempak switch =
+switch(type) {
+* semx-switch.c: Regenerate.
+Switch (ToInteger (arg0)) {
+'MICBIAS1 CAPLESS Switch':1:1
+switch(pathInfo.HttpMethod)
+switch x := x.(type) {
+yystart1:
+switch lhs := o.l.(type) {
+.has-switch.switch-mini {
+.has-switch span.switch-default.active {
+.has-switch span.switch-left {
+.has-switch span.switch-default[disabled] {
+.has-switch.switch-mini {
+switch ( cs )
+switch ( cs )
+switch (yych) {
+switch(yych){
+case string:
+case 29: case 30: case 31: case 32:
+case AR_STRUCT_ITEM_XML_SCHEMA:
+case 'moov': 
+case 'yahoo':
+case 'Y':
+case NOTHING: return OS_TEXT("NOTHING");
+case ICoreConstants.ISSUE:
+case (char) (9): 
+case REAL:
+case VMEXIT_CPUID:
+case APIC_TMR_INT:
+case 0: return regs->eax;
+case PF_VECTOR:
+case'new':
+case IPV6_ADDRFORM:
+case VEN_INPUTFMT_NV12:
+case VCD_S_SUCCESS:
+case DDL_I_DPB_RELEASE:
+case wxT('s'):
+case 'Y':
+case ROTATOR_REQUEST:
+case R_ARM_NONE:
+if (os_strncasecmp(c[j], str, len) == 0) {
+.Case("analyzer_noreturn", true)
+case 'isHTML5':
+case KDLTranscoders::KALTURA:
+case 'toggle-admin':
+case ROTATOR_REQUEST:
+case ETHTOOL_GTXCSUM:
+case FSF_PSQ_LINK_NO_LIGHT:
+case CHIP_R100:
+case ENCODER_OBJECT_ID_INTERNAL_LVDS:
+case ATOM_IIO_NOP:
+return { lat: cp.lat, lng: cp.lon }; 
+$yformat = 'Y'; $mformat = 'n'; $dformat = 'j';
+foreach( $ecp1_cals as $_e_id => $line ) {
+;turns left for 1 second, then continues forward
+GNU General Public License for more details.
+if ( !property_exists( $this, $propName ) ) {
+foreach ( $list as $elem ) {
+public $dataSourceClassName;
+$.format = $.validator.format;
+for (i = 0; i < this.rows; i++) {
+for (Locale locale : locales) {
+import java.text.MessageFormat;
+MessagesBundle mb = defaultFiles[i];
+<div class="block">View for Contacts</div>
+<td class="colLast">
+<div class="block">Form for GrapeMusts</div>
+<td class="colLast">
+struct {
+demo.RunPopulateTemplatesThread();
+Format the legacy item for display.
+for (;;) 
+case '2': 
+for(;;)
+printf("befor clear for INVALID BADGE\n ");
+17:51:42 ResponceServer ��������� �������.
+while (c = word[i++])
+while (c < 0x7f)
+while (c < 0x7f)
+while (i < src->size) {
+} while (0)
+while(cur!=end()) {
+while(_t_sz--) *_t_v++ = 0;\
+while(_t_sz--) *_t_v++ = 0;\
+} while (0)
+*(inst)++ = imb.b [7];\
+while(_t_sz--) *_t_v++ = 0;\
+} while(0)
+} while(0)
+} while(0)
+while (c <= 0x7e)
+while (c <= 0x7e)
+while (c < 0x7f)
+while ( p < now )
+while ($row = $db->sql_fetchrow($result))
+while (!feof($fp))
+while (rs.next()) {
+while(ptsp<pts+3*p) {
+} while (0)
+while(!feof(ffp) && !ferror(ffp))
+while(!feof(ffp) && !ferror(ffp))
+while (isDoubleQuoteToReplace)
+while ($buffer = fgets($src,4096)) {
+while(($key,$value) = each(%EchoChannels)) {
+while (isdigit(**s))
+while (result.hasNext()) {
+while (hasNewStatements()) {
+while (lua_next(L, 4) != 0) {
+while (result.hasNext()) {
+while (result.hasNext()) {
+} while (0)
+} while (0)
+} while (0)
+} while (0)
+while (sp > 0) {
+goto errout;
+while (1) {
+while (*start != '\0') {
+while (fgets(buf, sizeof(buf), f)) {
+while(files.size())
+if(i>j) do {int _=i; i=j; j=_;} while(false);
+} while (0)
+while (isdigit(**s))
+while(*s && strchr_m(sep,*s))
+while(line < (h->req_buf + h->req_contentoff))
+while ((d = readdir(dir)) != NULL) {
+while (*np && ptr < limit-1)
+} while (0)
+while (sp > 0) {
+} while (pmd++, addr = next, addr != end);
+while (count--) {
+while (isdigit(**s))
+} while (bh != head);
+} while (bh != head);
+} while (0)
+while (*(*ptr))
+while (*str)
+} while (0)
+while (*p) {
+while ( 1 )
+while ( 1 )
+while ( *ptr && IsWhiteSpace( *ptr ) ) ptr++;
+while (($tt = $this->t->get()) != TOKEN_END)
+while ( firstDirtyNode != null ) {
+;;; have been sent to it while it was busy.
+} while (0);
+while (*p)
+set_weights: while (wt > 3) {
+while (isdigit(**s))
+while(*ptr && !isspace(*ptr)) ++ptr;
+} while (--count);
+while( isspace(q[-1]) ) q--;
+;} while (0)
+} while (0)
+while (count--) {
+} while (!abort && get_ticks() <= etime);
+while (readl(&cmper->l3clkctrl) != PRCM_MOD_EN)
+while (isdigit(**s))
+while ((inb(tmport) & 0x01) != 0x01) {
+while ( ( ' ' == c ) || ( '\t' == c ) ) {
+- while (i < numInputSyms + numNewSyms) {
+while ( p < now )
+while (isdigit(**s))
+while (($tt = $this->t->get()) != TOKEN_END)
+while($w=mysql_fetch_array($sub)){
+while (*(*ptr))
+while (*str)
+while line == '':
+while (true)
+}while(0)
+}while(0)
+}while(0)
+}while(0)
+while ( height-- ) {
+} while(0)
+case 0x00:goto yy68;
+goto _out;
+goto _out;
+goto _test_eof;
+goto _out;
+goto _test_eof;
+goto _test_eof;
+goto _test_eof;
+goto error2;
+goto out;
+goto err;
+goto out;
+goto fail;
+goto bail;
+goto leave;
+goto out;
+goto out;
+goto instr_done;
+goto sigbus;
+if(tcom(l))
+13 0 obj
+13 0 obj
+goto _test_eof;
+if (yych <= 0x00) goto yy22;
+case 0x00:goto yy38;
+goto loop;
+APPLNgoto 21
+goto end;
++ goto _test_eof;
+goto leave;
+<< /S /GoTo /D (Outline0.2) >>
+<< /S /GoTo /D (Outline0.2) >>
+<< /S /GoTo /D (Outline0.2) >>
+<< /S /GoTo /D (Outline0.2) >>
+goto out;
+goto L20;
++goto out;
+<< /S /GoTo /D (Outline0.2) >>
+goto _test_eof;
+13 0 obj
+goto nextInstruction2;
+if(tcom(l))
+case "goto": t.kind = 80; break;
+goto out;
+goto out;
+case 0x00:goto jj38;
+case 0x00:goto kk70;
+goto nextInstruction2;
+copy_8: as_s8(dst) = as_s8c(src); goto COPY_END;
+goto yy0;
+goto yy0;
+goto error;
+goto restart;
+goto yyc_ST_IN_SCRIPTING;
+goto done_free;
+goto out;
+goto healthy;
+goto yystart1
+goto retry;
+goto error;
+13 0 obj
+goto error;
+/S /GoTo
+goto is_a_corner;
+goto is_a_corner;
+goto is_a_corner;
+goto fail;
+goto found;
+continue;
+op 21 array-length 12x y none continue|throw
+continue = false
+continue = true
+110 CONTINUE 
+110 CONTINUE 
+140 CONTINUE 
+continue;
+continue;
+continue;
+op 1a const-string 21c y string-ref continue|throw
+continue
+c 5 continue
+c 5 continue
+; env*: (break k14 continue k23 k22 i14)
+; env*: (loop k16 break k14 k15 continue k17)
+; env*: (rv22 k14 break rv23 i14 continue k25 k24)
+; env*: (loop break k14 k15 continue k18 rv17 k16)
+; env*: (break k14 continue k23 k22 i14)
+; env*: (loop break k14 k15 continue k18 rv17 k16)
+continue;
+continue
+7 continue
+7 continue
+1 continue
+continue
+continue
+23000 continue
+pause -1 "Hit return to continue"
+continue;
+continue;
+continue next_insn;
+Continue :c continue evaluation")
+lfor done
+* to continue the same random number sequence.
+{ gotoCase = this.case_INITIAL; continue; };
+continue;
+5001 CONTINUE
+continue;
+continue;
+continue;
+continue;
+-continue
+1001 continue
+30 continue
+10 continue
+bool cpuBreakLoop = false;
+case '"': out.append("\\\""); break;
+} break;
+case opNeg : SetRaw(a, -slotRawInt(a)); break;
+if (att->data == input_attribute) break;
+if(RecordType === 0 && last_Rn === 'EOF') break;
+case 'Description': tag = 'Comments'; break;
+case MGN_1M: ret = DESC_RATE1M;break;
+DebuggerBreakIfDebugging();
+case 82: s = "\"break\" expected"; break;
+} break;
+break ;
+var RecordType = blob.read_shift(2);
+case 'Description': tag = 'Comments'; break;
+case '<': sb.append("&lt;"); break;
+break; }
+PASS Invalid: "break 0.2"
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (result i n k14 break k16 k15 return k17)
+; env*: (x h return k14 k15 k16 break k19 rv18)
+; env*: (k14 break)
+; env*: (rv14 k15 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (rv14 rv15 break k16)
+; env*: (i result return k14 break k17 k15 k16)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (i nums k14 k15 return break k17 k16)
+.nr an-break-flag 1
+BREAK = 0x20
+case -1: { t.kind = eofSym; break loop; } 
+case '000b': $tag = 'ACDComment'; break; 
+case '000b': $tag = 'ACDComment'; break; 
+if(otherside == board.squares[xy(1,1)]) break;
+case '000b': $tag = 'ACDComment'; break; 
+use constant BREAK => 0040 ;
+is(x, 0, 'do-break without label')
+case '@': p->type = JISC6226_1978; break;
+PL_op = NORMAL; break;
+case '@': p->type = JISC6226_1978; break;
+} break;
+case 0x00:dyn_dop_ebgb(DOP_ADD);break;
+selector = getsym("break");
+case opSilence : func = &zero_a; break;
+break; \
+case 0x0000: strcat(buffer, " "); break; 
+RMEbGb(ADDB);break;
+switch(fEndDate.getDay()) {
+case "aa": return "aar"; break;
+}break;
+{fieldtype:"Column Break"},
+if(tmp0) break;
+if(tmp0) break;
+return R;
+_exp1=((((T977*)(((C)->_list)))->_storage))[_i];
+if(((int32_t)(_i))<=(INT32_C(0))) break;
+tmp0=((T6)(r553use_current(((T553*)a1))));
+se_die(INT32_C(1));
+while(1){
+if(tmp0) break;
+if(((int32_t)(_i))>(tmp0)) break;
+if(tmp0) break;
+case 378:
+if(tmp0) break;
+if(tmp0) break;
+Cast (VBit, VSByte, Nothing);
+public static final int EVENTKIND_BREAKPOINT = 2;
+case 0x00: RegB = RotateLeftCircular(RegB);break;
+case "abstract": t.kind = 6; break;
+case (0x69): valueholder = arg1; break; 
+*s = "DW_ACCESS_public"; break;
+break ;
+if (ord($marker) != 0xff) break;
+topic_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
+field_default_value varchar2(765) DEFAULT '' ,
+in_message INTEGER DEFAULT 0 NOT NULL,
+[0m[[0mdebug[0m] [0mreport for default
+Default value: @code{-1}
+Number format for Y-axis (in standard C form)@*
+default MSM_SOC_REV_NONE
+report for org.scala-tools.sbt
+default n
+default n
+default n
+default MSM_SOC_REV_NONE
+CREATE DATABASE `kalturaetl` ;
+<p><a href="
+default n
+default n
+default n
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+<p><a href="
+default n
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+\shape default 
+<p><a href="
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+<p><a href="
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default 2 if BF561
+<p><a href="
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+<p><a href="
+<p><a href="
+<p><a href="
+default MSM_SOC_REV_NONE
+<p><a href="
+default MSM_SOC_REV_NONE
+<p><a href="
+$tipDefaultWidth: 300px !default;
+default MSM_SOC_REV_NONE
+default:M_Createtables();
+[0m[[0mdebug[0m] [0mreport for default
+[0m[[0mdebug[0m] [0mreport for default
+[0m[[0mdebug[0m] [0mreport for default
+<p><a href="
+depends on SMP
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+) ENGINE=ENGINE DEFAULT CHARSET=latin1
+t4CREATE TABLE `t4` (
+t4CREATE TABLE `t4` (
+t5CREATE TABLE `t5` (
+t5CREATE TABLE `t5` (
+t1CREATE TABLE `t1` (
+t1CREATE TABLE `t1` (
+t1CREATE TABLE `t1` (
+t1CREATE TABLE `t1` (
+- char stringpool_str13[sizeof("L6")];
+Error += sizeof(glm::int8) != 1;
+Error += sizeof(glm::int8) != 1;
+: tag = tag + SIZEOF(TagItem)
+type size_t sizeof 4
+tempStream.read((char*)&x, sizeof(float));
+.n = sizeof(s390_regs) / sizeof(long),
+size_t siz = sizeof(reply);
+memset (str,0,sizeof str);
+sizeof(struct PDU),
+data = os_zalloc(sizeof(*data));
+os_memset(&ireq, 0, sizeof(ireq));
+{FOFS( s.events[0] ), sizeof( int ) * MAX_EVENTS},
+Zero(&t, sizeof(t));
+memset(&tv, 0, sizeof(tv));
+ZIP_PACKER *p = ZeroMalloc(sizeof(ZIP_PACKER));
+Zero(&t, sizeof(t));\
+Copy(&wp->name, &addr, sizeof(void *));\
+GetExeDirW(exedir, sizeof(exedir));
+IPToStr(ipstr1, sizeof(ipstr1), &p->ClientIP);
+BinToStr(tmp, sizeof(tmp), rand, sizeof(rand));
+Copy(&g->DestIp, &ip, sizeof(IP));
+if (ReadBuf(b, &h, sizeof(h)) != sizeof(h))
+Zero(t, sizeof(SECURE_SIGN));
+Zero(st, sizeof(DDNS_CLIENT_STATUS));
++ ah = malloc(sizeof(struct audio_helper));
+printf("Writing model->W to file... ");
+import net.sourceforge.sizeof.SizeOf;
+.ctxsize= sizeof ( struct md5_sha1_context ),
+copy = malloc(sizeof(*copy));
+algo = calloc(1, sizeof(*algo));
+struct ldap_uri *lu = xalloc(sizeof(*lu));
+qsort(glyphs,i,sizeof(uint16),cmpuint16);
+src = gf_malloc(sizeof(char)*size);
+memset(&hints, 0, sizeof(hints));
+SFBool *tmp = (SFBool *)gf_malloc(sizeof(SFBool));
+len = (sizeof(*cmd) - sizeof(cmd->iebuf)) +
+len += snprintf(buf + len, sizeof(buf) - len,
+len = min(count, sizeof(buf) - 1);
+le16_add_cpu(&cmd->size, sizeof(u16));
+src = gf_malloc(sizeof(char)*size);
+memset(&hints, 0, sizeof(hints));
+SFBool *tmp = (SFBool *)gf_malloc(sizeof(SFBool));
+mysql_payload_size = sizeof(field_count) +
+.pdu_len = sizeof(display_text_111),
+*dst = g_malloc0(2 * sizeof(gchar *));
+memset(out, 0, sizeof(out));
+GetCurrentMap(g_currentMap, sizeof(g_currentMap));
+memset(&listen_addr, 0, sizeof(listen_addr));
+Q_strncpyz( filename, value, sizeof( filename ) );
+memset(&fp, 0, sizeof(fp));
+memset(u, 0, sizeof(u));
+int elemPitchX = pitchX / sizeof( T );
+memcpy(&i, p, sizeof(int));
+memset(lambda,0,lambda_size*sizeof(double));
+addrs = calloc(count + 1, sizeof(*addrs));
+TSGDataType::sizeof_stype() const
+BUILD_BUG_ON(sizeof(long) % sizeof(u32));
+sizeof(time_str));
+my_buf = xmalloc(sizeof(struct slurm_buf));
+msg_sz += (sizeof(as_msg_field) + sizeof(trid));
+Kpr = (pfloat *)MALLOC(nnzK*sizeof(pfloat));
+.maxlen= sizeof(unsigned int),
+wcex.cbSize = sizeof(WNDCLASSEXW); 
+memset(u, 0, sizeof(u));
+cmd_in[i] = (char*) malloc(sizeof(char)* 100);
+htons(sizeof(reconf_msg.auth) - 4), 3, 1, 0,
+memset(u, 0, sizeof(u));
+os_memset(ireq, 0, sizeof(*ireq));
+count = sizeof(sta_infos) / sizeof(sta_infos[0]);
+len = sizeof(domain);
+stream->read((char*) &diffuse, sizeof(float) * 4);
+stream->read((char*) &tmp8, sizeof(uint8_t));
+len = array_length(a, sizeof(UINT16));
+h_addr = safe_malloc(sizeof(struct in_addr));
+miblen = sizeof(mib)/sizeof(size_t);
+len += sizeof("!~PASSENGER_RUBY: ") - 1;
+h.respond(out, unsafe.Sizeof(*out))
+ZeroMemory(&req, sizeof(req));
+ZeroMemory(info, sizeof(*info));
+addr_len = (socklen_t)sizeof(struct sockaddr_in);
+is_expr* DigSeq(int val) {
+%type <string> SIZEOF
+StreamData((char *)&type_telemetry, sizeof(char));
+memset((char *)&sad, 0, sizeof(sad)); 
+GetGameFolderName(game, sizeof(game));
+sizeof(flightMode) +
+snprintf(client_str, sizeof(client_str), "%s%s%s",
+this->read( (char*)&blk, sizeof(size_t) );
+this->read( (char*)&blk, sizeof(size_t) );
+ifs.read( (char*)&blk, sizeof(size_t) );
+op=(double*) calloc(end+1,sizeof(double));
+op=(double*) calloc(end+1,sizeof(double));
+op=(double*) calloc(end+1,sizeof(double));
+op=(double*) calloc(end+1,sizeof(double));
+op=(double*) calloc(end+1,sizeof(double));
+op=(double*) calloc(end+1,sizeof(double));
+op=(double*) calloc(end+1,sizeof(double));
+op=(double*) calloc(end+1,sizeof(double));
+mlc.cbStruct = sizeof(MIXERLINECONTROLS);
+return FALSE;
+return $return;
+return INSTANCE;
+return v;
+return ep->eid;
+if (values.length == 0) return NIL;
+returned = fn.apply( this, arguments );
+return $return;
+return $return;
+return $d;
+return T(); 
+if (nResult != AR_RETURN_OK)
+{ *length = 0; return; }
+return 0;
+return *this;
+case AR_RETURN_ACCESSIBLE: return "Accessible";
+return this;
+return;
+return this; 
+return n;
+return $return;
+return NO;
+return result;
+return result;
+return $ua_append;
+return this; 
+return returnValue;
+return;
+return;
+return;
+return color;
+return;
+return $return_array;
+return $return;
+return $return;
+return $arr;
+return $USER_NAME unless ($USER_NAME eq "NULL");
+syntax_return(allocator, OS_TEXT("return")),
+return true;
+return Optional.of(nextNamespace);
+CLASS="ABSTRACT"
+.super Ljava/lang/Object;
+.super Ljava/lang/Object;
+public abstract interface WebViewProvider
+public abstract interface WindowManagerPolicy
+public abstract class ActionBar
+public abstract class Context {
+public abstract class PackageManager {
+public abstract class ActionBar {
+public abstract Headerrec getHeader();
+.super Ljava/lang/Object;
+onoremap <buffer> <silent> [[ ?\(.*\%
+Abstract Erlang syntax trees.
+CLASS="ABSTRACT"
+public abstract class ProblemGeneral{
+<a href="ecli/abstract/ecli_statement.html
+<a href="ecli/abstract/ecli_status.html
+<a href="ecli/abstract/ecli_statement.html
+<a href="ecli/abstract/ecli_statement.html
+<a href="ecli/abstract/ecli_rowset_cursor.html
+<a href="ecli/abstract/ecli_statement.html
+-- Oct 17, 2012 3:51:07 PM SGT
+-- Oct 3, 2012 3:53:04 PM SGT
+-- Oct 17, 2012 3:51:07 PM SGT
+-- Oct 3, 2012 3:53:04 PM SGT
+bool cpuBreakLoop = false;
+case '"': out.append("\\\""); break;
+} break;
+case opNeg : SetRaw(a, -slotRawInt(a)); break;
+if (att->data == input_attribute) break;
+if(RecordType === 0 && last_Rn === 'EOF') break;
+case 'Description': tag = 'Comments'; break;
+case MGN_1M: ret = DESC_RATE1M;break;
+DebuggerBreakIfDebugging();
+case 82: s = "\"break\" expected"; break;
+} break;
+break ;
+var RecordType = blob.read_shift(2);
+case 'Description': tag = 'Comments'; break;
+case '<': sb.append("&lt;"); break;
+break; }
+PASS Invalid: "break 0.2"
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (result i n k14 break k16 k15 return k17)
+; env*: (x h return k14 k15 k16 break k19 rv18)
+; env*: (k14 break)
+; env*: (rv14 k15 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (rv14 rv15 break k16)
+; env*: (i result return k14 break k17 k15 k16)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (i nums k14 k15 return break k17 k16)
+.nr an-break-flag 1
+BREAK = 0x20
+case -1: { t.kind = eofSym; break loop; } 
+case '000b': $tag = 'ACDComment'; break; 
+case '000b': $tag = 'ACDComment'; break; 
+if(otherside == board.squares[xy(1,1)]) break;
+case '000b': $tag = 'ACDComment'; break; 
+use constant BREAK => 0040 ;
+is(x, 0, 'do-break without label')
+case '@': p->type = JISC6226_1978; break;
+PL_op = NORMAL; break;
+case '@': p->type = JISC6226_1978; break;
+} break;
+case 0x00:dyn_dop_ebgb(DOP_ADD);break;
+selector = getsym("break");
+case opSilence : func = &zero_a; break;
+break; \
+case 0x0000: strcat(buffer, " "); break; 
+RMEbGb(ADDB);break;
+switch(fEndDate.getDay()) {
+case "aa": return "aar"; break;
+}break;
+{fieldtype:"Column Break"},
+if(tmp0) break;
+if(tmp0) break;
+return R;
+_exp1=((((T977*)(((C)->_list)))->_storage))[_i];
+if(((int32_t)(_i))<=(INT32_C(0))) break;
+tmp0=((T6)(r553use_current(((T553*)a1))));
+se_die(INT32_C(1));
+while(1){
+if(tmp0) break;
+if(((int32_t)(_i))>(tmp0)) break;
+if(tmp0) break;
+case 378:
+if(tmp0) break;
+if(tmp0) break;
+Cast (VBit, VSByte, Nothing);
+public static final int EVENTKIND_BREAKPOINT = 2;
+case 0x00: RegB = RotateLeftCircular(RegB);break;
+case "abstract": t.kind = 6; break;
+case (0x69): valueholder = arg1; break; 
+*s = "DW_ACCESS_public"; break;
+break ;
+if (ord($marker) != 0xff) break;
+if ( nx == nWidth ) break;\
+} break;
+case SDLK_BREAK: return eKey_BREAK; break;
+case Bplus: ival1 += ival2; break;
+default: break;
+FMAPP_MSG("breaking...");
+if (cmd & PL_PCM_BREAK) {
+} break;
+case "000b": $tag = "ACDComment";break;
+10.01012 break this packet into, 1
+10.01012 break this packet into, 1
+17.42, break this packet into, 1
+15.01, receive incoming, Packet 
+17.42, break this packet into, 1
+15.01, receive incoming, Packet 
+default: break;
+<U0040><U00A0> \x00\x1B |0 
+default: break;
+<U0040><U00A0> \x00\x1B |0 
+case string:
+case 29: case 30: case 31: case 32:
+case AR_STRUCT_ITEM_XML_SCHEMA:
+case 'moov': 
+case 'yahoo':
+case 'Y':
+case NOTHING: return OS_TEXT("NOTHING");
+case ICoreConstants.ISSUE:
+case (char) (9): 
+case REAL:
+case VMEXIT_CPUID:
+case APIC_TMR_INT:
+case 0: return regs->eax;
+case PF_VECTOR:
+case'new':
+case IPV6_ADDRFORM:
+case VEN_INPUTFMT_NV12:
+case VCD_S_SUCCESS:
+case DDL_I_DPB_RELEASE:
+case wxT('s'):
+case 'Y':
+case ROTATOR_REQUEST:
+case R_ARM_NONE:
+if (os_strncasecmp(c[j], str, len) == 0) {
+.Case("analyzer_noreturn", true)
+case 'isHTML5':
+case KDLTranscoders::KALTURA:
+case 'toggle-admin':
+case ROTATOR_REQUEST:
+case ETHTOOL_GTXCSUM:
+case FSF_PSQ_LINK_NO_LIGHT:
+case CHIP_R100:
+case ENCODER_OBJECT_ID_INTERNAL_LVDS:
+case ATOM_IIO_NOP:
+case CPCODES_VEXT:
+case string:
+A += f_k;
+case AUDIT_FILTER_USER:
+case 8:
+case CMD_XMIT_SEQUENCE_CR:
+case TAPE390_DISPLAY: {
+case VIDIOC_OVERLAY_OLD:
+case V4L2_STD_PAL:
+case V4L2_CID_MPEG_AUDIO_SAMPLING_FREQ:
+case CX25840_AUDIO_SERIAL:
+case 2: \
+case 1:
+case 1:
+case L1_MODE_NULL:
+case 0x0001:
+case HID_UP_UNDEFINED:
+case 10: case 11: case 12:
+case RADEON_EMIT_PP_CNTL:
+case B57600: baud = 0; break;
+case spec_op:
+case CPU_R3081:
+case op_variable:
+case 'd':
+case AFE_PORT_AUDIO_IF_CONFIG:
+case WM8962_CLOCKING1:
+case WM8904_SW_RESET_AND_ID:
+case OMAP_DSS_CHANNEL_LCD:
+case VEN_INPUTFMT_NV12:
+case VCD_ERR_ILLEGAL_PARM:
+case DDL_I_DPB_RELEASE:
+case V4L2_CID_MPEG_AUDIO_SAMPLING_FREQ:
+case TIME_5MS :
+case POWER_SUPPLY_PROP_PRESENT:
+case ENCODER_OBJECT_ID_INTERNAL_LVDS:
+case ROTATOR_REQUEST:
+case ROTATOR_REQUEST:
+case SENSOR_CAMERA:
+case 10: case 11: case 12:
+case OPT_CONFIG_FILE:
+case VEN_INPUTFMT_NV12:
+case INVALID_CHANNEL_NUMBER:
+sfarray= new VBArray( ret);
+case 1: 
+case CHR('?'):
+CaseExpr *caseexpr = (CaseExpr *) node;
+case AFE_PORT_CMD_DEVICE_STOP:
+case AFE_PORT_AUDIO_IF_CONFIG:
+case VEN_INPUTFMT_NV12:
+case VCD_S_SUCCESS:
+case DDL_I_DPB_RELEASE:
+case HFI_CMD_SESSION_PARSE_SEQUENCE_HEADER:
+case ROTATOR_REQUEST:
+case 0:
+case 0: 
+case FSF_PSQ_LINK_NO_LIGHT:
+case TAPE390_DISPLAY: {
+case WM8350_IRQ_CHG_BAT_HOT:
+case 'd':
+case 0x200 ... 0x200 + 2 * KVM_NR_VAR_MTRR - 1:
+case G_PRINT:
+case OP_ENTER:
+case CURLE_OK:
+case AS_LOCAL:
+case CG_PRINT:
+SGString<char>* buf = (SGString<char>*) (*(char**)
+extern char const* const _PREHASH_CharterMember;
+_nunull()),
+_nunull()))),
+_nunull()))),
+njo <char-166><char-187><char-161>
+static const unsigned char gb_chars_ban0 [] = {
+extern const char * const ATTR_ACCOUNTING_GROUP;
+extern char const* const _PREHASH_CharterMember;
+extern const char kAppsPromoCounter[];
+EXT int cfg_key_debug(char *, char *, char *);
+char mbName[MBSYS_NETCDF_ATTRIBUTELEN];
+unsigned char BYTE;
+unsigned char BYTE;
+unsigned char BYTE;
+extern char * _PREHASH_CharterMember;
+extern char const* const _PREHASH_CharterMember;
+extern char const* const _PREHASH_CharterMember;
+char fmtchar, fmtstr[64];
+charop;
+static char *remove_dot(char *s)
+char(63),
+20 long sys_getpid(void);
+20 long sys_getpid(void);
+const char **pinfo, const char **ppem_str,
+const char **pinfo, const char **ppem_str,
+char *tmp_data1 = (char *)malloc(_size1);
+unsigned char CharToWhite(unsigned char ch)
+const char *type, const char *value));
+const char *type, const char *value));
+static int parse_char(char c, const char **str)
+const char *type, const char *value));
+const char **pinfo, const char **ppem_str,
+char[,,] c1 = new Char[4,2,3];
+charop;
+const char *str, int slen, unsigned char *p);
+const char *Left( int len, idStr &result ) const;
+unsigned char CharToBrown(unsigned char ch)
+const char *String_Alloc(const char *p) 
+const char *String_Alloc(const char *p) {
+int(*Font_StrLenChars) (const char *text);
+extern _XtShell_h_Const char XtShellStrings[];
+const char *type, const char *value));
+static char config_sleep_out[2] = {0x11, 0x00};
+const char **pinfo, const char **ppem_str,
+int u8_offset(char *str, int32_t charnum)
+unsigned char SFmacro[16][16]; 
+static const char * const blsp_uart1_groups[] = {
+unsigned char astartc;
+char fmtchar, fmtstr[64];
+static char *remove_dot(char *s)
+extern char *revcomp(char *comp, char *seq);
+SYS___POSIX_RENAME = 270 
+SYS___POSIX_RENAME = 270 
+SYS___POSIX_RENAME = 270 
+static const char *hexchars = "0123456789abcdef";
+extern struct mchar mchar_so, mchar_null;
+const char* data = ((char*) args) + 2; 
+static char *write_str(char *to, char *from)
+static char *write_str(char *to, char *from)
+static char *sec2annotation(const char *s)
+static const char * const audio_pcm_groups[] = {
+static const char * const gpio_groups[] = {
+unsigned char astartc;
+unsigned char byElementID;
+char fmtchar, fmtstr[64];
+static char *remove_dot(char *s)
+(char-upcase (char-upcase (char-downcase 
+char *buf, loff_t pos, size_t count);
+unsigned char file_checksum[4];
+unsigned short addr, unsigned char *data,
+unsigned char *gCfgParamName[] = {
+static char config_sleep_out[2] = {0x11, 0x00};
+char fmtchar, fmtstr[64];
+SYS___POSIX_RENAME = 270 
+SYS___POSIX_RENAME = 270 
+SYS___POSIX_RENAME = 270 
+static char *sec2annotation(const char *s)
+llgtr%r3,%r3
+char[,,] c1 = new Char[4,2,3];
+static const char * const audio_pcm_groups[] = {
+static const char * const gpio_groups[] = {
+unsigned char astartc;
+unsigned char byElementID;
+char fmtchar, fmtstr[64];
+const char **pinfo, const char **ppem_str,
+static char *remove_dot(char *s)
+const char **pinfo, const char **ppem_str,
+const char **pinfo, const char **ppem_str,
+char gdFontGiantData[] = {
+char gdFontLargeData[] = {
+char gdFontMediumBoldData[] = {
+char gdFontSmallData[] = {
+char gdFontTinyData[] = {
+static char display_on[2] = {0x29, 0x00}; 
+static char sw_reset[2] = {0x01, 0x00}; 
+static char led_pwm1[2] = {0x51, 0xFF};
+static char enter_sleep[2] = {0x10, 0x00};
+char max_pktsize[2] = {MIPI_DSI_MRPS, 0x00}; 
+unsigned char reg_addr, unsigned char *data)
+TempoMetric (const Meter& m, const Tempo& t)
+__fips_constseg
+const DI_CHANNEL=1;
+division(const MP_Float & n, const MP_Float & d);
+are_equal(const Facet & f, const Facet & g) const
+is_hidden(const Site_2 &p, const Site_2 &q) const
+bool operator>(const Gmpfr &a,const Gmpz &b){
+has_larger_distance_to_point(const PointH2<R>& p,
+compare_distance_to_point(const PointH3<R>& ,
+const Point& point);
+(const MeshEntity& triangle,
+std::size_t MultiMesh::num_parts() const
+const char *fileName, const FILE_BASIC_INFO *data,
+static const char *dpll3_ck_parent_names[] = {
+forceinline int getValue() const
+forceinline const T MIN (const T a, const T b)
+public const int Err_Cannot_Open_Resource = 1;
++ const char *LinkingOutput) const {
+const item& at(std::size_t pos) const
+const tree_cont_type & tree() const;
+const nana::any * _m_value() const;
+const item& at(std::size_t pos) const
+bool is_hit(const point&) const;
+const nana::string& icon() const;
+bool operator==(const index_pair& r) const
+public const int Err_Cannot_Open_Resource = 1;
+static const char *const SN_sect163k1;
+const item& at(std::size_t pos) const
+const item_proxy& operator*() const;
+int strcmp_opt(const char *s1, const char *s2);
+public const string ACTION_H = "120";
+if(!background)
+X1 const & x1, Y1 const & y1, Z1 const & z1, 
+A const & s, 
+X1 const & x1, Y1 const & y1, Z1 const & z1, 
+U const & a, 
+C const & s2
+X1 const & x1, Y1 const & y1, 
+value_type const & x0, value_type const & y0,
+value_type const & x1, value_type const & y1,
+U const & x1, V const & y1, 
+const WORD,
+const HDXVector3 n = ((b-a)%(c-a)).getNormal();
+const D3DXVECTOR4* getD3DX() const;
+public const int abc_fade_in = 2130968576;
+public const int abc_fade_in = 2130968576;
+const AUTOFILTER_RULETYPE_FILTER= 'filter';
+const AUTOSIZE_METHOD_APPROX= 'approx';
+const QPolygon &QwtPicker::pickedPoints() const
+public const int MvxBind = 2130771968;
+public const int MvxBind = 2130771968;
+extern const char * const kYuvImagesOutputDirPath;
+static const char KEY_SUPPORTED_CAMERAS[];
+int mpz_cmp (const mpz_t, const mpz_t);
+public const string Banner_Name = "Banner_Name";
+template<typename T>
+bool _Equal(const _Myt& _Right) const
+asn_constr_check_f NO_IntegerLowestMax_constraint;
+const IA5String_t *st = (const IA5String_t *)sptr;
+const float delta = dest - speed;
+const CUnit* owner,
+const char* name;
+bool Execute(const UnsyncedAction& action) const {
+const float3& pos3D,
+void CMiniMap::ApplyConstraintsMatrix() const
+const float ctrlVelY = vel.y;
+static const int maxDepth = 16;
+const int unitID = lua_toint(L, index);
+float3 operator/ (const float3& f) const {
+float3 operator/ (const float3& f) const {
+const unsigned short* p,
+const int mipsize = 1024 >> i;
+const spring_time currTime = spring_gettime();
+static const float DEGTORAD = PI / 180.0f;
+else if (opt->flags & PARSE_OPT_OPTARG && !p->opt)
+save(const char *key, const void * proto) {
+const uint32_t * ts = (const uint32_t *)(str + 2);
+const u8 *invite_go_dev_addr;
+static const char * mgmt_stype(u16 stype)
+int Document::LineEndTypesSupported() const {
+const string &StateMachine::StateName() const {
+const size_t __mid = (_M_nstate32 - __lag) / 2;
+typedef const idVec3 &vec3_c; 
+const FLAVOR_DESKTOP = 'QBD';
+int (*symlink) (const char *, const char *);
+continue;
+op 21 array-length 12x y none continue|throw
+continue = false
+continue = true
+110 CONTINUE 
+110 CONTINUE 
+140 CONTINUE 
+continue;
+continue;
+continue;
+op 1a const-string 21c y string-ref continue|throw
+continue
+c 5 continue
+c 5 continue
+; env*: (break k14 continue k23 k22 i14)
+; env*: (loop k16 break k14 k15 continue k17)
+; env*: (rv22 k14 break rv23 i14 continue k25 k24)
+; env*: (loop break k14 k15 continue k18 rv17 k16)
+; env*: (break k14 continue k23 k22 i14)
+; env*: (loop break k14 k15 continue k18 rv17 k16)
+continue;
+continue
+7 continue
+7 continue
+1 continue
+continue
+continue
+23000 continue
+pause -1 "Hit return to continue"
+continue;
+continue;
+continue next_insn;
+Continue :c continue evaluation")
+lfor done
+* to continue the same random number sequence.
+{ gotoCase = this.case_INITIAL; continue; };
+continue;
+5001 CONTINUE
+continue;
+continue;
+continue;
+continue;
+-continue
+1001 continue
+30 continue
+10 continue
+Continue cxi = (Continue) continues.get(i - 1);
+continue;
+major1=`Major ttyC 19` || continue
+git rebase --continue
+continue;
+if(M.anchored && !ismob(M)) continue
+declare continue handler for condname set x5 = 1;
+declare continue handler for foo set x = 1;
+100continue
+continue;
+(define (continue bytes-used)
+10 continue
+351 continue
+if ( m_nodes[i].m_hash != node->m_hash ) continue;
+continue;
+if ( wp[x] == ' ' ) continue;
+if ( wlen <= 0 ) continue;
+continue;
+if ( is_wspace_a(s[i]) ) continue;
+continue;
+if ( ! di ) continue;
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+10 CONTINUE
+continue;
+topic_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
+field_default_value varchar2(765) DEFAULT '' ,
+in_message INTEGER DEFAULT 0 NOT NULL,
+[0m[[0mdebug[0m] [0mreport for default
+Default value: @code{-1}
+Number format for Y-axis (in standard C form)@*
+default MSM_SOC_REV_NONE
+report for org.scala-tools.sbt
+default n
+default n
+default n
+default MSM_SOC_REV_NONE
+CREATE DATABASE `kalturaetl` ;
+<p><a href="
+default n
+default n
+default n
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+<p><a href="
+default n
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+\shape default 
+<p><a href="
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+<p><a href="
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default 2 if BF561
+<p><a href="
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+<p><a href="
+<p><a href="
+<p><a href="
+default MSM_SOC_REV_NONE
+<p><a href="
+default MSM_SOC_REV_NONE
+<p><a href="
+$tipDefaultWidth: 300px !default;
+default MSM_SOC_REV_NONE
+default:M_Createtables();
+[0m[[0mdebug[0m] [0mreport for default
+[0m[[0mdebug[0m] [0mreport for default
+[0m[[0mdebug[0m] [0mreport for default
+<p><a href="
+depends on SMP
+default MSM_SOC_REV_NONE
+default MSM_SOC_REV_NONE
+) ENGINE=ENGINE DEFAULT CHARSET=latin1
+t4CREATE TABLE `t4` (
+t4CREATE TABLE `t4` (
+t5CREATE TABLE `t5` (
+t5CREATE TABLE `t5` (
+t1CREATE TABLE `t1` (
+t1CREATE TABLE `t1` (
+t1CREATE TABLE `t1` (
+t1CREATE TABLE `t1` (
+else if (typeid(*i) == typeid(real_tp_interval)) {
+else return code;
+} else {
+else if ( input < 0x200000 )
+} else {
+} else {
+} else {
+} else {
+} else if (type == "mouseout") {
+} else {
+} else {
+} else {
+} else {
+%\def\replace@commawithbackslash
+else if(25<difficultynum<=50)
+else if(25<difficultynum<=50)
+else if (isset($utf_combining_class[$utf_char]))
+} else if ($_adodb_ver >= 5.0) {
+else if ($h < 10) $h = '0'.$h;
+} else {
+} else {
+else if (prop.equals(UILink.TYPE_PROPERTY)) {
+} else {
+} else if (firstBit == firstBit2) {
+else if (datatype.equals(XMLSchema.INTEGER)) {
+} else {
+else if (localTCKind.equals(TCKind.tk_long))
+else if (localTCKind.equals(TCKind.tk_long))
+else if(getOperation() == Operation.ADD)
+} else {m1=m2=0;mxs=fx;}
+int CClinkern_flipper_init (int ncount, int *cyc)
+} else if (seq_list->head == seq) {
+} else {
+} else {
+} else {
+} else {
+} else {
+} else if (strcmp(s2w, "1") == 0) {
+} else if (!driver->in_busy_2) {
+else if (count < 1048576)
+} else {
+} else {
+} else {
+} else {
+} else {
+} else if (type == "mouseout") {
+else if (ID == 0) 
+} else {
+} else {
+} else if (strcmp(s2w, "1") == 0) {
+} else {
+} else {
+} else {
+} else if ($_adodb_ver >= 5.0) {
+else $retarr[strtoupper($fld->name)] = $fld;
+} else if (strcmp(s2w, "1") == 0) {
+} else if (spec.flags & PLUS) {
+} else {
+} else if (!driver->in_busy_2) {
+else if (expr instanceof UnaryTupleOperator) {
+else if (datatype.equals(XMLSchema.INTEGER)) {
+CNV_PROX=${10}
+else if (expr instanceof UnaryTupleOperator) {
+else if (expr instanceof UnaryTupleOperator) {
+} else if (!driver->in_busy_2) {
+} else if (m == 'i') {
+pos = buf;
+else if (!strcmp(*argv, "-d"))
+else if(op_stack.top()=='+')
+else if (client->pers.hand == CENTER_HANDED)
+else if(strcmp(ptr, "2") == 0)
+(define-enum CURL_GLOBAL_ALL)
+enum EI_MAG0 = 0;
+enum EI_MAG0 = 0;
+enum EI_NIDENT = 16;
+enum MAXPNAMELEN = 32;
+enum DWORD ENUM_CURRENT_SETTINGS = -1;
+enum SQL_SPEC_MAJOR = 3;
+enum EI_NIDENT = 16;
+enum MAXPNAMELEN = 32;
+: <a class="el" href="xed-error-enum_8h.html
+* ENUMERATION
+enum intf_type {
+PCI_DEV_REG1= 0x40,
+typedef enum rtk_cpu_insert_e
+typedef enum rtk_cpu_insert_e
+enum v4l2_firmware_mode {
+enum intf_type {
+enum msm_bus_bimc_slave_block {
+* ENUMERATION
+* dwarf2.h (enum dwarf_sect): New enum type.
+* demangle.h (enum demangle_component_type): Add
+enum vpfe_isif_vdfc_corr_mode corr_mode;
+enum htc_endpoint_id ep_id;
+static enum vxge_hw_status
+PCI_DEV_REG1= 0x40,
+enum chg_state_flags flags;
+enum byte_sex target_byte_sex)
+enum strip_levels {
+enum TIFFReadDirEntryErr {
+enum : long x; 
+MLX4_MAX_NUM_PF= 16,
+enum vpfe_isif_vdfc_corr_mode corr_mode;
+enum bfa_ioc_event_e event);
+enum bfa_ioim_event {
+enum wmi_network_type {
+enum PrintColorAdjust {
+<tr valign="top" class="odd"><td ><a href="qt.html
+enum fe_stv0900_signal_type {
+enum intf_type {
+enum roffrule rule; 
+typedef enum _D3DLIGHTTYPE {
+typedef enum _D3DLIGHTTYPE {
+typedef enum {
+enum css_properties_e {
+typedef enum 
+˝7 Ť          9   a:1:{s:4:"link";s:32:"http:
+enum metadata_mode {
+enum metadata_mode {
+enum v4l2_firmware_mode {
+enum intf_type {
+enum htc_endpoint_id ep_id;
+enum rpc_loc_sv_system_e_type {
+<li><a href="
+enum mlx5_inline_modes {
+enum i40e_mac_type {
+enum mpd4_bpc {
+enum pc_di_src_sel {
+enum TextureMappingType
+;; sum :: enum a, enum b -> enum (U a b)
+enum mlx5_inline_modes {
+enum i40e_mac_type {
+enum a2xx_sq_ps_vtx_mode {
+enum chg_state_flags flags;
+enum S_IRUSR = 0x100; 
+enum Condition {
+class :foo {
+class :foo {
+typedef enum EAuthSessionResponse
+enum EAvatarSize
+: <a class="el" href="xed-iform-enum_8h.html
+: <a class="el" href="xed-category-enum_8h.html
+enum ast_event_ie_pltype ie_pltype;
+public enum FakeCam
+PCI_DEV_REG1= 0x40,
+enum TIFFReadDirEntryErr {
+enum TIFFReadDirEntryErr {
+enum TIFFReadDirEntryErr {
+typedef enum EAuthSessionResponse
+enum EAvatarSize
+typedef int Enum;
+name()body((ENUM)(0))
+enum Condition {
+extends <a href="http:
+extends <a href="http:
+typedef enum _D3DFORMAT D3DFORMAT;
+typedef enum _D3DFORMAT D3DFORMAT;
+Property: "InheritType", "enum", "",0
+Property: "InheritType", "enum", "",0
+enum ForceType {
+typedef struct _WS_ENUM_VALUE WS_ENUM_VALUE;
+enum enumINKMETRIC_FLAGS
+extends <a href="http:
+typedef enum {
+typedef enum {
+NiftiIntentEnum::NiftiIntentEnum(Enum e, 
+(see <a href="qt.html
+extends <a href="http:
+extends <a href="http:
+extends <a href="http:
+target Enum, level int32, internalformat Enum,
+export interface Node extends Printable {
+class Vehicle9 extends Vehicle10{}
+object metamodel extends MetamodelTypes {
+node class EmptyChain extends ScAstNode;
+trait MatrixOps extends DSLType with Variables {
+trait VectorOps extends DSLType with Variables {
+class TestValidate extends CakeTestModel {
+sealed trait AstNode extends Product {
+object MyTestEnum extends Enumeration {
+class PRED_$meta_call_5 extends Predicate {
+class TestValidate extends Model {
+class TestValidate extends CakeTestModel {
+class TestValidate extends CakeTestModel {
+class TestValidate extends CakeTestModel {
+class TestValidate extends CakeTestModel {
+case object PChannelR extends PChannel
+sealed trait TaasTree extends Dumpable {
+trait ASTNode extends Positional
+trait ASTNode extends Positional
+object MyTestEnum extends Enumeration {
+public class Settings extends SettingsActivity {
+extends ((A,B) => To) {
+extends BinaryOp[A,B,O,To] {
+class TestValidate extends CakeTestModel {
+public class KtrIcon extends Widget {
+class TestValidate extends CakeTestModel {
+Class MojoFuncLoadState Extends MonkeyFunction
+case object EmptyStatement extends Statement
+object UseRecord extends UseRecord
+class TestValidate extends CakeTestModel {
+class TestValidate extends CakeTestModel {
+class c extends object 
+override def name = a.toString+","+b.toString
+class TestAlias extends CakeTestModel {
+type item extends widget
+class TestValidate extends CakeTestModel {
+class ExtendsAccess2421 extends ExtendsAccess {
+class pants5 extends pants4{}
+class TestAlias extends CakeTestModel {
+class ExtendsAccess2421 extends ExtendsAccess {
+public class AssertStatement extends Statement 
+<extends>bandpopup</extends>
+public <K extends Object, T extends Serializable> 
+public <K extends Object, T extends Serializable> 
+trait ASTNode extends Positional
+class TestValidate extends CakeTestModel {
+class TestValidate extends CakeTestModel {
+class TestValidate extends CakeTestModel {
+class TestValidate extends CakeTestModel {
+class TestValidate extends CakeTestModel {
+public class CLIManager extends CLIBase{
+% g(x:A[\T\]) where { T extends Object } =
+% trait F[\nat n\] extends G[\n\] end
+\newcommand{\extends}{\:\KWD{extends}\:}
+% g(x:A[\T\]) where { T extends Object } =
+% trait F[\nat n\] extends G[\n\] end
+\newcommand{\extends}{\:\KWD{extends}\:}
+trait Gen[\T\] extends AnyGen
+public class BigNum extends NativeConstructor {
+public class NN32 extends NativeConstructor {
+public class Long extends NativeConstructor {
+public class RR32 extends NativeConstructor {
+public class Float extends NativeConstructor {
+public class Char extends NativeConstructor {
+public final class StructLayout extends Type {
+public final class PageSize
+public static final int abc_fade_in = 0x7f040000;
+public static final int abc_fade_in = 0x7f040000;
+public static final int abc_fade_in = 0x7f040000;
+public final class SVGColors
+public final class PageSize
+public final class ContactsContract {
+public final class MediaStore {
+public static final int BASSVERSION = 0x204;
+public final class MediaCodecInfo {
+public static final int EGL_DEFAULT_DISPLAY = 0;
+public final class nfsstat {
+static final boolean LOGGING = false;
+public static final int adSize = 0x7f010000;
+public static final int abc_fade_in = 0x7f040000;
+public static final int adSize = 0x7f010000;
+public static final int adSize = 0x7f010000;
+public static final int adSize = 0x7f010000;
+public final class ContactsContract {
+public final class MediaStore {
+public final class MediaCodecInfo {
+public static final int EGL_DEFAULT_DISPLAY = 0;
+public static final int adSize = 0x7f010000;
+public final class Opcodes {
+private final int id;
+public final class PsiUtil extends PsiUtilCore {
+public static final int NUM_KEYCODES = 256;
+public final class ContactsContract {
+public final class MediaStore {
+public final class MediaCodecInfo {
+public static final int EGL_DEFAULT_DISPLAY = 0;
+public static final int NUM_KEYCODES = 256;
+public final class DefiniteAssignmentUtil {
+public static final int adSize = 0x7f010000;
+public final class SSL {
+public static final int abc_fade_in = 0x7f040000;
+public static final int abc_fade_in = 0x7f040000;
+public static final int adSize = 0x7f010009;
+public static final int abc_fade_in = 0x7f040000;
+public static final int adSize = 0x7f010017;
+public static final int blood = 0x7f09000b;
+public static final int card_border = 0x7f040007;
+public static final String VER = "VER";
+public final class ToolConstants {
+public static final int LEFT = 0;
+public static final int GL_OES_VERSION_1_0 = 1;
+public static final int GL_ES_VERSION_2_0 = 1;
+public final class Opcodes {
+public final class CoreMetrics {
+public static final int abc_fade_in = 0x7f040000;
+public static final boolean cVersion3 = true;
+public static final int abc_fade_in = 0x7f040000;
+public static final int abc_fade_in = 0x7f040000;
+public final class TestGSDI {
+public final class DomainParsimonyCalculator {
+public static final int abc_fade_in = 0x7f040000;
+public static final int abc_fade_in = 0x7f040000;
+public static final Integer NULL = 0;
+public static final short FLASH_POLICY = 0x6f6c;
+public static final int abc_fade_in = 0x7f040000;
+public static final int adSize = 0x7f010000;
+public static final int GL_OES_VERSION_1_0 = 1;
+public static final int GL_ES_VERSION_2_0 = 1;
+public final class Constants {
+private static final String TAG = "TiAndroid";
+public static final int API_LEVEL_HONEYCOMB = 11;
+public static final int abc_fade_in = 0x7f040000;
+public static final int abc_fade_in = 0x7f040000;
+public static final int abc_fade_in = 0x7f040000;
+public static final int abc_fade_in = 0x7f040000;
+static av_cold float ath(float f, float add)
+-- @return float
+float glossinessFor(float _mip, float _mipCount)
+float m_floats[4];
+BX_CONST_FUNC float easeStep(float _t);
+BX_CONST_FUNC float easeOut(float _t)
+float FxaaLuma (
+float FxaaLuma (
+float FxaaLuma (
+uniform float _DetailNormalMapScale;
+uniform highp float _Bias;
+<DT><A HREF="./processing/core/PMatrix3D.html
+float jumplastposition;
+float Ax,Ay,Bx,By,Cx,Cy,e,d,f; \
+float GetColorz(float x, float y, float z) {
+float *alpha_, float C, float eps, int shrinking)
+static float lerp(float a, float b, float x) {
+float*s= (float*)buffer;
+template<typename Float>
+<DT><A HREF="./processing/core/PMatrix3D.html
+float FloatClamp(float val, float min, float max)
+extern void msgpos(float x, float y);
+float PathMode::Normalize(float state)
+float clamp(float val, float low, float hi);
+static float[] mBoldOffset = new float[]
+static voidSinCos( float a, float &s, float &c );
+float alpha1, float alpha2, float alphaParm,
+float alpha1, float alpha2, float alphaParm,
+float floatData = *((float *)&intData);
+float alpha1, float alpha2, float alphaParm,
+float alpha1, float alpha2, float alphaParm,
+float upx=((float)(x-hx))*mx;
+float timeScale = backEnd.refdef.floatTime;
+float upy=((float)(y-hy))*my;
+float tx = frameWidth * (float)col;
+float timeScale = backEnd.refdef.floatTime;
+float value = float(l.timeValue) * 0.01f * 0.05f;
+float alpha1, float alpha2, float alphaParm,
+float alpha1, float alpha2, float alphaParm,
+float alpha1, float alpha2, float alphaParm,
+float alpha1, float alpha2, float alphaParm,
+float flrand(float min, float max)
+final float radiusB = shapeB.m_radius;
+public float m_referenceAngle;
+DEF_CVT_SCALE_FUNC(32f8u, float, uchar, float)
+float xOut = float.PositiveInfinity;
+float clamp(float val, float low, float hi);
+static av_cold float ath(float f, float add)
+'float square (float x) {',
+<DT><A HREF="./processing/core/PMatrix3D.html
+-- @return float
+-- @return float
+final float radiusB = shapeB.m_radius;
+public float m_referenceAngle;
+public void setHigh (float min, float max) {
+float c4vec_norm_l2 ( int n, complex <float> a[] )
+float r4_uniform ( float a, float b, int *seed )
+float r4_betai ( float x, float pin, float qin );
+float r4_max ( float x, float y )
+-- @return float
+DEF_CVT_SCALE_FUNC(32f8u, float, uchar, float);
+float fastAtan2( float y, float x )
+'float square (float x) {',
+final float cos = FloatMath.cos(angleRad);
+<DT><A HREF="./processing/core/PMatrix3D.html
+-- @return float
+const float fx = (float)x / (float)ibuf->x;
+float **in = (float **)sources;
+float strength;
+float audio_volume;
+copy_v4_v4((float *)self->matrix, (float *)mat);
+float viewdx, viewdy;
+static float f_Rd(float alpha_, float A, float ro)
+<a href="../../processing/core/PGraphics.html
+<a name="lerp(float, float, float, float)">
+<a href="../../processing/core/PGraphics.html
+<a href="../../processing/core/PGraphics.html
+<a name="lerp(float, float, float, float)">
+<a href="../../processing/core/PGraphics.html
+public void setHigh (float min, float max) {
+public void allocParticlesData(int capacity){
+public float apply (float a) {
+final float radiusB = shapeB.m_radius;
+public float m_referenceAngle;
+public void setHigh (float min, float max) {
+public float apply (float a) {
+<p>Supports float, float2, float3, float4. </p>
+float xOut = float.PositiveInfinity;
+float interpolate(float a, float b, float t)
+extern float modff _PARAMS((float, float *));
+extern float modff _PARAMS((float, float *));
+<li><a href="Decimal-float-library-routines.html
+extern float modff _PARAMS((float, float *));
+extern float modff _PARAMS((float, float *));
+extern float modff _PARAMS((float, float *));
+extern float modff _PARAMS((float, float *));
+float x = (float)atof(sx.c_str());
+extern float modff _PARAMS((float, float *));
+extern float modff _PARAMS((float, float *));
+float elasticEaseIn(float time, float period)
+return { lat: cp.lat, lng: cp.lon }; 
+$yformat = 'Y'; $mformat = 'n'; $dformat = 'j';
+foreach( $ecp1_cals as $_e_id => $line ) {
+;turns left for 1 second, then continues forward
+GNU General Public License for more details.
+if ( !property_exists( $this, $propName ) ) {
+foreach ( $list as $elem ) {
+public $dataSourceClassName;
+$.format = $.validator.format;
+for (i = 0; i < this.rows; i++) {
+for (Locale locale : locales) {
+import java.text.MessageFormat;
+MessagesBundle mb = defaultFiles[i];
+<div class="block">View for Contacts</div>
+<td class="colLast">
+<div class="block">Form for GrapeMusts</div>
+<td class="colLast">
+struct {
+demo.RunPopulateTemplatesThread();
+Format the legacy item for display.
+for (;;) 
+case '2': 
+for(;;)
+printf("befor clear for INVALID BADGE\n ");
+static voidwebsMsgStart(webs_t wp);
+for (sp = tp->hash_table[i]; sp; sp = forw) {
+for (i = ep->variableMax - 1; i >= 0; i--) {
+char_t**args;
+static intbFreeLeft;
++ Updated for HaxePunk 2.5.3 and openfl 2.0.1
+for (child in _children) {
+import flash.text.TextFormatAlign;
+'forceEnable' => $this->settings['forceEnable'],
+width += prefCol[i];
+g.setColor(Color.GRAY);
+ps = new Port[cols];
+ret.ttyFormat |= TtyInterface.FORMAT_TABLE;
+private int numDrops;
+} else {
+import javax.xml.transform.Transformer;
+public void doIt(Project proj) {
+if (name == null) return null;
+dest.attrs.addAll(INIT_ATTRIBUTES);
+for (Component repl : map.get(comp)) {
+boolean afterWhitespace = false;
+entries = new Entry[data.contents.length][];
+char prev = text.charAt(0);
+double total = 0.0;
+insertBefore: "before",
+best for your project.
+for(XmlNode buildNode : buildNodes)
+for(File buildFile : buildFiles)
+_LOGGING_FORMAT = '%(message)s'
+for (int x = 0; x < img.getHeight(); x ++){
+for(int y = 0; y < getWidth(); y++){
+bild = new char[l][h];
+for (int i = 0; i<l; i ++){
+case 0x00:goto yy68;
+goto _out;
+goto _out;
+goto _test_eof;
+goto _out;
+goto _test_eof;
+goto _test_eof;
+goto _test_eof;
+goto error2;
+goto out;
+goto err;
+goto out;
+goto fail;
+goto bail;
+goto leave;
+goto out;
+goto out;
+goto instr_done;
+goto sigbus;
+if(tcom(l))
+13 0 obj
+13 0 obj
+goto _test_eof;
+if (yych <= 0x00) goto yy22;
+case 0x00:goto yy38;
+goto loop;
+APPLNgoto 21
+goto end;
++ goto _test_eof;
+goto leave;
+<< /S /GoTo /D (Outline0.2) >>
+<< /S /GoTo /D (Outline0.2) >>
+<< /S /GoTo /D (Outline0.2) >>
+<< /S /GoTo /D (Outline0.2) >>
+goto out;
+goto L20;
++goto out;
+<< /S /GoTo /D (Outline0.2) >>
+goto _test_eof;
+13 0 obj
+goto nextInstruction2;
+if(tcom(l))
+case "goto": t.kind = 80; break;
+goto out;
+goto out;
+case 0x00:goto jj38;
+case 0x00:goto kk70;
+goto nextInstruction2;
+copy_8: as_s8(dst) = as_s8c(src); goto COPY_END;
+goto yy0;
+goto yy0;
+goto error;
+goto restart;
+goto yyc_ST_IN_SCRIPTING;
+goto done_free;
+goto out;
+goto healthy;
+goto yystart1
+goto retry;
+goto error;
+13 0 obj
+goto error;
+/S /GoTo
+goto is_a_corner;
+goto is_a_corner;
+goto is_a_corner;
+goto fail;
+goto found;
+IF i >= n THEN GOTO lineformatdone
+if errorlevel 1 goto VCReportError
+if errorlevel 1 goto VCReportError
+13 0 obj
+goto err;
+if (tmp_a == NULL) goto err;
+goto err;
+goto -3
+goto _test_eof;
+goto done;
+if (stoprun) {goto ret_;}
+13 0 obj
+goto Err;
+if "%1" == "-h" goto usage
+goto error;
+"goto",LGOTO,Txxx,OXXX,
+case OGOTO:
+goto nextInstruction2;
+13 0 obj
+goto _out;
+13 0 obj
+goto exception_handler;
+goto exception_handler;
+goto mls_ops;
+goto _test_eof;
+case 0x00:goto yy6;
+goto trunc;
+case 0x00:goto yy6;
+goto _test_eof;
+17 0 obj
+if ($LID == 0) goto L_GenID;
+goto S_Fluc;
+.implements i00001
+.implements i00001
+Class LoadStateDelegate Implements IVMDelegate
+References:
+implements_describe_props(Implements *implements)
+Attr implements LegacyQueryInterface;
+Attr implements LegacyQueryInterface;
+Attr implements LegacyQueryInterface;
+Attr implements LegacyQueryInterface;
+public enum Azimuth implements CSSProperty {
+export class PostEventSuccess implements Action
+Implements the AAA instruction and side effects.
+<LI TYPE="circle">java.lang.Object<UL>
+Implements the AAA instruction and side effects.
+abstract class AnchorElement implements Element {
+<tr><td class="mdescLeft">&
+Implements the AAA instruction and side effects.
+Implements the AAA instruction and side effects.
+Implements \code{TOS = +TOS}.
+msgid "Implements ``TOS = +TOS``."
+msgid "Implements ``TOS = +TOS``."
+''' </summary>
+Implements the AAA instruction and side effects.
+Implements the AAA instruction and side effects.
+<LI TYPE="circle">java.lang.<A HREF="http:
+<LI TYPE="circle">java.lang.<A HREF="http:
+<dl class="nameValue">
+<li type="circle">java.util.<a href="http:
+<li type="circle">java.util.<a href="http:
+Implements the AAA instruction and side effects.
+<li type="circle">java.util.<a href="http:
+Implements the AAA instruction and side effects.
+Implements the AAA instruction and side effects.
+<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+Implements the AAA instruction and side effects.
+Implements the AAA instruction and side effects.
+Implements \code{TOS = +TOS}.
+Implements the AAA instruction and side effects.
+class LazyMapIterator implements \HH\Iterator {
+<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+<LI TYPE="circle">class java.util.<A HREF="http:
+<LI TYPE="circle">class java.util.<A HREF="http:
+<LI TYPE="circle">class java.util.<A HREF="http:
+<LI TYPE="circle">class java.util.<A HREF="http:
+<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+public enum ItemLogReason implements ILogReason {
+<li type="circle"><a href="http:
+"public class X implements I {}\n" +
+"class Y implements Managed {\n" +
+if ti2.cs || ti2.csp { 
+class LazyMapIterator implements \HH\Iterator {
+<li type="circle">javax.swing.<a href="http:
+import org.jruby.ast.ArgumentNode;
+import java.io.File;
+import java.util.Iterator;
+import jnr.constants.platform.AddressFamily;
+import com.google.common.base.Splitter;
+import org.jruby.java.util.BlankSlateWrapper;
+import org.jruby.java.invokers.StaticFieldGetter;
+import java.io.Serializable;
+import java.io.IOException;
+import java.io.IOException;
+import org.jruby.ast.DAsgnNode;
+import java.io.IOException;
+import java.util.Arrays;
+import org.jruby.Profile;
+import org.jruby.java.invokers.StaticFieldGetter;
+import android.app.Activity;
+@import "functions/contains";
+import java.util.ArrayList;
+import java.awt.Color;
+from django.contrib import admin, messages
+from django.db import models
+import android.graphics.Point;
+import java.util.ArrayList;
+import com.google.bitcoin.core.Address;
+import java.awt.Panel;
+import java.awt.Panel;
+import javax.swing.BorderFactory;
+import java.awt.Insets;
+import javax.swing.BorderFactory;
+from datetime import datetime
+$sprites-layout: smart;
+import com.hazelcast.cluster.ClusterService;
+import com.hazelcast.core.Cluster;
+import java.io.BufferedReader;
+import java.io.IOException;
+import com.hazelcast.config.Config;
+import com.hazelcast.client.ClientServiceProxy;
+import com.hazelcast.ascii.TextCommandService;
+import com.eclipsesource.json.JsonObject;
+import com.hazelcast.core.Member;
+import com.hazelcast.cluster.MemberInfo;
+import com.hazelcast.core.HazelcastException;
+import com.hazelcast.config.Config;
+import com.hazelcast.config.Config;
+import com.hazelcast.config.Config;
+import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.client.spi.ClientProxy;
+import com.hazelcast.client.ClientCreateRequest;
+import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.client.AuthenticationRequest;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.config.AwsConfig;
+import com.google.zxing.BarcodeFormat;
+import java.awt.event.KeyEvent;
+import com.google.java.contract.Ensures;
+import java.util.HashSet;
+import java.nio.charset.Charset;
+import hudson.EnvVars;
+import java.io.IOException;
+import hudson.EnvVars;
+import java.nio.charset.Charset;
+import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.io.DataInputStream;
+import java.awt.BorderLayout;
+import java.awt.AWTEvent;
+import java.awt.Component;
+import java.io.BufferedReader;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.net.URLEncoder;
+import java.io.InputStream;
+import java.awt.BorderLayout;
+int styleable SearchView_queryHint 4
+int attr queryHint 0x7f01007b
+public static final int queryHint = 0x7f01007b;
+int styleable SearchView_queryHint 4
+int styleable SearchView_queryHint 4
+int anim abc_fade_out 0x7f040001
+int attr dropDownHintAppearance 0x7f010068
+int *i4mat_u1_inverse ( int n, int a[] );
+int i4_uniform ( int a, int b, int *seed );
+int attr dropDownHintAppearance 0x7f01005a
+int string email_hint 0x7f0a0018
+int attr pstsUnderlineHeight 0x7f010073
+int string ecmobile_design_introduction 0x7f060152
+SYS_SOCKETPAIR = 135 
+SYS_SOCKETPAIR = 135 
+SYS_SOCKETPAIR = 135 
+SYS_SOCKETPAIR = 135 
+SYS_SOCKETPAIR = 135 
+SYS_SOCKETPAIR = 135 
+SYS_KDEBUG_TRACE = 180 
+SYS_KDEBUG_TRACE = 180 
+CS_E_SCHEMA_MISMATCH = unchecked((int)0x8004016E),
+int anim abc_fade_out 0x7f040001
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable SwitchCompat_trackTintMode 13
+int styleable SwitchCompat_trackTintMode 13
+int styleable SwitchCompat_trackTintMode 13
+int styleable SwitchCompat_trackTintMode 13
+int attr trackTintMode 0x010104da
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int attr tintMode 0x010103fb
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int attr trackTintMode 0x010104da
+int styleable SwitchCompat_thumbTintMode 10
+int styleable SwitchCompat_thumbTintMode 10
+int styleable SwitchCompat_thumbTintMode 10
+int styleable SwitchCompat_thumbTintMode 10
+int attr trackTintMode 0x010104da
+int attr trackTintMode 0x010104da
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SearchView_defaultQueryHint 7
+int attr trackTintMode 0x010104da
+int styleable SearchView_defaultQueryHint 7
+int styleable SearchView_defaultQueryHint 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int attr trackTintMode 0x010104da
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int attr trackTintMode 0x010104da
+int attr trackTintMode 0x010104da
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable TextInputLayout_hintTextAppearance 2
+int styleable SwitchCompat_trackTintMode 13
+int styleable SearchView_queryHint 6
+int styleable SearchView_defaultQueryHint 7
+int styleable SearchView_defaultQueryHint 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+int styleable SwitchCompat_trackTintMode 7
+interface NodeProcess extends EventEmitter {
+<TD><CODE><A HREF="http:
+<TD><CODE><A HREF="https:
+public <A HREF="http:
+public static <A HREF="http:
+<code><a href="http:
+VmInterface *vnet[16];
+<li><a href="http:
+interface ReadableStream extends EventEmitter {
+<TD><CODE><A target="_top" HREF="http:
+<TD><CODE><A target="_top" HREF="http:
+<TD><CODE><A target="_top" HREF="http:
+public &lt;T&gt; <A target="_top" HREF="http:
+interface FastEthernet0/1
+<TD><CODE><A target="_top" HREF="http:
+<TD><CODE><A target="_top" HREF="http:
+<CODE>static&nbsp;interface</CODE></FONT></TD>
+interface Function {
+Aanderaa,Optode 4330,Optode 4330,Interface,
+<li type="circle">java.lang.<a href="http:
+export interface ClientConfig {
+interface FlashPoint3D extends FlashPoint {
+interface DOMEvent extends Event {}
+interface Buffer extends NodeBuffer {}
+interface HighchartsDateTimeFormats {
+interface Function {
+interface Acceleration {
+<TD><CODE><A HREF="http:
+<dd><a href="http:
+<dt>All Implemented Interfaces:</dt>
+<td class="colFirst"><code><a href="http:
+<td class="colFirst"><code><a href="http:
+<pre><a href="http:
+<td class="colFirst"><code><a href="http:
+<td class="colFirst"><code><a href="http:
+<td class="colFirst"><code><a href="http:
+<tr class="altColor">
+<pre><a href="http:
+<td class="colFirst"><code><a href="http:
+<td class="colFirst"><code><a href="http:
+<tr class="altColor">
+<tr class="altColor">
+<td class="colFirst"><code><a href="http:
+<tr class="altColor">
+<td class="colFirst"><code><a href="http:
+<pre><a href="http:
+<td class="colFirst"><code><a href="http:
+<tr class="altColor">
+<tr class="altColor">
+<pre>public&nbsp;<a href="http:
+<td class="colFirst"><code><a href="http:
+<td class="colFirst"><code><a href="http:
+<td class="colFirst"><code><a href="http:
+<pre><a href="http:
+<td class="colFirst"><code><a href="http:
+<tr class="altColor">
+<td class="colFirst"><code><a href="http:
+<tr class="altColor">
+<tr class="altColor">
+<td class="colFirst"><code><a href="http:
+if s, ok := v.data.(interface{}); ok {
+<li type="circle">java.text.<a href="http:
+<dd><a href="http:
+<pre>public&nbsp;<a href="http:
+<code><a href="http:
+<dd><code><a href="http:
+<code><a href="http:
+extends <a href="http:
+<dd><a href="http:
+<code><a href="http:
+<dd><a href="http:
+<code><a href="http:
+<code><a href="http:
+<code><a href="http:
+<code><a href="http:
+<dd><a href="http:
+<code><a href="http:
+<code><a href="http:
+<code><a href="http:
+<code><a href="http:
+public <A HREF="http:
+<CODE>&nbsp;<A HREF="http:
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="http:
+<CODE>&nbsp;<A HREF="http:
+<CODE>&nbsp;<A HREF="http:
+<CODE>&nbsp;interface</CODE></FONT></TD>
+<TD><CODE><A HREF="http:
+<CODE>protected &nbsp;<A HREF="http:
+<CODE>protected &nbsp;<A HREF="http:
+<CODE>&nbsp;<A HREF="http:
+<TD><CODE><A HREF="http:
+<TD><CODE><A HREF="http:
+<CODE>protected &nbsp;<A HREF="http:
+public void <B>setTypeMap</B>(<A HREF="http:
+<CODE>&nbsp;<A HREF="http:
+<CODE>&nbsp;<A HREF="http:
+<CODE>protected &nbsp;<A HREF="http:
+<CODE>&nbsp;<A HREF="http:
+<TD><CODE><A HREF="http:
+.long LDIFF_SYM0
+unsigned long pto = (unsigned long) ptep;
+unsigned long val;
+unsigned long *p = (unsigned long *) addr;
+unsigned long SSL_set_mode(SSL *, unsigned long);
+<Tuple2<Long, Long>, Tuple2<Long, Long>, Long> {
+for (long i = 1; i <= my nx; i++) {
+<native> <event name='3'/> </native>
+private static native void init ();
+obj/android-debug/src/native/utils/WeakRef.obj
+inherit native packagegroup
+public native boolean isNativeBFP();
+public native boolean isNativeBFP();
+NATIVE.com.sun.squawk.NativeUnsafe.setInt.NAME=82
+native-__thrwakeup: permit
+${P5ARCH}/Moose/Meta/Attribute/Native/
+acl-native :2.2.51-r3 
+(native ?) (native get-?) (native set-?)
+src/native/native.c, src/native/native.h,
+private native Void setContext(JqBase context)
+native-__thrwakeup: permit
+**.patch = native
+"browsewm"="native"
+set(nativeExtra ${nativeExtra}
+HEADERS += ../native/ext/glew/GL/*.h
+set(nativeExtra ${nativeExtra}
+HEADERS += ../native/ext/glew/GL/*.h
+<p><p><a target="new" href="http:
+;-- Control Natives - nat_control.c
+private native void nativeGetVelocity(WYPoint p);
+public native trait DOMException {
+public native trait Image : HTMLImageElement {
+.method private static native nAttachFunctor(II)V
+.method private static native native_getCTM(II)V
+<key>Native Map</key>
+pc.1=HardcopyGrayscaleImageStorage,$ts-native
+native/jni/native-lib/Makefile
+"native/JNI.hx",
+.method private static native PMemInit()V
+.method private static native nAttachFunctor(II)V
+.method private static native native_getCTM(II)V
+private native int nativeGetDivisor()
+(bytevector-u16-set! bv 0 
+final class NativeDB extends DB
+public static native JSObject create()
+public static native JSObject create()
+public static native JSObject create()
+private native int nativeGetDivisor()
+import Text.Pandoc.Writers.Native (writeNative)
+final class NativeDB extends DB
+private native int nativeGetDivisor()
+import io.netty.util.internal.NativeLibraryLoader;
+public final native String getKey()/*-{
+.method private native CloseDevice2(I)V
+[native(cls='DisplayObjectClass')]
+[native(cls='TextFieldClass')]
+-- Print all active handles
+obj/mscv/src/native/utils/CompressionAlgorithm.obj
+"native/Lib.hx",
+obj/android-debug/src/native/utils/WeakRef.obj
+"native/Lib.hx",
+public native void destroy();
+private native void nativeInit();
+/*.native
+set(nativeExtra ${nativeExtra}
+<li><a class="reference internal" href="
+public native final int TestCooperativeLevel();
+<lib_test/test_parser.{native,byte}>: pkg_base64
+@native def glClearIndex(c: GLfloat)
+private static native void init( );
+native(SkeletalMesh)
+native lua(const fn[], {Float,_}:...);
+Function AddPerk(Perk akPerk) native
+static native_info_t *native_table;
+nb.ignore.native=-Dignore.native=true
+.method public static native freezeDisplay(I)V
+.method private final native native_finalize()V
+pc.StoredPrintStorage=$ts-native
+==========
+* native/jni/native-lib/.gitignore,
+native bool:IsValidEntity(edict);
+bytevector-ieee-double-native-ref
+public native void setTitle(String value)/*-{
+.method public static native freezeDisplay(I)V
+.method private final native native_finalize()V
+var nativeEvent = Element.NativeEvents[realType];
+var nativeEvent = Element.NativeEvents[realType];
+native bool:IsMapValid(const String:map[]);
+native Float:float(value);
+$newList = new static();
+GridLayout gridLayout = new GridLayout(1, false);
+public void setNewUserMode(boolean newUserMode) {
+mainPanelSuper = new JPanel(new BorderLayout());
+itemFilterModel = new ItemFilterModel();
+if(newName != null && newName.length() > 0)
+setMinimumSize(new Dimension(350, 180));
+topPanel = new JPanel();
+$expected = array('new record', 'new record');
+tt = new TimerTask() {
+shapeVels.push(new Vector2(2,-1.5)); 
+setFocusable(true);
+var PR_keywords = new Object();
+<a name="119" href="
+<p>node package manager</p>
+'package' => $language_update->package,
+package android.graphics;
+package android.graphics;
++ data['packages'] = kwargs.get('packages', [])
+package android.graphics;
+'package' => $language_update->package,
+[[package]]
+\package & a package \\
+private EnigmaItems main;
+private ThreadSimulator[] threads;
+private ThreadSimulator[] threads;
+private static final long serialVersionUID = 1L;
+private static final long serialVersionUID = 1L;
+private var t:MovieClip; 
+private SurfaceView svPreview;
+private static String lastFileDialogDir = ""; 
+private String OUTLINE_VIEW= "Outline View - ";
+privatefinal static int ALLVIEWS= 1;
+private ContaineroParent= null;
+private PropertiesoptionsProperties = null;
+private intnNumberOfNodes = 0;
+private static final int EOF = 0;
+private booleanbPrintNodeDetail = false;
+private static final int SERVICELOAD= 5;
+<CODE>private &nbsp;long</CODE></FONT></TD>
+<CODE>private &nbsp;class</CODE></FONT></TD>
+private static String ifNotNullTrim(Object str){
+private boolean code; 
+private final void jjCheckNAdd(int state)
+* @access private
+private int mobID, uid;
+private int mManagedButton;
+private String filepath = "/sdcard";
+.field private static final ALL_BRIGHT:I = 0xf
+.field private static final ADD:Z = true
+.field private static final ADD_LISTENER:I = 0x8
+.field private static final CLOSE_ENOUGH:I = 0x2
+.field private static final DBG:Z = false
+.field private static final DEBUG:Z = false
+.field private static final DEBUG:Z = false
+.field private static final DBG:Z = false
+.field private static final ATTRS:[I = null
+.field private static final MAX_ALPHA:F = 1.0f
+.field private mPrivateBrowsingEnabled:Z
+.field private static final BEEP_DURATION:I = 0x96
+.field private static final FORMAT_FIXED:I = 0x2
+.field private static final BASE:I = 0x21000
+.field private static final CONNECT_MODE:I = 0x1
+.field private static final DEBOUNCE_TIME:I = 0x46
+.field private static final BIDI_FLAG_MASK:I = 0x7
+.field private static DEFAULT_DURATION:J = 0x0L
+.field private static final DBG_WAKE:Z = false
+.field private static final BATTERY_INFO:I = 0xf
+private var mSyncRequired:Boolean;
+static private function init():void
+private final String text;
+msgstr "UID"
+private CTabFolder wTabFolder; 
+private CTabFolder wTabFolder;
+import org.openrdf.annotations.InstancePrivate;
+private final static intPANEL_SAT_VAL = 0;
+private boolean od_include_private;
+private static final boolean TRACE = false;
+private LoggerChannellog;
+private static final boolean DEBUG = false;
+private static final int noErr = 0;
+final private static boolean ROUND_NO = true;
+private volatile int_lastPiece =-1;
+private static final LogIDs LOGID = LogIDs.CORE;
+private static final int LDT_DL_ADDED= 1;
+private static final intANNOUNCE_MAX= 60*60*1000;
+private static final String VIEW_ID = "azbuddy";
+private static final Stringpub_exp = "10001";
+private static SpeedLimitHandlersingleton;
+private static final booleanLOG_RTA= false;
+private static final boolean DEBUG= false;
+private Stringexternal_address;
+private static booleanTESTING= false;
+* @access private
+private Animation mOutToRight;
+private String ErrorMessageFromServer = ""; 
+private static final String TAG = "ViewPager";
+private static final long serialVersionUID = 1L;
+return (cdev->private->state == DEV_STATE_ONLINE);
+private string mVirtualDirectoryName;
+private final InstanceCheckerEngine engine;
+private int readyWait = 3000;
+private Agent agent;
+private static final int APPSTATUS_UNINITED = -1;
+private int BALL_RADIUS = 0;
+private Gtk.Window _main_window;
+private string Title = "Hovis Presenter";
+zurmo/app/protected/
+protected $_readReceipt = array();
+protected static final int WIDTH= 100;
+protected $src = "";
+protected Node createAllNode(
+static protected $TRUE = array("keyword", "true");
+protected $src = "";
+static const char *RcsId = "$Id: $";
+protected function addClassOpen(&$script)
+protected static $peer;
+protected static $peer;
+protected static $peer;
+protected static $peer;
+protected static $peer;
+protected static $peer;
+protected static $peer;
+static protected $namespaces = array(
+static protected $namespaces = array(
+protected
+protected static DeviceImpl
+protected void
+protected AESocksProxyImplproxy;
+protected $driverId = 'm';
+protected $settings;
+protected $auth; 
+protected $params = array();
+protected $basePath; 
+protected static const ATLAS_IMAGE:Class;
+protected final static int PARSER_KIND = 0x00FF;
+protected float aA;
+protected $preserveComments = false;
+protected int var3 = g.m(3);
+protected $src = "";
+protected static const ATLAS_IMAGE:Class;
+protected UID entityUid;
+protected $AmountPaid;
+protected $ListingDuration;
+protected $ApplicationData;
+protected $ListingDurations;
+protected $CategoryID;
+protected int var3 = g.m(3);
+protected $_readReceipt = array();
+protected static $_column_cache = array();
+protected $_readReceipt = array();
+<CODE>protected &nbsp;<A HREF="http:
+protected int var3 = g.m(3);
+protected int var3 = g.m(3);
+static protected $TRUE = array("keyword", "true");
+protected static Ptg calcAcosh(Ptg[] operands){
+protected $_logContext = array();
+protected $driverId = 'm';
+protected $rules = array();
+protected $message;
+<li class="level1"><a href="
+<li class="level1"><a href="
+<li class="level1"><a href="
+static protected $TRUE = array("keyword", "true");
+protected File root;
+protected static function fields($query = null) {
+protected $_throwsExceptions = array(
+.field protected act:[I
+.field protected AvrLn1:I
+protected $_safe_mode= FALSE;
+protected $return_delete_sql= FALSE;
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected Class<?> getModelClass() {
+protected $driverId = 'm';
+protected $urls = array();
+protected $src = "";
+protected bool _running;
+protected el_action_t
+static protected $namespaces = array(
+protected Agent(Boolean commitSuicide) {
+protected $_readReceipt = array();
+protected $routes;
+protected $RegionID;
+protected $RegionID;
+protected $RegionID;
+protected $RegionID;
+public abstract class IRVisitor {
+public abstract class Attributable {
+public abstract class Constant : Expression
+public class F {
+public abstract class Statement {
+public class Results {
+public class RubyParser {
+public abstract class BignumNodes {
+public abstract class FixnumNodes {
+public abstract class StringNodes {
+public class Code {
+public class OpenFile implements Finalizable {
+public static int Main (string[] args) {
+public int i;
+public T dummy;
+public int a;
+public class Tests
+public class Tests {
+public class Tests {
+public class GroupProperties {
+public final class Functions {
+public class MyClass
+public static String getDate() {
+public abstract class DGLM {
+public class AutoBuffer {
+public final class H2O {
+public enum BraceStyle
+public class LibLsf {
+public abstract class Attributable {
+public abstract class Constant : Expression
+public readonly BranchingType Type;
+public class Utils {
+public abstract class Statement {
+public class BuiltinTypes
+* and associated documentation or publications.
+public class Conv{
+public class Fmath{
+public class Foo { public int Bar; };
+public class Const {
+public class RowsResultSet implements ResultSet {
+public static final int abc_fade_in = 0x7f040000;
+public static final int abc_fade_in = 0x7f040000;
+public static final int abc_fade_in = 0x7f040000;
+public class ActivityManager {
+public abstract class PackageManager {
+public interface WindowManagerPolicy {
+* Lesser General Public License for more details.
+public class BASS
+public class BASSMIDI
+public class Paint {
+public class AudioSystem
+public final class MediaCodecInfo {
+public class EGL14 {
+public class WifiManager {
+public class MasterService {
+public class WorkerService {
+public Tapestry1N() : base( 0xEAA )
+[Constructable]
+[Constructable]
+public int CookingLevel
+[CommandProperty( AccessLevel.Batisseur )]
+public Blight( int amount )
+public CraftResource Resource
+[CommandProperty( AccessLevel.Batisseur )]
+[CommandProperty( AccessLevel.Batisseur )]
+public enum RankFlags
+public enum FightMode
+public static final int adSize = 0x7f010000;
+public static final int abc_fade_in = 0x7f040000;
+public class BitStream : IDisposable {
+public $useTable = false;
+public class ActivityManager {
+public abstract class PackageManager {
+public interface WindowManagerPolicy {
+public class Robolectric {
+public class Results {
+public class Paint {
+public class AudioSystem
+public final class MediaCodecInfo {
+public class EGL14 {
+public class JGitText extends TranslationBundle {
+public class WifiManager {
+public class BitStream : IDisposable {
+public class ExtendedFormatRecord
+public class BitStream : IDisposable {
+public final class Opcodes {
+public enum CombatSpells {
+public class UnboxedMathUtils {
+public final class Headers {
+public bool IsKnownColor {
+public interface GameConstants {
+public interface PreferenceKeys {
+public class ControllerMethodInvokerTest {
+public class ILGenerator
+public class OffsetTable
+public class VersionInfo {
+public class TestsBase
+public sealed partial class NativeConvert
+public enum SyslogLevel {
+public MyDesigner()
+return FALSE;
+return $return;
+return INSTANCE;
+return v;
+return ep->eid;
+if (values.length == 0) return NIL;
+returned = fn.apply( this, arguments );
+return $return;
+return $return;
+return $d;
+return T(); 
+if (nResult != AR_RETURN_OK)
+{ *length = 0; return; }
+return 0;
+return *this;
+case AR_RETURN_ACCESSIBLE: return "Accessible";
+return this;
+return;
+return this; 
+return n;
+return $return;
+return NO;
+return result;
+return result;
+return $ua_append;
+return this; 
+return returnValue;
+return;
+return;
+return;
+return color;
+return;
+return $return_array;
+return $return;
+return $return;
+return $arr;
+return $USER_NAME unless ($USER_NAME eq "NULL");
+syntax_return(allocator, OS_TEXT("return")),
+return true;
+return Optional.of(nextNamespace);
+name "Strictfp"
+burs.ir.strictFP(P(p),PL(p))?INFINITE:10
+burs.ir.strictFP(P(p),PL(p))?INFINITE:10
+burs.ir.strictFP(P(p),PL(p))?INFINITE:10
+burs.ir.strictFP(P(p),PL(p))?INFINITE:10
+STRICTFP_KEYWORD
+STRICTFP_KEYWORD
+name "Strictfp"
+$parserState->{storeDec} => 
+| < STRICTFP: "strictfp" >
+%keyword STRICTFP "strictfp"
+%keyword STRICTFP "strictfp"
+AT_CHECK_JAVA_MINIMAL([[%define strictfp]])
+AT_CHECK_JAVA_MINIMAL([[%define strictfp]])
+STRICTFP_KEYWORD
+-=: DUMP OF PARSE TREE :=-
+-=: DUMP OF PARSE TREE :=-
+%token STRICTFP "strictfp"
+%keyword STRICTFP "strictfp"
+STRICTFP_KEYWORD
+* keyword.gperf (strictfp): Added.
+var STRICTFP = ToTerm("strictfp", "strictfp");
+if(strictfp)
+%keyword STRICTFP "strictfp"
+public strictfp class Strictfp {
+strictfp ::= strictfp
+|STRICTFP 
+case STRICTFP:
+strictfp =
+strictfp =
+STRICTFP_KEYWORD,
+STRICTFP_KEYWORD
+%keyword STRICTFP "strictfp"
+%keyword STRICTFP "strictfp"
+%keyword STRICTFP "strictfp"
+%keyword STRICTFP "strictfp"
+%token STRICTFP "strictfp"
+strictfp final class InputModifier 
+%keyword STRICTFP "strictfp"
+%keyword STRICTFP "strictfp"
+%keyword STRICTFP "strictfp"
+%keyword STRICTFP "strictfp"
+%keyword STRICTFP "strictfp"
+%keyword STRICTFP "strictfp"
+strictfp public static void printVariables() {
+strictfp public static void printVariables() {
+strictfp public static void printVariables() {
+public boolean isStrictfp() {
+STRICTFP="strictfp"; SUPER_CTOR_CALL; CTOR_CALL;
+strictfp class EditorDialog
+strictfp class EditorDialog
+'strictfp' |
+STRICTFP : 'strictfp';
+jneshort @1@98
+final short[] triangles = this.triangles;
+unsigned shortcmd_id;
+unsigned short dec_id;
+unsigned shortcmd_id;
+unsigned short cmd_id;
+unsigned short dec_id;
+void set_gpio_dir(unsigned, unsigned short);
+void set_gpio_dir(unsigned, unsigned short);
+static short SampRate_Y_H, SampRate_Y_V;
+case 184: 
+unsigned short CPrimalGrid::nDim;
++ typedef unsigned short __kernel_old_uid_t;
+typedef unsigned short ISC_USHORT;
+extern short *Map[WORLD_X];
+extern short max_zone_dim[3];
+short pick_import_town(short which_dlog,short def)
+jsSHORT $LN10@flpydsk_se
+<short></short>
+<short></short>
+this.FailWithError((short)1, (short)0);
+9NOIEshort2133315081 0.75 0.74485075
+"The Extra Girl" was produced by Sennett.
+9NOIEshort2133315081 0.75 YES
+this.video_object_layer_width = (short)width;
+extern short FREAD(short parm1,
+short uk5_;
+extern short testByteKiller_13 ( void );
+</text>
+<value form="short">House ID</value>
+Long The alchemist stands behind the counter.
+Short a large rat~
+static short
+short tmp = (short) (Cycle_Data & 0x01);
+short w_x1;
+this.FailWithError((short)1, (short)0);
+short vRef = (short) store.addVar(var);
+short vRef = (short) scalerStore.addVar(var);
+short[] tmp = (short[])data[z];
+static $shellLocale = 'en_US.utf8';
+if(def == TYPE_STATIC) 
+static sem_t offline_tran_count;
+static HWNDhwnd;
+public static $routes = array();
+static int PTRFASTCALL
+static Processor prologProcessor;
+static string RootPath(int level);
+<CODE>static&nbsp;<A HREF="http:
+<CODE>static&nbsp;boolean[]</CODE></FONT></TD>
+<CODE>static&nbsp;<A HREF="http:
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<CODE>private static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+private static final String TAG = "Gl";
+private static final String TAG = "Gl";
+static int vfstraceClose(sqlite3_file*);
+static struct {
+static int vfslogClose(sqlite3_file*);
+static struct {
+static int jtClose(sqlite3_file*);
+static int safe_isspace(char c){
+static void async_mutex_enter(int eMutex);
+static const char*sLightType;
+staticTQnode*_qFree0; 
+<CODE>static&nbsp;<A HREF="http:
+<CODE>static&nbsp;int</CODE></FONT></TD>
+static int uhet_create(void);
+public static $routes = array();
+static struct sockaddr_in my_http_addr;
+static int do_bitexact = 0;
+static AVInputFormat *file_iformat;
+static FILE *vstats_file;
+static void pattern 
+static const AVOption options[] = {
+static const AVOption options[] = {
+static int ebml_id_size(unsigned int id)
+static EbmlSyntax ebml_header[] = {
+static const ModeTab mode_11_08 = {
+static VLC huff_vlc[16];
+static av_noinline void OPNAME 
+import static com.atlassian.fugue.Option.none;
+public final static String INSERT_VIEWNODE_QUERY =
+public final static String INSERT_VIEWLINK_QUERY =
+public final static int ACTION_NONE=0;
+private static final int SERVICELOAD= 5;
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<CODE>private static&nbsp;class</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<CODE>static&nbsp;int</CODE></FONT></TD>
+public static final String NAMESPACE = "http:
+public static final String NAMESPACE = "http:
+public static final String NAMESPACE = "http:
+public static final String NAMESPACE = "http:
+public static enum Action {
+private static final String TYPE = ".type";
+public static final String USER = "user";
+public static final String SPACE = " ";
+public static final byte BOOLEAN = 001;
+/** Assorted static utility routines.
+static final long[] jjbitVec0 = {
+static final long[] jjbitVec0 = {
+static final long[] jjbitVec0 = {
+private static final int LAST_PAPER_SIZE = 89;
+<CODE>static&nbsp;<A HREF="http:
+staticMembers.append("public static final int ");
+static const char cdrom_str[] = "CD-ROM";
+static unsigned
+static Bit8u read_byte();
+static void vperfctr_ihandler(unsigned long pc);
+static void vperfctr_ihandler(unsigned long pc);
+static intRateControlMode = VARIABLE_RATE;
+static void hsschur_aux2x2schur(double* a,
+static void
+static Xextralink *Xextralinkalloc (void);
+static void
+static void
+static void
+static void
+static void
+static void
+static void
+static void
+static int test_cycle_size = 0;
+static void
+static int norm = CC_EUCLIDEAN;
+static void
+static void
+static double sgamma, cgamma;
+static GL2PScontext *gl2ps = NULL;
+static List_T *ListOfTransformedPoints = NULL;
+public static int mapY = 0;
+static int disable_esco;
+static gfp_t saved_gfp_mask;
+static gfp_t htlb_alloc_mask = GFP_HIGHUSER;
+static LIST_HEAD(modules);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+super(DaeElement,self).__init__()
+[super startWithTarget:aTarget];
+java.util.concurrent.ConcurrentHashMap
+super(gl);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+super(gl);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+super(gl);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+[super startWithTarget:aTarget];
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+super.classInstanceCreation(hasClassBody);
+return super.visit(node);
+super.consumeFieldAccess(isSuperAccess);
+super(true);
+op.setOmitSuper(false);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+super(DataType.VEC2);
+super(gl);
+super(gl);
+super();
+super();
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+PdmSuperClusterer super;
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+super(gl);
+super(DataType.VEC2);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+super(gl);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+super(gl);
+super(gl);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+[super startWithTarget:aTarget];
+if( (self=[super init])) {
+[super startWithTarget:aTarget];
+if( (self=[super init])) {
+git clone super super2 &&
+super(gl);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+git clone super super2 &&
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+struct logfs_super *super = logfs_super(sb);
+switch (hubs->dcs_readback_mode) {
+switch (hubs->dcs_readback_mode) {
+switch (reg) {
+.switch.checked > .switch-button {
+switch (hubs->dcs_readback_mode) {
+switch (reg) {
+switch (yych) {
+case Nfs3Ok:
+switch (reg) {
+switch (reg) {
+.has-switch.switch-mini {
+switch ($vowel) {
+.has-switch.switch-mini {
+.switch > .switch-track.switch-info {
+'SLIMBUS_DL_HL Switch':1:1
+'SLIMBUS_DL_HL Switch':1:1
+'SLIMBUS_DL_HL Switch':1:1
+'SLIMBUS_DL_HL Switch':1:1
+'DAC1 Switch':1:1
+'DAC1 Switch':1:1
+'SLIMBUS_DL_HL Switch':1:1
+switch ((yych = *YYCURSOR)) {
+'AFE_PCM_RX Port Mixer INTERNAL_FM_TX':1:0
+yych = *(YYMARKER = ++YYCURSOR);
+.has-switch.switch-mini {
+* Copyright 2011, Big Switch Networks, Inc.
+.has-switch label.switch-small {
+switch(pathInfo.HttpMethod)
+.has-switch span.switch-default[disabled] {
+.has-switch.switch-mini {
+`switch`。
+class SwitchCombinationError(SwitchError):
+'SLIMBUS_DL_HL Switch':1:1
+.ats-switch.switch-mini i.switch-mini-icons {
+.switch.switch-success span.switch-left {
+.switch.switch-mini i.switch-mini-icons {
+unsigned char WMT_MSMPEG4V3_DECODER; 
+-- Title: Fibre Channel Switch MIB.
+switch((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
+Mempak switch =
+switch(type) {
+* semx-switch.c: Regenerate.
+Switch (ToInteger (arg0)) {
+'MICBIAS1 CAPLESS Switch':1:1
+switch(pathInfo.HttpMethod)
+switch x := x.(type) {
+yystart1:
+switch lhs := o.l.(type) {
+.has-switch.switch-mini {
+.has-switch span.switch-default.active {
+.has-switch span.switch-left {
+.has-switch span.switch-default[disabled] {
+.has-switch.switch-mini {
+switch ( cs )
+switch ( cs )
+switch (yych) {
+switch(yych){
+;; Operations on switch trees
+switch(index) {
+switch ( cs ) {
+switch ( cs )
+{switch( act ) {
+switch(yych){
+;; * C-c C-c a -- mojo-switch-to-assistant
+switch(CVCenter.cvWidgets[key].class,
+switch (tagName.toLowerCase()) {
+switch {
+switch (stage) {
+'MICBIAS1 CAPLESS Switch':1:0
+struct tb_switch *sw = tb_to_switch(dev);
+switch (reg) {
+SOC_SINGLE("OUT1 Playback Switch", RT5677_LOUT1,
+switch (reg) {
+switch (reg) {
+switch (reg) {
+switch (cmd) {
+switch((((T0*)(((C)->_result_type)))->id)){
+switch (expression->id) {
+switch((((T0*)(a4))->id)){
+switch s {
+switch(propertyIndex)
+switch( t ) {
+Switch(property.MSRPCOpnum)
+Switch(property.MSRPCOpnum)
+switch (ch)
+synchronized (mListError) {
+public synchronized void reset(boolean force) {
+public synchronized String getNagiosUrl() {
+synchronized (fTaskQueue) {
+synchronized (fLock) {
+if (this->ox == cl.ox && this->oy == cl.oy) {
+if (this->ox == clox && this->oy == cloy) {
+this.o_root.a_index[this.n_id] = this;
+First Vim searches for the start of the current
+<If this works, add this in your .Xmodmap file: >
+mappings |:map-<buffer>|
+this group! This is not checked.
+var this_form = $(this);
+$userToken=$this->getPost($this->csrfTokenName);
+$this->setText($this->buildQuery($this->_query));
+CSchemaTable tbl(*this->pInside);
+this->arIn = &arIn;
+this->obj = &obj;
+bottomLeft.reset(this.left, this.bottom); 
+.foundicon-thumb-down {
+_this.list.slideUp(_this.options.outSpeed);
+this.domElement = canvas;
+this.change = this.moneyIn - this.cost;
+this.trucks.addListSelectionListener(this);
+return "Day 
+this.buffer1 = this.buffer2;
+/** This property handles the light type.
+return Math.floor((this.min() + this.max()) / 2);
+this.gagant = this.equipeAttaquee;
+this.gagant = this.equipeAttaquee;
+this.gagant = this.equipeAttaquee;
+this.addChild(this._blankItem, this._startIndex);
+this._setConstraintsAttr(this.constraints); 
+this.show.apply(this, this._onDeck);
+this.set('tabIndex', this.tabIndex);
+var h = lang.hitch(this,this.handleEnterKey);
+this._parent && this._parent._remove(this);
+(this.url || this.html) && this._createIFrame();
+if (!this._focused && this._opened) {
+post: function() {
+this._init(this.firstDayOfWeek, this.date);
+var thisContents = this.contents,
+this.element && this.element.remove();
+if ( this.getValue() || this.isChanged() )
+this._.output.push( this.selfClosingEnd );
+this.setValue( !this.getValue() );
+this.successorList[0] = n;
+if (!this.successorList[0].equals(this.node)){
+if (!this.successorList[0].equals(this.node)){
+this.scene.add(this.placeholders[r]);
+this.mouse.xDown = this.mouse.x;
+;; mell-transient-mode-p
+<dd><p><a target="new" href="http:
+GkmObjectTransient *transient;
+<transient name="primaryKey" />
+<transient name="modelAttributes" />
+private final transient Map entityPersisters;
+private final transient Map entityPersisters;
+(defun evil-transient-save ()
+(defun evil-transient-save ()
+protected transient ThingleFont font;
+private transient World world;
+creationObj FALSE
+transient generic DefineAttribute = "-define" ;
+transient generic MacroName = AtomId / VarId ;
+var next_transient_handle_ = -1;
+ALSO TRANSIENT DEFINITIONS
+void clear_trans_last(struct transient * trans)
+transientEntityNames.add( transientEntityName );
+from plone.app.tiles.demo import TransientTile
+private transient ISettings settings;
+;; mell-transient-mode-p
+transient public string uid {get;set;}
+private transient ISettings settings;
+private transient ISettings settings;
+private transient ISettings settings;
+private transient InitialContext initialContext;
+varconst transient array<AnimNode> AnimTickArray;
+persistence "Transient"
+String transient = "transient" !(idrest);
+<transient name="modelAttributes" />
+import javax.persistence.Transient;
+On re-invocation 
+<transient name="modelAttributes" />
+private transient Indir<Resource> indir = null;
+private transient ISettings settings;
+private transient ISettings settings;
+public transient ResCache cache;
+<a name="138" href="
+private transient Server server = null;
+(defclass magit-log-prefix (transient-prefix)
+persistence "Transient"
+/ "transient" :keyword @Transient
+(defun evil-transient-save ()
+private transient Scene mScene;
+(defun spacemacs
+(defun spacemacs
+@Transient
+void **request_buf, void **response_buf)
+static void clean_writequeues(void)
+void ext4_exit_mballoc(void)
+static inline void unregister_as_ext3(void) { }
+void destroy_checkpoint_caches(void);
+void f2fs_balance_fs(struct f2fs_sb_info *sbi)
+static void block_sigs(sigset_t *oldset)
+const void *value;
+static inline void unregister_fuseblk(void)
+void hfsplus_destroy_attr_tree_cache(void);
+static void init_once(void *foo)
+extern void nfs_fs_proc_exit(void);
+static inline void
+static void nfs4_renew_release(void *calldata)
+static void
+int flags, const char *dev_name, void *raw_data);
+void (*exit)(struct net *);
+void nfsd4_put_session(struct nfsd4_session *ses)
+void nfs4_state_init(void);
+extern void nfs4_lock_state(void);
+void __user *argp = (void __user *)arg;
+- (void)viewDidLoad
+void *kaddr;
+TP_PROTO(void *inode, void *file, void *dentry,
+const void*xi_value;
+void dlm_destroy_master_caches(void);
+static void
+void (*detach)(struct acpi_device *dev);
+void acpi_os_free(void *memory);
+prototype;
+void acpi_processor_ppc_init(void);
+u8 *buffer;
+void *priv;
+extern void __audit_syscall_entry(int arch,
+static inline void *bio_data(struct bio *bio)
+void *node_bootmem_map;
+void(*unprepare)(struct clk_hw *hw);
+extern void clockevents_suspend(void);
+void(*unblank)(void);
+extern void context_tracking_user_enter(void);
+static inline void cpu_hotplug_begin(void) {}
+void cpufreq_put_global_kobject(void);
+extern void cpuidle_driver_unref(void);
+void *ptr;
+void dma_issue_pending_all(void);
+void efivar_entry_iter_end(void);
+void *data;
+static inline void freezable_schedule(void)
+static inline void ftrace_stop(void)
+void usbhid_quirks_exit(void);
+void (*callback) (void *context);
+void*chip_data;
+void might_fault(void);
+extern void kgdb_arch_exit(void);
+extern void kmemleak_init(void) __ref;
+void *(*alloc)(void);
+static inline void kvm_irqfd_exit(void)
+ATA_LFLAG_NO_HRST= (1 << 1), 
+extern void lockdep_init(void);
+static inline void mem_cgroup_oom_enable(void)
+void lock_memory_hotplug(void);
+extern void setup_per_cpu_pageset(void);
+void (*exit)(void);
+- (void)reportError_:(NSError *)error {
+void (*flush_branch_stack)(void);
+extern void pm_runtime_enable(struct device *dev);
+static inline void wake_up_klogd(void)
+void rcu_sysidle_force_exit(void);
+static inline void rcu_force_quiescent_state(void)
+void rcu_cpu_stall_reset(void);
+void calc_load_enter_idle(void);
+void __init kmem_cache_init(void);
+void kick_all_cpus_sync(void);
+extern void pm_restore_console(void);
+extern void lru_add_drain(void);
+void*private;
+static inline void tick_nohz_idle_enter(void) { }
+register_trace_
+extern void tty_vhangup_self(void);
+public override void Emit (EmitContext ec)
+void AddModuleCharSet (ResolveContext rc)
+public override void Emit (EmitContext ec)
+public override void Emit ()
+void refresh_zone_stat_thresholds(void);
+void laptop_sync_completion(void);
+static inline void ceph_encode_8(void **p, u8 v)
+void *r_priv; 
+void(*clk_writel)(u32 val, void __iomem *reg);
+void M3::parse(){
+static inline void prcmu_disable_wakeups(void)
+void *buf;
+void *targinfo;
+void*controller_data;
+void __iomem*regs;
+void*(*vaddr)(void *buf_priv);
+void ipv6_addr_label_cleanup(void);
+delegate void EmptyDelegate ();
+void ip_init(void);
+void ip_vs_conn_cleanup(void);
+volatile uint32_t fec_id;
+volatile u8mode;
+volatile u8mode;
+typedef volatile struct
+volatile u32mbar;
+asm volatile("movdqa %0,%%xmm7" : : "m" (x0f[0]));
+volatile unsigned long ps; 
+extern volatile struct CoreGlobalRegs {
+volatile unsigned long cr[8];
+volatile uint32_t gotgctl; 
+static void print_fixed (volatile uchar *p);
+volatile uint8 *MuxConfigReg;
+typedef volatile struct
+volatile grstctl_t greset ={ .d32 = 0};
+volatile unsigned long mps_swirn0set; 
+volatile unsigned long clc; 
+volatile uint32_t maca_entry = 0;
+extern volatile uint8_t fcs_mode;
+volatile u32alpha;
+volatile int tec_matrix;
+typedef volatile struct {
+volatile u8 PAR[6];
+volatile ushort cin;
+unsigned intpad1[3];
+extern volatile uint32_t __break_error_detect[3]; 
+;; URL: http:
+${body}}
+volatile u_int32_t dot3StatsAlignmentErrors;
+volatile u_int16_t cb_status;
+volatile unsigned short ev_head;
+inline volatile T* Addr() volatile {return &val;}
+; ...likewise volatile accesses.
+__asm__ __volatile__( \
+volatile unsigned int memstatus;
+volatile uint16_tcsar;
+volatile u32 status_attn_bits_ack;
+VOLATILE char sync_tr[NTARGET];
+volatile __device__ int g_q_offsets[1]={0};
+volatile uint32_t gotgctl;
+*(volatile ulong*)MPC5XXX_CS0_START,
+asm volatile(\
+__asm__ __volatile__("sync;" insn\
+REMAP1(u8, readb, const volatile)
+volatile __u32 DMA_Ctl;
+volatile fec_t*hwp;
+volatile immap_t *immap = (immap_t *)CFG_IMMR;
+__asm__ volatile ("sync");
+typedef volatile struct
+volatile UINT32 UDPHS_EPTCFG; 
+static inline u
++volatile u32 *mcr;
+__asm__ __volatile__(" lg %0,0(%4)\n"\
+REMAP1(u8, readb, const volatile)
+volatile u32 sys_base;
+volatile u32krn_type;
+volatile u8 mcr;
+volatile fec_t*hwp;
+*buf++ = *(volatile unsigned char *)portp;
+*(volatile unsigned char *)portp = b;
+;; URL: http:
+asm volatile("pushfl;"
+typedef void *volatile XchgPtr;
+volatile uint16_t *reg =
+asm volatile("\n\
+volatile structlereg1 *sc_r1;
+extern volatile far BDT ep0Bo; 
+private volatile Destination requestDestination;
+private volatile AbstractJmsChannel channel;
+private volatile Destination requestDestination;
+__asm__ __volatile__ ("" ::: "memory");
+volatile struct ADC_REGS AdcRegs;
+volatile u8 idr[0x8];
+typedef volatile _PN PN;
+volatile u32mbar;
+extern volatile unsigned char TMR0 @ 0x001;
+} STATUSbits_t;
+volatile unsigned int lsr; 
+volatile u8mode;
+asm volatile("rdtsc"); 
+asm volatile("rdtsc"); 
+extern volatile good_test x3;
+extern volatile enum good_test x3;
+extern volatile class good_test x3;
+extern volatile enum good_test x3;
+extern volatile struct good_test x3;
+extern volatile union good_test x3;
+void operator = (const volatile Base& a) volatile
+volatile struct psif_csr_mmu_config *ptr,
+volatile unsigned char INDF @ 0x000;
+extern volatile unsigned char WDMOD;
+extern volatile unsigned char WDMOD;
+asm volatile (\
+static uint8_t __LDREXB(volatile uint8_t *addr)
+set_bit (int nr, volatile void *addr)
+typedef volatile struct mailbox {
+volatile struct scp_struct*scp;
+volatile u16 *ib = (volatile u16 *)dev->mem_start;
+volatile struct lance_regs *ll;
+asm volatile("ocbwb%0"
+volatile __u32*ph_regaddr;
+17:51:42 ResponceServer ��������� �������.
+while (c = word[i++])
+while (c < 0x7f)
+while (c < 0x7f)
+while (i < src->size) {
+} while (0)
+while(cur!=end()) {
+while(_t_sz--) *_t_v++ = 0;\
+while(_t_sz--) *_t_v++ = 0;\
+} while (0)
+*(inst)++ = imb.b [7];\
+while(_t_sz--) *_t_v++ = 0;\
+} while(0)
+} while(0)
+} while(0)
+while (c <= 0x7e)
+while (c <= 0x7e)
+while (c < 0x7f)
+while ( p < now )
+while ($row = $db->sql_fetchrow($result))
+while (!feof($fp))
+while (rs.next()) {
+while(ptsp<pts+3*p) {
+} while (0)
+while(!feof(ffp) && !ferror(ffp))
+while(!feof(ffp) && !ferror(ffp))
+while (isDoubleQuoteToReplace)
+while ($buffer = fgets($src,4096)) {
+while(($key,$value) = each(%EchoChannels)) {
+while (isdigit(**s))
+while (result.hasNext()) {
+while (hasNewStatements()) {
+while (lua_next(L, 4) != 0) {
+while (result.hasNext()) {
+while (result.hasNext()) {
+} while (0)
+} while (0)
+} while (0)
+} while (0)
+while (sp > 0) {
+goto errout;
+while (1) {
+while (*start != '\0') {
+while (fgets(buf, sizeof(buf), f)) {
+while(files.size())
+if(i>j) do {int _=i; i=j; j=_;} while(false);
+} while (0)
+while (isdigit(**s))
+while(*s && strchr_m(sep,*s))
+while(line < (h->req_buf + h->req_contentoff))
+while ((d = readdir(dir)) != NULL) {
+while (*np && ptr < limit-1)
+} while (0)
+while (sp > 0) {
+} while (pmd++, addr = next, addr != end);
+while (count--) {
+while (isdigit(**s))
+} while (bh != head);
+} while (bh != head);
+} while (0)
+while (*(*ptr))
+while (*str)
+} while (0)
+while (*p) {
+while ( 1 )
+while ( 1 )
+while ( *ptr && IsWhiteSpace( *ptr ) ) ptr++;
+while (($tt = $this->t->get()) != TOKEN_END)
+while ( firstDirtyNode != null ) {
+;;; have been sent to it while it was busy.
+} while (0);
+while (*p)
+set_weights: while (wt > 3) {
+while (isdigit(**s))
+while(*ptr && !isspace(*ptr)) ++ptr;
+} while (--count);
+while( isspace(q[-1]) ) q--;
+;} while (0)
+} while (0)
+while (count--) {
+} while (!abort && get_ticks() <= etime);
+while (readl(&cmper->l3clkctrl) != PRCM_MOD_EN)
+while (isdigit(**s))
+while ((inb(tmport) & 0x01) != 0x01) {
+while ( ( ' ' == c ) || ( '\t' == c ) ) {
+- while (i < numInputSyms + numNewSyms) {
+while ( p < now )
+while (isdigit(**s))
+while (($tt = $this->t->get()) != TOKEN_END)
+while($w=mysql_fetch_array($sub)){
+while (*(*ptr))
+while (*str)
+while line == '':
+while (true)
+}while(0)
+}while(0)
+}while(0)
+}while(0)
+while ( height-- ) {
+} while(0)
+selected: false,
+private boolean bExternalActivation= false;
+return false;
+"required": false,
+<required>false</required>
+<required>false</required>
+<required>false</required>
+<required>false</required>
+hdmi_msm_state->cec_enabled = false;
+return false;
+return false;
+9190: None,
+65794: None,
+InsertOp(k, none, none, 0C3H, none, none, none);
+('2','Africa',None,'!!WORLD', None),
+9190: None,
+8 1820216 13 malloc() in none(0) "icon_stumble"
+d none usr 755 root sys
+d none usr 755 root sys
+d none usr 755 root sys
+d none usr 755 root sys
+<g fill="none" stroke="
+ban_userid INTEGER DEFAULT 0 NOT NULL,
+display: none;
+CDC = AVR8 : at90usb1287 : NONE : 128 : 8 : 8 :
+AdminUISequence = [
+"fill": "none", 
+"fill": "none", 
+$('moduleNameRow').style.display="none";
+[ir_action_act_window]
+<td style="border: 10px none orange">none</td>
+54,minicircle,None,MC,
+</td><td class="none">
+MFP_FALCON(GPIO0,RST,GPIO, NONE, NONE),
+DSP Effects : none
+* Output : None.
+Or None otherwise.
+MFP_XWAY(GPIO2, NONE,NONE,NONE,NONE),
+</head><style>
+* Output : None.
+<li> None<br>
+background-image: none
+list-style: none outside none;
+list-style: none outside none;
+anchor1 = none
+anchor1 = none
+anchor1 = none
+alEnable.restype = None
+MFP_XWAY(GPIO41, GPIO,NONE,NONE,NONE),
+<set name="crystal_type" value="NONE"/>
+<set name="crystal_type" value="NONE"/>
+<set name="crystal_type" value="NONE"/>
+<set name="crystal_type" value="NONE"/>
+<set name="type" value="NONE"/>
+holds(neg(none),T1,P) :-
+holds(neg(none),T1,P) :-
+holds(neg(none),T1,P) :-
+holds(neg(none),T1,P) :-
+holds(neg(none),T,P) :-
+holds(neg(infected(none)),T1,P) :-
+display: none;
+<token value="[C-]
+cpInitChipmunk = chipmunk_lib.cpInitChipmunk
+5 syntax-basic-05syntax-basic-05.rqNonehttp:
+Scope.__init__(self, "?", None, None)
+pop true /patternNone idef
+* Input : None
+\color none
+61.641,9.718 46.597,16.406 "/>
+61.641,9.718 46.597,16.406 "/>
+61.641,9.718 46.597,16.406 "/>
+61.641,9.718 46.597,16.406 "/>
+61.641,9.718 46.597,16.406 "/>
+61.641,9.718 46.597,16.406 "/>
+61.641,9.718 46.597,16.406 "/>
+<polyline fill="none" stroke="
+<polyline fill="none" stroke="
+<polyline fill="none" stroke="
+<polyline fill="none" stroke="
+<line fill="none" stroke="
+<line fill="none" stroke="
+intF[1214] = 0
+intF[1214] = 0
+strS[1001] = 'NONE'
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1000], 'NONE')
+intF[1215] = 0
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intF[1215] = 0
+intF[1215] = 0
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+intA[1000] = strcmp (strS[1004], 'NONE')
+" for mappings and commands.
+and ":put" commands and with CTRL-R. {not in Vi}
+if !exists(':TbStart')
+Related standards and specs:
+class _LogsDequeBuffer(object):
+$command->andWhere(array('and', 'id=1', 'id=2'));
+E - Added 'Error Handler' support and references
+andecx, 255; 000000ffH
+**You must specify one (and only one) command.**
+Added: Command line understands @ syntax
+<li>Andreas Schwier &lt;andreas.schwier&
+355,8,9,"The user lands and
+primary attack and an off hand attack in the same 
+Allow me to give you some practical examples.
+That is not always easy.
+The world economy needs stability.
+Mr Broks report recognises this great potential.
+Let there be no illusions.
+Yet it should not be so!
+1F8B; S; 1F83; 
+bison and which is both reentrant and thread-safe.
+* in MPLAB, replace C30 linker script and rebuild.
+CLASS="COMMAND"
+TITLE="External Filters, Programs and Commands"
+> and signals. This command and
+HREF="commandsub.html
+HREF="randomvar.html
+TITLE="External Filters, Programs and Commands"
+TITLE="External Filters, Programs and Commands"
+>and Patrick Wood</SPAN
+>command_not_found_handle</B
+HREF="commandsub.html
+2.3 Commands *VimExplorer-commands*
+* [Andale Mono 14](http:
+handbook - Enable handbooks generation for KDE4.
+'pattern' => '', 
+'grouped', 0.5, ...
+command = this._normalizeCommand(command);
+For Vim version 7.0 and above.
+<li><a href="http:
+and (min-height : 601px)
+"description": " <p><a href='http:
+handler(self.validate(attributes, handler));
+<td class="colFirst"><a href="
+<td class="colFirst"><a href="
+@command{./configure}.
+the command line. Lines starting with the hash ('
+handler = handleObjIn.handler;
+AND topic_moved_id = 0
+0 => 'What is BBCode?',
+'REG_USERS_TOTAL_AND'=> '%d registered and ',
+AND post_postcount = 1 AND post_approved = 1
+AND ug.user_id = ' . $user->data['user_id'] . '
+$match= array('
+AND left_id BETWEEN {$left_id} AND {$right_id}
+* simple to understand and use. 
+var $random = 'random()';
+<ulink url="http:
+struct comedi_async *async = s->async;
+=== 0.9.10 ===
+struct comedi_async *async = s->async;
+comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+syscall("mes.erase_fukidasi") -> {107, async};
+syscall("mes.erase_fukidasi") -> {107, async};
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+comedi_reset_async_buf(async);
+struct comedi_async *async = s->async;
+struct comedi_async *async = s->async;
+comedi_reset_async_buf(async);
+comedi_reset_async_buf(async);
+struct comedi_async *async = s->async;
+comedi_reset_async_buf(async);
+struct comedi_async *async = s->async;
+MochiKit.Async.NAME="MochiKit.Async";
+(pushnew '(async-grep-mode . async-grep-status)
+exports['select alias'] = function(test){
+async_destroy (ASYNC *async)
+/** \def IS_PARAM_ASYNC
+} catch (e) {
+} catch (e) {
+MochiKit.Async.NAME = "MochiKit.Async";
+async->async_flags |= ASYNC_STOPPED;
+async_handle = (hci1394_async_handle_t)async;
+comedi_reset_async_buf(async);
+async Task<bool> ArrayAccessTest_1 ()
+public async Task LoadSaveBuildConsoleProject ()
+} catch (e) {
+} catch (e) {
+&nbsp;PREV CLASS&nbsp;
+comedi_reset_async_buf(async);
+comedi_reset_async_buf(async);
+[CCode (cname = "pk_catalog_test")]
+MochiKit.Async.Deferred = function ( canceller) {
+comedi_reset_async_buf(async);
+/** \def IS_PARAM_ASYNC
+comedi_reset_async_buf(async);
+comedi_reset_async_buf(async);
+ok(Async.chain, "Async.chain exists");
+schro_async_free (SchroAsync * async)
+schro_async_free (SchroAsync * async)
+struct async_work *async;
+async_data_free (AsyncData *async)
+async = g_slice_new (AsyncData);
+comedi_reset_async_buf(async);
+comedi_reset_async_buf(async);
+comedi_reset_async_buf(async);
+comedi_reset_async_buf(async);
+import scala.concurrent.{ Await, Promise, Future }
+var servers = await session.Query<ServerRecord>()
+await sol.SaveAsync (Util.GetMonitor ());
+import scala.concurrent.{Promise, Future, Await}
+import scala.concurrent.Await
+data Await x y = Await !(x -> y)
+%% @spec await(Key::key()) -> {pid(),Value}
+import scala.concurrent.Await
+package com.jayway.awaitility;
+for (var i = 0; i < 10; i++) {
+fmap await
+using WinRTXamlToolkit.AwaitableUI;
+import scala.concurrent.{Promise, Future, Await}
+import scala.concurrent.Await
+import akka.dispatch.Await
+assertTrue(latch.await(10, TimeUnit.SECONDS));
+package com.jayway.awaitility;
+await DetectServerSupportedFeatures();
+import scala.concurrent.Await
+import ExecutionContext.Implicits.global
+test "cannot have `await` outside a function", ->
+import akka.util.Timeout;
+import scala.concurrent.Await
+import scala.concurrent.Await
+import akka.dispatch.Await
+import akka.util.Timeout;
+func TestAwaitWithTimeout(t *testing.T) {
+import scala.concurrent.Await
+class await:
+await {
+await = wrap $ Await return
+class EftAwaitTest < Test::Unit::TestCase
+await this.ShowWebBrush();
+startSignal.await();
+%% @equiv await(Key,infinity)
+trigger.await();
+namespace AsyncAwait
+This function works rather like [`await/2`](
+%% @spec await(Key::key()) -> {pid(),Value}
+This function works rather like [`await/2`](
+using (await WriteLock ()) {
+await = suspend (Await return)
+return await(await task);
+await SaveApiKeys(systemSession);
+; await await-for
+import akka.dispatch.Await.Awaitable
+var result = await client.GetCurrentVersion();
+; await await-for
+trigger.await();
+trigger.await();
+IconUrl = await iconUrlFunc(parameter);
+package com.jayway.awaitility;
+await TypeSystemService.Load (solution, monitor);
+await message.ShowAsync();
+%% @equiv await(Key,infinity)
+start.await();
+trigger.await();
+assertTrue(latch1.await(10, TimeUnit.SECONDS));
+import scala.concurrent.Await
+import scala.concurrent.Await
+request = await SetupRequestAsync (address);
+await base.OnEndLoad ();
+var docView = await controller.GetDocumentView ();
+await(0.19999)
+%% @equiv await(Key,infinity)
+%% @equiv await(Key,infinity)
+await TypeSystemService.Load (solution, monitor);
+await this.ReplyToSelectedComment();
+import scala.concurrent.duration._
+writeLatch1.await();
+import concurrent.Await
+import scala.concurrent.Await
+; await await-for
+await this.RoundtripAsync(
+var response = await task.ConfigureAwait (false);
+latch.await(15 * 1000, TimeUnit.MILLISECONDS);
+var fe_awaiter = new FieldExpr (awaiter, loc);
+await RunExperimentsAsync().ConfigureAwait(false);
+response = await task.ConfigureAwait (false);
+var response = await ctx.Client.SendAsync (
+; await await-for
+bool cpuBreakLoop = false;
+case '"': out.append("\\\""); break;
+} break;
+case opNeg : SetRaw(a, -slotRawInt(a)); break;
+if (att->data == input_attribute) break;
+if(RecordType === 0 && last_Rn === 'EOF') break;
+case 'Description': tag = 'Comments'; break;
+case MGN_1M: ret = DESC_RATE1M;break;
+DebuggerBreakIfDebugging();
+case 82: s = "\"break\" expected"; break;
+} break;
+break ;
+var RecordType = blob.read_shift(2);
+case 'Description': tag = 'Comments'; break;
+case '<': sb.append("&lt;"); break;
+break; }
+PASS Invalid: "break 0.2"
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (result i n k14 break k16 k15 return k17)
+; env*: (x h return k14 k15 k16 break k19 rv18)
+; env*: (k14 break)
+; env*: (rv14 k15 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (rv14 rv15 break k16)
+; env*: (i result return k14 break k17 k15 k16)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (k14 break)
+; env*: (i nums k14 k15 return break k17 k16)
+.nr an-break-flag 1
+BREAK = 0x20
+case -1: { t.kind = eofSym; break loop; } 
+case '000b': $tag = 'ACDComment'; break; 
+case '000b': $tag = 'ACDComment'; break; 
+if(otherside == board.squares[xy(1,1)]) break;
+case '000b': $tag = 'ACDComment'; break; 
+use constant BREAK => 0040 ;
+is(x, 0, 'do-break without label')
+case '@': p->type = JISC6226_1978; break;
+PL_op = NORMAL; break;
+case '@': p->type = JISC6226_1978; break;
+} break;
+case 0x00:dyn_dop_ebgb(DOP_ADD);break;
+selector = getsym("break");
+case opSilence : func = &zero_a; break;
+break; \
+case 0x0000: strcat(buffer, " "); break; 
+RMEbGb(ADDB);break;
+switch(fEndDate.getDay()) {
+case "aa": return "aar"; break;
+}break;
+{fieldtype:"Column Break"},
+if(tmp0) break;
+if(tmp0) break;
+return R;
+_exp1=((((T977*)(((C)->_list)))->_storage))[_i];
+if(((int32_t)(_i))<=(INT32_C(0))) break;
+tmp0=((T6)(r553use_current(((T553*)a1))));
+se_die(INT32_C(1));
+while(1){
+if(tmp0) break;
+if(((int32_t)(_i))>(tmp0)) break;
+if(tmp0) break;
+case 378:
+if(tmp0) break;
+if(tmp0) break;
+Cast (VBit, VSByte, Nothing);
+public static final int EVENTKIND_BREAKPOINT = 2;
+case 0x00: RegB = RotateLeftCircular(RegB);break;
+case "abstract": t.kind = 6; break;
+case (0x69): valueholder = arg1; break; 
+*s = "DW_ACCESS_public"; break;
+break ;
+if (ord($marker) != 0xff) break;
+if ( nx == nWidth ) break;\
+} break;
+case SDLK_BREAK: return eKey_BREAK; break;
+case Bplus: ival1 += ival2; break;
+default: break;
+FMAPP_MSG("breaking...");
+if (cmd & PL_PCM_BREAK) {
+} break;
+case "000b": $tag = "ACDComment";break;
+10.01012 break this packet into, 1
+10.01012 break this packet into, 1
+17.42, break this packet into, 1
+15.01, receive incoming, Packet 
+17.42, break this packet into, 1
+15.01, receive incoming, Packet 
+default: break;
+<U0040><U00A0> \x00\x1B |0 
+default: break;
+<U0040><U00A0> \x00\x1B |0 
+continue;
+op 21 array-length 12x y none continue|throw
+continue = false
+continue = true
+110 CONTINUE 
+110 CONTINUE 
+140 CONTINUE 
+continue;
+continue;
+continue;
+op 1a const-string 21c y string-ref continue|throw
+continue
+c 5 continue
+c 5 continue
+; env*: (break k14 continue k23 k22 i14)
+; env*: (loop k16 break k14 k15 continue k17)
+; env*: (rv22 k14 break rv23 i14 continue k25 k24)
+; env*: (loop break k14 k15 continue k18 rv17 k16)
+; env*: (break k14 continue k23 k22 i14)
+; env*: (loop break k14 k15 continue k18 rv17 k16)
+continue;
+continue
+7 continue
+7 continue
+1 continue
+continue
+continue
+23000 continue
+pause -1 "Hit return to continue"
+continue;
+continue;
+continue next_insn;
+Continue :c continue evaluation")
+lfor done
+* to continue the same random number sequence.
+{ gotoCase = this.case_INITIAL; continue; };
+continue;
+5001 CONTINUE
+continue;
+continue;
+continue;
+continue;
+-continue
+1001 continue
+30 continue
+10 continue
+Continue cxi = (Continue) continues.get(i - 1);
+continue;
+major1=`Major ttyC 19` || continue
+git rebase --continue
+continue;
+if(M.anchored && !ismob(M)) continue
+declare continue handler for condname set x5 = 1;
+declare continue handler for foo set x = 1;
+100continue
+continue;
+(define (continue bytes-used)
+10 continue
+351 continue
+if ( m_nodes[i].m_hash != node->m_hash ) continue;
+continue;
+if ( wp[x] == ' ' ) continue;
+if ( wlen <= 0 ) continue;
+continue;
+if ( is_wspace_a(s[i]) ) continue;
+continue;
+if ( ! di ) continue;
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+150 CONTINUE
+10 CONTINUE
+continue;
+def _defines_primary_key(d):
+def manage(module, **params):
+class MSDialect(default.DefaultDialect):
+defines a large part of the ORM's interactivity.
+def _clone(element, **kw):
+def getDefaultServerFile():
+def dir_config(target, idefault=nil, ldefault=nil)
+from django.core.cache import cache
+def chequearPlacasAuxiliares(listaDispositivos):
+def pq_link(p, text):
+def doc_rev_parser(*args, **kwargs):
+elif operator and typedef.operators:
+else if (typeid(*i) == typeid(real_tp_interval)) {
+else return code;
+} else {
+else if ( input < 0x200000 )
+} else {
+} else {
+} else {
+} else {
+} else if (type == "mouseout") {
+} else {
+} else {
+} else {
+} else {
+%\def\replace@commawithbackslash
+else if(25<difficultynum<=50)
+else if(25<difficultynum<=50)
+else if (isset($utf_combining_class[$utf_char]))
+} else if ($_adodb_ver >= 5.0) {
+else if ($h < 10) $h = '0'.$h;
+} else {
+} else {
+else if (prop.equals(UILink.TYPE_PROPERTY)) {
+} else {
+} else if (firstBit == firstBit2) {
+else if (datatype.equals(XMLSchema.INTEGER)) {
+} else {
+else if (localTCKind.equals(TCKind.tk_long))
+else if (localTCKind.equals(TCKind.tk_long))
+else if(getOperation() == Operation.ADD)
+} else {m1=m2=0;mxs=fx;}
+int CClinkern_flipper_init (int ncount, int *cyc)
+} else if (seq_list->head == seq) {
+} else {
+} else {
+} else {
+} else {
+} else {
+} else if (strcmp(s2w, "1") == 0) {
+} else if (!driver->in_busy_2) {
+else if (count < 1048576)
+} else {
+} else {
+} else {
+} else {
+} else {
+} else if (type == "mouseout") {
+else if (ID == 0) 
+} else {
+} else {
+} else if (strcmp(s2w, "1") == 0) {
+} else {
+} else {
+} else {
+} else if ($_adodb_ver >= 5.0) {
+else $retarr[strtoupper($fld->name)] = $fld;
+} else if (strcmp(s2w, "1") == 0) {
+} else if (spec.flags & PLUS) {
+} else {
+} else if (!driver->in_busy_2) {
+else if (expr instanceof UnaryTupleOperator) {
+else if (datatype.equals(XMLSchema.INTEGER)) {
+CNV_PROX=${10}
+else if (expr instanceof UnaryTupleOperator) {
+else if (expr instanceof UnaryTupleOperator) {
+} else if (!driver->in_busy_2) {
+} else if (m == 'i') {
+pos = buf;
+else if (!strcmp(*argv, "-d"))
+else if(op_stack.top()=='+')
+else if (client->pers.hand == CENTER_HANDED)
+else if(strcmp(ptr, "2") == 0)
+finally {
+finally {
+finally {
+finally {
+finally {
+finally {
+finally {
+finally {
+finally {
+finally {
+} finally {
+} finally {
+} finally {
+goto finally;
+goto finally;
+} finally {
+finally
+finally
+goto finally;
+} finally { DebugExitDecision(1); }
+finally
+finally {
+finally {
+goto finally;
+finally
+} finally {
+} finally {
+finally {
+finally {
+finally {
+return { lat: cp.lat, lng: cp.lon }; 
+$yformat = 'Y'; $mformat = 'n'; $dformat = 'j';
+foreach( $ecp1_cals as $_e_id => $line ) {
+;turns left for 1 second, then continues forward
+GNU General Public License for more details.
+if ( !property_exists( $this, $propName ) ) {
+foreach ( $list as $elem ) {
+public $dataSourceClassName;
+$.format = $.validator.format;
+for (i = 0; i < this.rows; i++) {
+for (Locale locale : locales) {
+import java.text.MessageFormat;
+MessagesBundle mb = defaultFiles[i];
+<div class="block">View for Contacts</div>
+<td class="colLast">
+<div class="block">Form for GrapeMusts</div>
+<td class="colLast">
+struct {
+demo.RunPopulateTemplatesThread();
+Format the legacy item for display.
+for (;;) 
+case '2': 
+for(;;)
+printf("befor clear for INVALID BADGE\n ");
+static voidwebsMsgStart(webs_t wp);
+for (sp = tp->hash_table[i]; sp; sp = forw) {
+for (i = ep->variableMax - 1; i >= 0; i--) {
+char_t**args;
+static intbFreeLeft;
++ Updated for HaxePunk 2.5.3 and openfl 2.0.1
+for (child in _children) {
+import flash.text.TextFormatAlign;
+'forceEnable' => $this->settings['forceEnable'],
+width += prefCol[i];
+g.setColor(Color.GRAY);
+ps = new Port[cols];
+ret.ttyFormat |= TtyInterface.FORMAT_TABLE;
+private int numDrops;
+} else {
+import javax.xml.transform.Transformer;
+public void doIt(Project proj) {
+if (name == null) return null;
+dest.attrs.addAll(INIT_ATTRIBUTES);
+for (Component repl : map.get(comp)) {
+boolean afterWhitespace = false;
+entries = new Entry[data.contents.length][];
+char prev = text.charAt(0);
+double total = 0.0;
+insertBefore: "before",
+best for your project.
+for(XmlNode buildNode : buildNodes)
+for(File buildFile : buildFiles)
+_LOGGING_FORMAT = '%(message)s'
+for (int x = 0; x < img.getHeight(); x ++){
+for(int y = 0; y < getWidth(); y++){
+bild = new char[l][h];
+for (int i = 0; i<l; i ++){
+from __future__ import with_statement
+from __future__ import with_statement
+from search import AtomField
+from birth. As itgrows older, the
+It heals one POKéMON from a
+6,8,9,"Prevents combatants from
+fetching proxylist from 'http:
+FROM ' . FORUMS_TABLE;
+FROM ' . SEARCH_WORDLIST_TABLE . '
+"FROM Detail "+
+Disconnected from Server.
+- [Laravel 3.2.8](
+DELETE FROM `creature_text` WHERE `entry`=@ENTRY;
+DELETE FROM `creature_text` WHERE `entry`=@ENTRY;
+DELETE FROM `creature_text` WHERE `entry`=@ENTRY;
+DELETE FROM `creature_text` WHERE `entry`=@ENTRY;
+DELETE FROM `gameobject` WHERE `guid` = 203174;
+DELETE FROM `creature` WHERE `id`=8416;
+FROM `'._DB_PREFIX_.'category`
+ldrr1,[sp,
+FROM (SELECT * FROM (
+@@GLOBAL.INIT_FILE@@GLOBAL.INIT_FILE IS NULL
+Global Const $tagGDIPCOLORPALETTE = _
+function global_awards()
+var/kwiki/.global/config.yaml
+Global Const Hlp_Contents = 10 'Main Help Window
+Global Const $__RICHEDITCONSTANT_WM_USER = 0x400
+Global Const $WS_TILED = 0
+global.applied=Applied
+global $languages;
+-moz-box-shadow: 0px 1px 4px rgba(0,0,0,.3) ;
+-moz-box-shadow: 0px 1px 4px rgba(0,0,0,.3) ;
+import org.jruby.ast.ArgumentNode;
+import java.io.File;
+import java.util.Iterator;
+import jnr.constants.platform.AddressFamily;
+import com.google.common.base.Splitter;
+import org.jruby.java.util.BlankSlateWrapper;
+import org.jruby.java.invokers.StaticFieldGetter;
+import java.io.Serializable;
+import java.io.IOException;
+import java.io.IOException;
+import org.jruby.ast.DAsgnNode;
+import java.io.IOException;
+import java.util.Arrays;
+import org.jruby.Profile;
+import org.jruby.java.invokers.StaticFieldGetter;
+import android.app.Activity;
+@import "functions/contains";
+import java.util.ArrayList;
+import java.awt.Color;
+from django.contrib import admin, messages
+from django.db import models
+import android.graphics.Point;
+import java.util.ArrayList;
+import com.google.bitcoin.core.Address;
+import java.awt.Panel;
+import java.awt.Panel;
+import javax.swing.BorderFactory;
+import java.awt.Insets;
+import javax.swing.BorderFactory;
+from datetime import datetime
+$sprites-layout: smart;
+import com.hazelcast.cluster.ClusterService;
+import com.hazelcast.core.Cluster;
+import java.io.BufferedReader;
+import java.io.IOException;
+import com.hazelcast.config.Config;
+import com.hazelcast.client.ClientServiceProxy;
+import com.hazelcast.ascii.TextCommandService;
+import com.eclipsesource.json.JsonObject;
+import com.hazelcast.core.Member;
+import com.hazelcast.cluster.MemberInfo;
+import com.hazelcast.core.HazelcastException;
+import com.hazelcast.config.Config;
+import com.hazelcast.config.Config;
+import com.hazelcast.config.Config;
+import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.client.spi.ClientProxy;
+import com.hazelcast.client.ClientCreateRequest;
+import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.client.AuthenticationRequest;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.config.AwsConfig;
+import com.google.zxing.BarcodeFormat;
+import java.awt.event.KeyEvent;
+import com.google.java.contract.Ensures;
+import java.util.HashSet;
+import java.nio.charset.Charset;
+import hudson.EnvVars;
+import java.io.IOException;
+import hudson.EnvVars;
+import java.nio.charset.Charset;
+import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.io.DataInputStream;
+import java.awt.BorderLayout;
+import java.awt.AWTEvent;
+import java.awt.Component;
+import java.io.BufferedReader;
+import java.awt.BorderLayout;
+import java.awt.BorderLayout;
+import java.net.URLEncoder;
+import java.io.InputStream;
+import java.awt.BorderLayout;
+((lambda-keyword-p (car lambda-list))
+(define add1 (lambda (n) (+ n 1))) 
+(lambda (proc list1)
+class Lambda(LambdaBase):
+class Lambda(LambdaBase):
+(define with (lambda (s f) (apply f s)))
+(if (and (pair? a) (eq? (car a) 'parameters))
+field_val = lambda { |f|
+Lambda(
+Lambda(
+Lambda(
+Lambda(
+Lambda(
+for (lambda = 40; lambda <= 120; lambda++) {
+;;; (lambda (key)
+field_val = lambda { |f|
+\def\mwm@in@group@with@nonlocal
+nonlocal_labels = TREE_CHAIN (nonlocal_labels);
+struct is_nonlocal
+[note] [nvarchar](255) NOT NULL,
+-- blogs_posts
+-- core_group
+CREATE TABLE IF NOT EXISTS `crm_case` (
+-- mail_alerts
+ID NUMERIC(20,0) NOT NULL,
+The keychain does not exist.
+inherit1.pass: join1.pass priority1.pass
+def __init__(this, code='', data_or_message=None):
+27.22.4.1.1_2PASS
+;;; (starting-pass '<pass-name>)
+PASS array is [,42,43,44]
+PASS tests[i](nativeJSON) is tests[i](JSON)
+def PtChangePassword(password):
+def passthrough(func):
+class Info(LoggedEvent): pass
+pass=TestOS_RNG() && pass;
+pass = pass && !fail;
+is format_pass( $pass[5] ), <<'EOD', 'Pass 6';
+ACC1a st_access.testReadLink : PASS
+lxe: tostring_utf16 (SATR T1) 22.4042 msec/pass
+PASS : orgQhull::PointCoordinates_test::t_modify()
+| [Pass] 241. Pass W20131119-160614-3 (10 sec)
+PASS decode('gb18030', '%A3%A0') is 'U+3000'
+PASS attr.prefix is null
+static int passnum;
+== clip-01.svg pass.svg
+== standalone--0-0--0-0.svg pass-empty.svg
+class fill(xsc.ColorAttr): pass
+class arch(xsc.TextAttr): pass
+== clip-01.svg pass.svg
+== clip-01.svg pass.svg
+== clip-01.svg pass.svg
+PASS "<!doctype html><script></SCRIPT"
+== border-radius-01.html pass.svg
+== standalone--0-0--0-0.svg pass-empty.svg
+<pass name="p0">
+pass = new Pass("main");
+pass=TestOS_RNG() && pass;
+Device selection....................... PASS 
+colour_op_multipass_fallback one one
+scheme is found, at which point it is passed to 
+Take one down, pass it around;
+Found between 31 and 34 samples
+== border-radius-01.html pass.svg
+def f1(): pass
+passaffsg1aort�mamat
+1236878702.769 | REFTEST TEST-PASS | file:
+5 syntax-basic-05syntax-basic-05.rqNonehttp:
+colour_op_multipass_fallback one one
+== standalone--0-0--0-0.svg pass-empty.svg
+colour_op_multipass_fallback one one
+scheme is found, at which point it is passed to 
+<pass name="p0">
+PASS date.setFullYear passed all tests
+PASS assign_test1() is 'PASS'
+def PtChangePassword(password):
+PASS !0 is true
+PASS input.formAction is "http:
+colour_op_multipass_fallback one one
+scheme is found, at which point it is passed to 
+return FALSE;
+return $return;
+return INSTANCE;
+return v;
+return ep->eid;
+if (values.length == 0) return NIL;
+returned = fn.apply( this, arguments );
+return $return;
+return $return;
+return $d;
+return T(); 
+if (nResult != AR_RETURN_OK)
+{ *length = 0; return; }
+return 0;
+return *this;
+case AR_RETURN_ACCESSIBLE: return "Accessible";
+return this;
+return;
+return this; 
+return n;
+return $return;
+return NO;
+return result;
+return result;
+return $ua_append;
+return this; 
+return returnValue;
+return;
+return;
+return;
+return color;
+return;
+return $return_array;
+return $return;
+return $return;
+return $arr;
+return $USER_NAME unless ($USER_NAME eq "NULL");
+syntax_return(allocator, OS_TEXT("return")),
+return true;
+return Optional.of(nextNamespace);
+17:51:42 ResponceServer ��������� �������.
+while (c = word[i++])
+while (c < 0x7f)
+while (c < 0x7f)
+while (i < src->size) {
+} while (0)
+while(cur!=end()) {
+while(_t_sz--) *_t_v++ = 0;\
+while(_t_sz--) *_t_v++ = 0;\
+} while (0)
+*(inst)++ = imb.b [7];\
+while(_t_sz--) *_t_v++ = 0;\
+} while(0)
+} while(0)
+} while(0)
+while (c <= 0x7e)
+while (c <= 0x7e)
+while (c < 0x7f)
+while ( p < now )
+while ($row = $db->sql_fetchrow($result))
+while (!feof($fp))
+while (rs.next()) {
+while(ptsp<pts+3*p) {
+} while (0)
+while(!feof(ffp) && !ferror(ffp))
+while(!feof(ffp) && !ferror(ffp))
+while (isDoubleQuoteToReplace)
+while ($buffer = fgets($src,4096)) {
+while(($key,$value) = each(%EchoChannels)) {
+while (isdigit(**s))
+while (result.hasNext()) {
+while (hasNewStatements()) {
+while (lua_next(L, 4) != 0) {
+while (result.hasNext()) {
+while (result.hasNext()) {
+} while (0)
+} while (0)
+} while (0)
+} while (0)
+while (sp > 0) {
+goto errout;
+while (1) {
+while (*start != '\0') {
+while (fgets(buf, sizeof(buf), f)) {
+while(files.size())
+if(i>j) do {int _=i; i=j; j=_;} while(false);
+} while (0)
+while (isdigit(**s))
+while(*s && strchr_m(sep,*s))
+while(line < (h->req_buf + h->req_contentoff))
+while ((d = readdir(dir)) != NULL) {
+while (*np && ptr < limit-1)
+} while (0)
+while (sp > 0) {
+} while (pmd++, addr = next, addr != end);
+while (count--) {
+while (isdigit(**s))
+} while (bh != head);
+} while (bh != head);
+} while (0)
+while (*(*ptr))
+while (*str)
+} while (0)
+while (*p) {
+while ( 1 )
+while ( 1 )
+while ( *ptr && IsWhiteSpace( *ptr ) ) ptr++;
+while (($tt = $this->t->get()) != TOKEN_END)
+while ( firstDirtyNode != null ) {
+;;; have been sent to it while it was busy.
+} while (0);
+while (*p)
+set_weights: while (wt > 3) {
+while (isdigit(**s))
+while(*ptr && !isspace(*ptr)) ++ptr;
+} while (--count);
+while( isspace(q[-1]) ) q--;
+;} while (0)
+} while (0)
+while (count--) {
+} while (!abort && get_ticks() <= etime);
+while (readl(&cmper->l3clkctrl) != PRCM_MOD_EN)
+while (isdigit(**s))
+while ((inb(tmport) & 0x01) != 0x01) {
+while ( ( ' ' == c ) || ( '\t' == c ) ) {
+- while (i < numInputSyms + numNewSyms) {
+while ( p < now )
+while (isdigit(**s))
+while (($tt = $this->t->get()) != TOKEN_END)
+while($w=mysql_fetch_array($sub)){
+while (*(*ptr))
+while (*str)
+while line == '':
+while (true)
+}while(0)
+}while(0)
+}while(0)
+}while(0)
+while ( height-- ) {
+} while(0)

@@ -11,8 +11,8 @@ from baiduspider import BaiduSpider
 from src import demo
 
 url_pattern = dict()
-pattern_csdn = "https://blog\\.csdn\\.net/.+"
-pattern_cnblogs = "https://www\\.cnblogs\\.com/.+"
+pattern_csdn = "https://blog\\.csdn\\.net/.+/article/details/.+"
+pattern_cnblogs = "https://www\\.cnblogs\\.com/.+\\.html"
 pattern_github = "https://.+\\.github\\.io/.+"
 pattern_jianshu = "https://www\\.jianshu\\.com/.+"
 url_pattern['csdn'] = pattern_csdn
@@ -30,7 +30,8 @@ class Pretreatment:
     @staticmethod
     def split_txt(txt_url, EDU=False):
         """
-        根据url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；5。date：日期；6。text全文（不含代码段）
+        根据url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；
+        5。date：日期；6。text：全文（不含代码段）；7。hole_text：全文（含代码段）
         :param EDU: 是否采用EDU来划分句子
         :param txt_url: url地址
         :return: 词典，如果不满足目的url（1。csdn2。cnblogs3。github4。简书），则返回None
@@ -43,6 +44,7 @@ class Pretreatment:
         head = ""
         text = ""
         update_date = ""
+        hole_text = ""
         clean_text_for_EDU = list()
         clean_text_for_EDU_element = ""
 
@@ -59,9 +61,11 @@ class Pretreatment:
             content = bf.find("h1", class_="title-article")
             if content is None:
                 print("这个url标题有问题：" + txt_url)
+                return None
             head = content.text.replace("\n", "")
             # text
             text = bf.find("div", id="content_views").getText()
+            hole_text = text
             # date
             update_date = date.fromisoformat(bf.find("span", class_="time").text[0:10])
             # codes
@@ -76,6 +80,7 @@ class Pretreatment:
                 content = bf.find("a", id="cb_post_title_url")
                 if content is None:
                     print("这个url标题有问题：" + txt_url)
+                    return None
             head = content.text.replace("\n", "")
             # text
             text = bf.find("div", id="cnblogs_post_body").getText()
@@ -93,6 +98,7 @@ class Pretreatment:
                 content = bf.find("h1", class_="article-title sea-center")
                 if content is None:
                     print("这个url标题有问题：" + txt_url)
+                    return None
             head = content.text.replace("\n", "")
             # text
             text = bf.find("div", itemprop="articleBody").getText()
@@ -121,6 +127,7 @@ class Pretreatment:
             content = bf.find("h1", class_="_1RuRku")
             if content is None:
                 print("这个url标题有问题：" + txt_url)
+                return None
             head = content.text.replace("\n", "")
             # text
             text = bf.find("article", class_="_2rhmJa").getText()
@@ -180,6 +187,7 @@ class Pretreatment:
             result['codes'] = codes
             result['date'] = update_date
             result['text'] = text
+            result['hole_text'] = hole_text
             return result
         else:
             return None
@@ -323,7 +331,7 @@ class Pretreatment:
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
         }
         try:
-            r = requests.get(url=url, headers=headers, timeout=30)
+            r = requests.get(url=url, headers=headers, timeout=10)
             r.raise_for_status()
             return r.text
         except Exception as e:
@@ -346,7 +354,7 @@ class Pretreatment:
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
         }
         try:
-            r = requests.get(url=url, headers=headers, timeout=30)
+            r = requests.get(url=url, headers=headers, timeout=10)
             r.raise_for_status()
             return r.url
         except Exception as e:
@@ -462,7 +470,7 @@ class Pretreatment:
             article_urls = list()
             html = Pretreatment.get_raw_html(baidu_url)
             baidu_url = Pretreatment.get_next_baidu_url(html)
-            print("第{}页".format(pn+1))
+            print("第{}页".format(pn + 1))
             pn += 1
             if baidu_url == "":
                 baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=" + str(
