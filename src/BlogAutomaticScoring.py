@@ -5,6 +5,8 @@ from pprint import pprint
 import xlsxwriter
 from bs4 import BeautifulSoup
 import requests
+
+from src.Pretreatment import Pretreatment
 from src.SimilarityCalculator import SimilarityCalculator
 from baiduspider import BaiduSpider
 
@@ -322,3 +324,60 @@ class BlogAutomaticScoring:
                     break
             student_score_dict[student] = score
         return student_score_dict, student_info_dict
+
+    @staticmethod
+    def get_course_related_urls(students, model="", dictionary=""):
+        """
+        用于获取所有课程相关的url（仅用于测试阶段）
+        :param students:学生们
+        :param model:模型【可选】
+        :param dictionary:模型中使用到的词典【可选】
+        :return: urls
+        """
+        path = "../src/text/"
+        model_related_filename = "最终版本"
+        stopwords_file = open("../src/text/stopwords.txt")
+        stopwords_string = stopwords_file.read()
+        stopwords_file.close()
+        my_stopwords = stopwords_string.split("\n")
+
+        if not dictionary:
+            dictionary = SimilarityCalculator.get_dictionary(path, model_related_filename)
+        if not model:
+            # TODO
+            a = 0
+        print("共{0}个学生".format(len(students)))
+        course_related_urls = list()
+        num = 0
+        for student in students:
+            num += 1
+            print("正在抓取第{0}个学生:\t".format(num) + student.__str__())
+            if student.url is None:
+                continue
+            if not re.match("(.*csdn.*)|(.*cnblogs.*)|(.*github.*)|(.*jianshu.*)", student.url):
+                continue
+            urls = Pretreatment.get_urls(Pretreatment.get_main_url(student.url))
+            urls = list(urls)
+            valid_urls = list()
+            texts = list()
+            for url in urls:
+                result = Pretreatment.split_txt(url)
+                if result is not None and result.get("text") is not None:
+                    texts.append(result.get("text"))
+                    valid_urls.append(url)
+            clean_texts = SimilarityCalculator.clean(texts, stopwords_set=my_stopwords)
+            _, corpus_tfidf = SimilarityCalculator.train_tf_idf(clean_texts, dictionary=dictionary)
+            feature = list()
+            for items in corpus_tfidf:
+                items_feature = [0] * len(dictionary)
+                for item in items:
+                    if dictionary.get(item[0]) is not None:
+                        items_feature[item[0]] = item[1]
+                feature.append(items_feature)
+            if feature:
+                result = model.predict(feature)
+                for i in range(len(valid_urls)):
+                    if result[i] == 0:
+                        print(valid_urls[i])
+                        course_related_urls.append(valid_urls[i])
+        return course_related_urls

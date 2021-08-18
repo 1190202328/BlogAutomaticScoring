@@ -53,7 +53,9 @@ class SeparateCode:
         for sentence in sentences:
             token = list()
             for word in sentence:
-                if word in vocab_list:
+                if word not in vocab_list:
+                    token.append(1)
+                else:
                     token.append(vocab_list.index(word))
             token = token[:embedding_len] + [0] * (embedding_len - len(token))
             token_list.append(token)
@@ -68,18 +70,24 @@ class SeparateCode:
         :return: codes的列表
         """
         codes = list()
-        embedding_len = 50
-        sentences = text.lower().split("\n")
+        embedding_len = 100
+        sentences = text.split("\n")
+        code_like_sentences_list = list()
         code_like_sentences = list()
         for sentence in sentences:
-            sentence = SeparateCode.clean_code_line(sentence, low_limit=0, high_limit=100)
-            if sentence == "" or re.match(".*" + SeparateCode.chinese_pattern + ".*", sentence):
+            pre_sentence = sentence.lower().strip()
+            pre_sentence = SeparateCode.clean_code_line(pre_sentence, low_limit=0, high_limit=100)
+            if pre_sentence == "" or re.match(".*" + SeparateCode.chinese_pattern + ".*", pre_sentence):
                 continue
             code_like_sentences.append(sentence)
+            pre_sentence = re.split("[ .]", pre_sentence)
+            code_like_sentences_list.append(pre_sentence)
         # pprint(sentences)
-        pprint(code_like_sentences)
-        code_indexes = [1] * len(code_like_sentences)
-        sequences = SeparateCode.get_sequences(code_like_sentences, embedding_len)
+        # pprint(code_like_sentences_list)
+        code_indexes = [1] * len(code_like_sentences_list)
+        print(code_like_sentences_list)
+        sequences = SeparateCode.get_sequences(code_like_sentences_list, embedding_len)
+        print(sequences)
         path = "../src/saved_model/"
         filename = "code_separate_model.h5"
         model = tf.keras.models.load_model(path + filename)
@@ -87,7 +95,7 @@ class SeparateCode:
         for i in range(len(results)):
             if results[i][0] > results[i][1]:
                 code_indexes[i] = 0
-        pprint(code_indexes)
+        # pprint(code_indexes)
         for i in range(1, len(code_indexes) - 1):
             if code_indexes[i] == 1 and code_indexes[i - 1] == 0 and code_indexes[i + 1] == 0:
                 code_indexes[i] = 0
@@ -97,10 +105,13 @@ class SeparateCode:
         return codes
 
 
-# url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
-# text = Pretreatment.split_txt(url).get('hole_text')
-# text = "public static void main\nI love you"
-f = open("../src/text/江江.txt")
-text = f.read()
-f.close()
-pprint(SeparateCode.get_codes(text))
+if __name__ == '__main__':
+    # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
+    # text = Pretreatment.split_txt(url).get('hole_text')
+    # text = "public static void main\nI love you"
+
+    f = open("../src/text/江江.txt")
+    text = f.read()
+    f.close()
+    pprint(SeparateCode.get_codes(text))
+

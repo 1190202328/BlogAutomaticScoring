@@ -12,9 +12,13 @@ from src import demo
 
 url_pattern = dict()
 pattern_csdn = "https://blog\\.csdn\\.net/.+/article/details/.+"
-pattern_cnblogs = "https://www\\.cnblogs\\.com/.+\\.html"
+pattern_cnblogs = "https://www\\.cnblogs\\.com/.+/p/\\d+\\.html"
 pattern_github = "https://.+\\.github\\.io/.+"
-pattern_jianshu = "https://www\\.jianshu\\.com/.+"
+pattern_jianshu = "https://www\\.jianshu\\.com/p/.+"
+pattern_csdn_main = "https://blog\\.csdn\\.net/.+"
+pattern_cnblogs_main = "https://www\\.cnblogs\\.com/.+"
+pattern_github_main = "https://.+\\.github\\.io"
+pattern_jianshu_main = "https://www\\.jianshu\\.com/u/.+"
 url_pattern['csdn'] = pattern_csdn
 url_pattern['cnblogs'] = pattern_cnblogs
 url_pattern['github'] = pattern_github
@@ -97,8 +101,10 @@ class Pretreatment:
             if content is None:
                 content = bf.find("h1", class_="article-title sea-center")
                 if content is None:
-                    print("这个url标题有问题：" + txt_url)
-                    return None
+                    content = bf.find("h1", class_="article-title")
+                    if content is None:
+                        print("这个url标题有问题：" + txt_url)
+                        return None
             head = content.text.replace("\n", "")
             # text
             text = bf.find("div", itemprop="articleBody").getText()
@@ -240,36 +246,60 @@ class Pretreatment:
     def get_urls(main_url):
         """
         根据学生主页面获取所有博客的url地址
-        :param main_url: 主页面地址
+        :param main_url: 主页面地址，包括（1。csdn2。cnblogs3。github4。简书）
         :return: 所有博客的ulr地址
         """
-        req = requests.get(url=main_url, headers={'User-Agent': 'Baiduspider'})
-        html = req.text
+        html = Pretreatment.get_raw_html(main_url)
         bf = BeautifulSoup(html, "html.parser")
-        contents = bf.find_all("a", href=True)
         urls = set()
-        for content in contents:
-            if re.match(".*/article/details.*", content.get("href")):
-                if re.match(".*#comments|.*blogdevteam.*", content.get("href")):
-                    continue
-                urls.add(content.get("href"))
+        contents = bf.find_all("a")
+        if re.match(pattern_csdn_main, main_url):
+            for content in contents:
+                if content.get("href") is not None and re.match(".*/article/details.*", content.get("href")):
+                    if re.match(".*#comments|.*blogdevteam.*", content.get("href")):
+                        continue
+                    urls.add(content.get("href"))
+        if re.match(pattern_cnblogs_main, main_url):
+            for content in contents:
+                if content.get("href") is not None and re.match(pattern_cnblogs, content.get("href")):
+                    urls.add(content.get("href"))
+        if re.match(pattern_github_main, main_url):
+            for content in contents:
+                if content.get("href") is not None and re.match("/\\d{4}/\\d{2}/\\d{2}/.+/", content.get("href")):
+                    urls.add(main_url + content.get("href"))
+        if re.match(pattern_jianshu_main, main_url):
+            for content in contents:
+                if content.get("href") is not None and re.match("/p/\\w+", content.get("href")):
+                    if not re.match(".*#comments.*", content.get("href")):
+                        urls.add("https://www.jianshu.com" + content.get("href"))
         return urls
 
     @staticmethod
     def get_main_url(url):
         """
         根据url地址返回主页的url地址
-        :param url: 任意url地址
-        :return: 主页的URL地址，如果找不到则返回None
+        :param url: url地址（1。csdn2。cnblogs3。github4。简书）
+        :return: 主页的URL地址，如果找不到则返回""
         """
-        req = requests.get(url=url, headers={'User-Agent': 'Baiduspider'})
-        html = req.text
-        bf = BeautifulSoup(html, "html.parser")
-        contents = bf.find_all("a", href=True)
-        for content in contents:
-            if re.match("https://blog.csdn.net/\\w+", content.get("href")):
-                return content.get("href")
-        return None
+        main_url = ""
+        if re.match(pattern_csdn_main, url):
+            temps = url.split("/")
+            main_url = "https://blog.csdn.net/" + temps[3]
+        if re.match(pattern_cnblogs_main, url):
+            temps = url.split("/")
+            main_url = "https://www.cnblogs.com/" + temps[3]
+        if re.match(pattern_github_main, url):
+            temps = url.split("/")
+            main_url = "https://" + temps[2]
+        if re.match(pattern_jianshu, url):
+            html = Pretreatment.get_raw_html(url)
+            bf = BeautifulSoup(html, "html.parser")
+            contents = bf.find_all("a", href=True)
+            for content in contents:
+                if re.match("/u/.+", content.get("href")):
+                    main_url = "https://www.jianshu.com" + content.get("href")
+                    break
+        return main_url
 
     @staticmethod
     def get_related_texts(text_head, number, page_limit=10, url=""):

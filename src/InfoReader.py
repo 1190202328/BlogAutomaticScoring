@@ -16,7 +16,7 @@ class InfoReader:
             :returns
                 学生的列表
         """
-        workbook = load_workbook('./src/text/' + filename)
+        workbook = load_workbook('../src/text/' + filename)
         sheets = workbook.get_sheet_names()
         booksheet = workbook.get_sheet_by_name(sheets[0])
         rows = booksheet.rows

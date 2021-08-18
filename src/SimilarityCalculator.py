@@ -1,6 +1,5 @@
 import collections
 import re
-import gensim
 import numpy as np
 import jieba
 from gensim import corpora, models

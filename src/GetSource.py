@@ -128,12 +128,10 @@ def get_key_words(path, file):
 
 
 # write_code("","python关键字.txt",keyword.kwlist)
-path = ""
-file = "代码.txt"
-for key_word in get_key_words(path, "java关键字.txt"):
-    write_code(path, file, get_related_codes(key_word.replace("\n", ""), 100, high_limit=50))
-
-path = ""
-file = "代码.txt"
-for key_word in get_key_words(path, "python关键字.txt"):
-    write_code(path, file, get_related_codes(key_word.replace("\n", ""), 100, high_limit=50))
+path = "../src/text/"
+key_words = set(get_key_words(path, "不重复关键字.txt"))
+i = 1
+for key_word in key_words:
+    print("第{}个(共{}个)".format(i, len(key_words)), end="")
+    i += 1
+    write_code(path, "扩大的代码.txt", get_related_codes(key_word.replace("\n", ""), 200, high_limit=50))
