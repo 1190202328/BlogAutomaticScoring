@@ -1,9 +1,9 @@
 import re
 from pprint import pprint
+
+import jieba
 import numpy as np
 import tensorflow as tf
-
-from src.Pretreatment import Pretreatment
 
 
 class SeparateCode:
@@ -77,17 +77,23 @@ class SeparateCode:
         for sentence in sentences:
             pre_sentence = sentence.lower().strip()
             pre_sentence = SeparateCode.clean_code_line(pre_sentence, low_limit=0, high_limit=100)
-            if pre_sentence == "" or re.match(".*" + SeparateCode.chinese_pattern + ".*", pre_sentence):
+            if pre_sentence == "" or re.match(r'[\u4e00-\u9fa5]+', pre_sentence):
                 continue
+            if re.match(r'.*[\u4e00-\u9fa5]+.*', pre_sentence):
+                if not re.match(r'([^\u4e00-\u9fa5]*".*?"[^\u4e00-\u9fa5]*)+', sentence):
+                    continue
             code_like_sentences.append(sentence)
             pre_sentence = re.split("[ .]", pre_sentence)
+            # pre_sentence = jieba.lcut(pre_sentence)
             code_like_sentences_list.append(pre_sentence)
         # pprint(sentences)
-        # pprint(code_like_sentences_list)
+        if not code_like_sentences:
+            return codes
+        print("可能是代码的如下:")
+        pprint(code_like_sentences)
         code_indexes = [1] * len(code_like_sentences_list)
-        print(code_like_sentences_list)
         sequences = SeparateCode.get_sequences(code_like_sentences_list, embedding_len)
-        print(sequences)
+        # print(sequences)
         path = "../src/saved_model/"
         filename = "code_separate_model.h5"
         model = tf.keras.models.load_model(path + filename)
@@ -114,4 +120,3 @@ if __name__ == '__main__':
     text = f.read()
     f.close()
     pprint(SeparateCode.get_codes(text))
-

@@ -9,6 +9,7 @@ import re
 from datetime import date
 from baiduspider import BaiduSpider
 from src import demo
+from src.SeparateCode import SeparateCode
 
 url_pattern = dict()
 pattern_csdn = "https://blog\\.csdn\\.net/.+/article/details/.+"
@@ -35,7 +36,7 @@ class Pretreatment:
     def split_txt(txt_url, EDU=False):
         """
         根据url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；
-        5。date：日期；6。text：全文（不含代码段）；7。hole_text：全文（含代码段）
+        5。date：日期；6。text：全文（不含代码段）；
         :param EDU: 是否采用EDU来划分句子
         :param txt_url: url地址
         :return: 词典，如果不满足目的url（1。csdn2。cnblogs3。github4。简书），则返回None
@@ -48,7 +49,6 @@ class Pretreatment:
         head = ""
         text = ""
         update_date = ""
-        hole_text = ""
         clean_text_for_EDU = list()
         clean_text_for_EDU_element = ""
 
@@ -69,7 +69,6 @@ class Pretreatment:
             head = content.text.replace("\n", "")
             # text
             text = bf.find("div", id="content_views").getText()
-            hole_text = text
             # date
             update_date = date.fromisoformat(bf.find("span", class_="time").text[0:10])
             # codes
@@ -151,6 +150,14 @@ class Pretreatment:
                     text = text[0:start] + text[start + len(code):]
             text = re.sub("\n+", "\n", text)
             text = re.sub("(\\xa0)|(\\u200b)", "", text)
+            more_codes = SeparateCode.get_codes(text)
+            if more_codes:
+                for more_code in more_codes:
+                    start = text.find(more_code)
+                    if start != -1:
+                        text = text[0:start] + text[start + len(more_code):]
+                codes += more_codes
+            text = re.sub("\n+", "\n", text)
             # paragraphs
             paragraphs = text.split("\n")
             lenth = 200
@@ -193,7 +200,6 @@ class Pretreatment:
             result['codes'] = codes
             result['date'] = update_date
             result['text'] = text
-            result['hole_text'] = hole_text
             return result
         else:
             return None
@@ -574,28 +580,29 @@ class Pretreatment:
 
 
 if __name__ == '__main__':
-    # url = "https://blog.csdn.net/Louis210/article/deJava中的List类的contains和indexOf方法的区别tails/117415546"
+    # url = "https://blog.csdn.net/Louis210/article/details/117415546"
     # url = "https://www.cnblogs.com/yuyueq/p/15119512.html"
     # url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
     # url = "https://www.jianshu.com/p/92373a603d42"
     #
-    # similarity = Pretreatment.split_txt(url)
-    # print("---------head---------")
-    # print(similarity['head'])
-    # print("---------text---------")
-    # print(similarity['text'])
-    # print("---------paragraphs---------")
-    # pprint(similarity['paragraphs'])
-    # print("---------sentences---------")
-    # pprint(similarity['sentences'])
-    # print("---------code---------")
-    # i = 1
-    # for code in similarity['codes']:
-    #     print("-----------code{}-----------".format(i))
-    #     i += 1
-    #     print(code)
-    # print("---------date---------")
-    # print(similarity['date'])
+    url = "https://blog.csdn.net/Louis210/article/details/119666026"
+    similarity = Pretreatment.split_txt(url)
+    print("---------head---------")
+    print(similarity['head'])
+    print("---------text---------")
+    print(similarity['text'])
+    print("---------paragraphs---------")
+    pprint(similarity['paragraphs'])
+    print("---------sentences---------")
+    pprint(similarity['sentences'])
+    print("---------code---------")
+    i = 1
+    for code in similarity['codes']:
+        print("-----------code{}-----------".format(i))
+        i += 1
+        print(code)
+    print("---------date---------")
+    print(similarity['date'])
 
     # similarity = Pretreatment.split_txt(url, EDU=True)
     # print("---------EDU-sentences--------")
@@ -654,10 +661,10 @@ if __name__ == '__main__':
     # pprint(article_urls)
     # pprint(red_strings)
 
-    url = "https://blog.csdn.net/Louis210/article/details/117415546"
-    original_sentence = "Java中的List类的contains和indexOf方法的区别"
-    pprint(Pretreatment.get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, sentence_number=10,
-                                                             url=url))
+    # url = "https://blog.csdn.net/Louis210/article/details/117415546"
+    # original_sentence = "Java中的List类的contains和indexOf方法的区别"
+    # pprint(Pretreatment.get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, sentence_number=10,
+    #                                                          url=url))
 
     # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
     # # url = "https://www.cnblogs.com/yuyueq/p/15119512.html"x

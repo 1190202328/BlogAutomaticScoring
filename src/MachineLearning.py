@@ -1,6 +1,7 @@
 import re
 from pprint import pprint
 
+import jieba
 import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
@@ -38,8 +39,8 @@ def get_sentences_and_labels():
         if line != "":
             line = re.sub("[\\t ]+", " ", line)
             line = line.replace("\n", "")
-            # words = line.lower().strip().split(" ")
             words = re.split("[ .]", line.lower().strip())
+            # words = jieba.lcut(line.lower().strip())
             sentences.append(words)
             labels.append(0)
     f.close()
@@ -49,8 +50,8 @@ def get_sentences_and_labels():
         if line != "":
             line = re.sub("[\\t ]+", " ", line)
             line = line.replace("\n", "")
-            # words = line.lower().strip().split(" ")
             words = re.split("[ .]", line.lower().strip())
+            # words = jieba.lcut(line.lower().strip())
             sentences.append(words)
             labels.append(1)
     f.close()
@@ -59,8 +60,6 @@ def get_sentences_and_labels():
 
 
 sentences, labels = get_sentences_and_labels()
-# pprint(sentences[0:100])
-# pprint(sentences[20000:20100])
 labels = np.array(labels)
 x_train, x_test, y_train, y_test = train_test_split(sentences, labels, test_size=0.3, random_state=0)
 vocab = set()
