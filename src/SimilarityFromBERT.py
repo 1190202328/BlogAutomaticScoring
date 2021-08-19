@@ -6,7 +6,6 @@ from bert_serving.client import BertClient
 
 from src import demo
 from src.Pretreatment import Pretreatment
-from src.SimilarityCalculator import SimilarityCalculator
 
 
 class SimilarityFromBERT:
@@ -29,16 +28,63 @@ class SimilarityFromBERT:
         my_stopwords = stopwords_string.split("\n")
 
         bc = BertClient(check_length=False)
-        clean_sentences = SimilarityCalculator.clean_with_low_frequency(sentences, my_stopwords)
+        clean_sentences = Pretreatment.clean_with_low_frequency(sentences, my_stopwords)
         sentences = []
         for clean_sentence in clean_sentences:
             if len(clean_sentence) != 0:
                 sentences.append(" ".join(clean_sentence))
         if len(sentences) <= 1:
             return [[0.0, 0.0], [0.0, 0.0]]
-        print("<<<<<<<<", end="")
-        print(sentences)
+        # print("<<<<<<<<", end="")
+        # print(sentences)
         return cosine_similarity(bc.encode(sentences))
+
+    @staticmethod
+    def get_text_related(contents, text, limit=0.80):
+        """
+        使用BERT，根据contents中的content与text的相似度来排除一些不相关的content，比如（下课之后，我查询了...）
+        :param limit: 阈值，相似度小于limit的content将会被过滤
+        :param contents: 内容列表。（可以是句子或者段落）
+        :param text: 文章。
+        :return: 过滤后的句子或段落列表
+        """
+        related_contents = list()
+        if not contents:
+            return related_contents
+
+        stopwords_file = open("../src/text/stopwords.txt")
+        stopwords_string = stopwords_file.read()
+        stopwords_file.close()
+        my_stopwords = stopwords_string.split("\n")
+
+        bc = BertClient(check_length=False)
+        total_contents = [text] + contents
+        clean_contents = Pretreatment.clean_with_low_frequency(total_contents, my_stopwords)
+        sentences = []
+        origin_sentences = []
+        for i in range(len(clean_contents)):
+            if len(clean_contents[i]) != 0:
+                origin_sentences.append(total_contents[i])
+                sentences.append(" ".join(clean_contents[i]))
+        if len(sentences) <= 1:
+            return related_contents
+        # print("<<<<<<<<", end="")
+        # print(sentences)
+        similarities = cosine_similarity(bc.encode(sentences))[:1][0][1:]
+        # print(origin_sentences)
+        # print(similarities)
+        for i in range(len(similarities)):
+            print(similarities[i], end="")
+            print(">>>>>>>>>", end="")
+            print(origin_sentences[i + 1])
+        count = 1
+        for i in range(len(similarities)):
+            if similarities[i] >= limit:
+                related_contents.append(origin_sentences[i + 1])
+            else:
+                print("[{}]>>>{}>>>".format(count, similarities[i]) + origin_sentences[i + 1])
+                count += 1
+        return related_contents
 
     @staticmethod
     def get_5d_similarities(url, head_number, text_number, paragraph_number, sentence_number, code_number,
@@ -75,11 +121,15 @@ class SimilarityFromBERT:
         # 段落和句子相似度
         paragraphs_similarity = []
         sentences_similarity = []
+        print("不相关段落如下")
+        paragraphs = SimilarityFromBERT.get_text_related(paragraphs, text, limit=0.80)
         for paragraph in paragraphs:
             if EDU:
                 sentences = demo.get_EDUs(paragraph)
             else:
                 sentences = re.split("[,.，。]", paragraph)
+            print("不相关句子如下")
+            sentences = SimilarityFromBERT.get_text_related(sentences, text, limit=0.85)
             for sentence in sentences:
                 if sentence != "" and len(sentence) > sentence_lenth_limit:
                     print("开始搜索句子[{}]".format(sentence))
@@ -265,10 +315,10 @@ if __name__ == '__main__':
     sentence_number = 10
     code_number = 10
     result = SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number,
-                                                         sentence_number,
-                                                         code_number,
-                                                         EDU=False,
-                                                         )
+                                                    sentence_number,
+                                                    code_number,
+                                                    EDU=False,
+                                                    )
     print("-----------标题相似度---------")
     pprint(result['head'])
     print("-----------全文相似度---------")

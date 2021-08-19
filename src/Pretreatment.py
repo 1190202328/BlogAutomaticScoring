@@ -3,6 +3,7 @@ import random
 from pprint import pprint
 
 import bs4
+import jieba
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -112,10 +113,12 @@ class Pretreatment:
             # codes
             contents = bf.find_all("pre")
             digits = list()
+            delete_codes = list()
             for content in contents:
                 if re.match("\\d+", content.getText()):
                     digits.append(content.getText())
                     continue
+                delete_codes.append(content.getText())
                 raw_code = ""
                 for child in content.children:
                     if child.name == "span":
@@ -126,6 +129,10 @@ class Pretreatment:
                 start = text.find(digit)
                 if start != -1:
                     text = text[0:start] + text[start + len(digit):]
+            for delete_code in delete_codes:
+                start = text.find(delete_code)
+                if start != -1:
+                    text = text[0:start] + text[start + len(delete_code):]
         if re.match(url_pattern['jianshu'], url):
             is_illegal = True
             # head
@@ -149,7 +156,7 @@ class Pretreatment:
                 if start != -1:
                     text = text[0:start] + text[start + len(code):]
             text = re.sub("\n+", "\n", text)
-            text = re.sub("(\\xa0)|(\\u200b)", "", text)
+            text = re.sub("(\\xa0)|(\\u200b)|(\\u2003)|(\\u3000)", "", text)
             more_codes = SeparateCode.get_codes(text)
             if more_codes:
                 for more_code in more_codes:
@@ -345,7 +352,7 @@ class Pretreatment:
                         related_texts.append(result['text'])
                         total_urls.append(real_url)
                         count += 1
-                    print("count = {}".format(count))
+                        print("count = {}".format(count))
             if count >= number:
                 break
         print(total_urls)
@@ -578,6 +585,32 @@ class Pretreatment:
             print("url共有{}个".format(len(article_urls)))
         return related_paragraphs, related_sentences, find
 
+    @staticmethod
+    def clean_with_low_frequency(documents, stopwords_set=""):
+        """
+        将按列表存储的文档进行清洗
+        :param stopwords_set: 可选参数, 如果选上，则表示自己提供停用词
+        :param documents: 按列表存储的文档，列表中一个元素为一个文档
+        :return: 清洗好的文档，二维列表，一行为一个文档的清洗后的词
+        """
+        if stopwords_set:
+            my_stopwords = stopwords_set
+        else:
+            stopwords_file = open("./src/text/stopwords.txt")
+            stopwords_string = stopwords_file.read()
+            stopwords_file.close()
+            my_stopwords = stopwords_string.split("\n")
+        texts = list()
+        for document in documents:
+            text = list()
+            for word in jieba.cut(document):
+                word = word.lower().strip()
+                if (word in my_stopwords) or re.match("\\s+", word) or re.match("\\d+", word):
+                    continue
+                text.append(word)
+            texts.append(text)
+        return texts
+
 
 if __name__ == '__main__':
     # url = "https://blog.csdn.net/Louis210/article/details/117415546"
@@ -586,6 +619,7 @@ if __name__ == '__main__':
     # url = "https://www.jianshu.com/p/92373a603d42"
     #
     url = "https://blog.csdn.net/Louis210/article/details/119666026"
+    url = "https://www.jianshu.com/p/e206d7ba0a40/"
     similarity = Pretreatment.split_txt(url)
     print("---------head---------")
     print(similarity['head'])

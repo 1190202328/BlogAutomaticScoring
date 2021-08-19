@@ -43,6 +43,13 @@ class SeparateCode:
 
     @staticmethod
     def get_sequences(sentences, embedding_len, vocab_list=""):
+        """
+        获取句子对应的词序列
+        :param sentences: 句子（一行为一个句子）（每个句子为一个列表，列表中每个元素为一个词）
+        :param embedding_len: 词向量维度
+        :param vocab_list: 词典列表
+        :return: 词序列
+        """
         if not vocab_list:
             vocab_list = list()
             f = open("../src/text/vocab_list.txt", 'r')
@@ -108,6 +115,8 @@ class SeparateCode:
         for i in range(len(code_indexes)):
             if code_indexes[i] == 0:
                 codes.append(code_like_sentences[i])
+        print("检测出的代码的如下:")
+        pprint(codes)
         return codes
 
 
