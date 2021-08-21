@@ -1,5 +1,4 @@
 import json
-import random
 from pprint import pprint
 
 import bs4
@@ -9,7 +8,7 @@ import requests
 import re
 from datetime import date
 from baiduspider import BaiduSpider
-from src import demo
+from src.BERT import demo
 from src.SeparateCode import SeparateCode
 
 url_pattern = dict()
@@ -613,23 +612,22 @@ class Pretreatment:
 
 
 if __name__ == '__main__':
-    # url = "https://blog.csdn.net/Louis210/article/details/117415546"
+    url = "https://blog.csdn.net/Louis210/article/details/117415546"
     # url = "https://www.cnblogs.com/yuyueq/p/15119512.html"
     # url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
     # url = "https://www.jianshu.com/p/92373a603d42"
     #
-    url = "https://blog.csdn.net/Louis210/article/details/119666026"
-    url = "https://www.jianshu.com/p/e206d7ba0a40/"
+    # url = "https://blog.csdn.net/Louis210/article/details/119666026"
     similarity = Pretreatment.split_txt(url)
     print("---------head---------")
     print(similarity['head'])
     print("---------text---------")
     print(similarity['text'])
-    print("---------paragraphs---------")
+    print("---------paragraphs共{}个---------".format(len(similarity['paragraphs'])))
     pprint(similarity['paragraphs'])
-    print("---------sentences---------")
+    print("---------sentences共{}个---------".format(len(similarity['sentences'])))
     pprint(similarity['sentences'])
-    print("---------code---------")
+    print("---------codes共{}个---------".format(len(similarity['codes'])))
     i = 1
     for code in similarity['codes']:
         print("-----------code{}-----------".format(i))

@@ -10,7 +10,7 @@ import copy
 from collections import deque
 from tqdm import tqdm
 
-from src.dataset import TransCollator
+from src.BERT.dataset import TransCollator
 
 try:
     torch.multiprocessing.set_start_method("spawn")

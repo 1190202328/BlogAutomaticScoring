@@ -4,7 +4,7 @@ from pprint import pprint
 from sklearn.metrics.pairwise import cosine_similarity
 from bert_serving.client import BertClient
 
-from src import demo
+from src.BERT import demo
 from src.Pretreatment import Pretreatment
 
 

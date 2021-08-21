@@ -6,7 +6,7 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 from pytorch_pretrained_bert.modeling import BertModel
 
-from src.dataset import RlatCollator, AugCollator
+from src.BERT.dataset import RlatCollator, AugCollator
 
 try:
     torch.multiprocessing.set_start_method("spawn")

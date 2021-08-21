@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from pytorch_pretrained_bert.modeling import BertModel
 from tqdm import tqdm
 
-from src.dataset import EDUCollator
+from src.BERT.dataset import EDUCollator
 
 os.makedirs("saved_model/", exist_ok=True)
 
