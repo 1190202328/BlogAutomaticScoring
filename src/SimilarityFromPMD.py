@@ -32,16 +32,25 @@ class SimilarityFromPMD:
 
     @staticmethod
     def is_similar(code1, code2):
+        """
+        判断code1和code2是否相似
+        :param code1: 代码行1
+        :param code2: 代码行2
+        :return: True：相似；False：不相似
+        """
         SimilarityFromPMD.write_codes_to_file(code1, code2)
         SimilarityFromPMD.run_pmd()
         return SimilarityFromPMD.get_result()
 
 
 if __name__ == '__main__':
-    code1 = "total = 0;for (int j = n;j > 0;j--){total=total+i}"
-    code2 = "a = 0; for (int k = 0;k < m;k++){a+=k}"
-    code3 = "if(a==5){a+=10;b++;c-=5;d+=1;}"
-    print(SimilarityFromPMD.is_similar(code1, code2))
-    print(SimilarityFromPMD.is_similar(code1, code3))
-    print(SimilarityFromPMD.is_similar(code2, code3))
+    # code1 = "total = 0;for (int j = n;j > 0;j--){total=total+i}"
+    # code2 = "a = 0; for (int k = 0;k < m;k++){a+=k}"
+    # code3 = "if(a==5){a+=10;b++;c-=5;d+=1;}"
+    # print(SimilarityFromPMD.is_similar(code1, code2))
+    # print(SimilarityFromPMD.is_similar(code1, code3))
+    # print(SimilarityFromPMD.is_similar(code2, code3))
 
+    code4 = '"public static void main(String[] args) {\n" +'
+    code5 = 'public static void main(String[] args) {'
+    print(SimilarityFromPMD.is_similar(code4, code5))

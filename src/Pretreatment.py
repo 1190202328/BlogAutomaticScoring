@@ -68,9 +68,15 @@ class Pretreatment:
                 return None
             head = content.text.replace("\n", "")
             # text
-            text = bf.find("div", id="content_views").getText()
+            # text = bf.find("div", id="content_views").get_text()
+            for child in bf.find("div", id="content_views"):
+                if child.name != "pre":
+                    if child.string is not None:
+                        text += child.string
+                    else:
+                        text += child.get_text(separator="\n")
             # date
-            update_date = date.fromisoformat(bf.find("span", class_="time").text[0:10])
+            update_date = bf.find("span", class_="time").text[0:10]
             # codes
             contents = bf.find_all("pre")
             for content in contents:
@@ -87,8 +93,14 @@ class Pretreatment:
             head = content.text.replace("\n", "")
             # text
             text = bf.find("div", id="cnblogs_post_body").getText()
+            # for child in bf.find("div", id="cnblogs_post_body"):
+            #     if child.name != "pre":
+            #         if child.string is not None:
+            #             text += child.string
+            #         else:
+            #             text += child.get_text(separator="\n")
             # date
-            update_date = date.fromisoformat(bf.find("span", id="post-date").text[0:10])
+            update_date = bf.find("span", id="post-date").text[0:10]
             # codes
             contents = bf.find_all("pre")
             for content in contents:
@@ -108,7 +120,7 @@ class Pretreatment:
             # text
             text = bf.find("div", itemprop="articleBody").getText()
             # date
-            update_date = date.fromisoformat(bf.find("time").attrs['datetime'][0:10])
+            update_date = bf.find("time").attrs['datetime'][0:10]
             # codes
             contents = bf.find_all("pre")
             digits = list()
@@ -154,8 +166,10 @@ class Pretreatment:
                 start = text.find(code)
                 if start != -1:
                     text = text[0:start] + text[start + len(code):]
-            text = re.sub("\n+", "\n", text)
             text = re.sub("(\\xa0)|(\\u200b)|(\\u2003)|(\\u3000)", "", text)
+            text = re.sub("[\\t ]+", " ", text)
+            text = re.sub("\n+", "\n", text)
+            text = re.sub("(\n +)|( +\n)", "\n", text)
             more_codes = SeparateCode.get_codes(text)
             if more_codes:
                 for more_code in more_codes:
@@ -168,8 +182,8 @@ class Pretreatment:
             paragraphs = text.split("\n")
             lenth = 200
             for paragraph in paragraphs:
-                paragraph = re.sub("\\s+", "", paragraph)
-                if paragraph != "":
+                paragraph = re.sub("\\s+", " ", paragraph)
+                if paragraph != " " and len(paragraph) > 2:
                     clean_paragraphs.append(paragraph)
                     if len(clean_text_for_EDU_element) >= lenth:
                         clean_text_for_EDU.append(clean_text_for_EDU_element)
@@ -180,6 +194,9 @@ class Pretreatment:
                     else:
                         clean_text += paragraph + "。"
                         clean_text_for_EDU_element += paragraph + "。"
+            text = ""
+            for clean_paragraph in clean_paragraphs:
+                text += clean_paragraph + "\n"
             # sentences
             if EDU:
                 if clean_text_for_EDU_element != "":
@@ -446,6 +463,11 @@ class Pretreatment:
                 if int(ids[i]) - 1 == int(ids[i - 1]) and int(ids[i]) + 1 == int(ids[i + 1]):
                     clean_lines = Pretreatment.clean_code(lines[ids[i]], limit)
                     for clean_line in clean_lines:
+                        try:
+                            clean_line = eval(clean_line + "' '")
+                            clean_line = clean_line.replace("\n", "")
+                        except:
+                            pass
                         related_codes.append(clean_line)
                         count += 1
                         if count >= number:
@@ -455,7 +477,7 @@ class Pretreatment:
     @staticmethod
     def clean_code(code, limit=7):
         """
-        获得干净的codes列表（每一个元素为一行代码）（不含\t，\n，连续2个以上空格，注释）
+        获得干净的codes列表（每一个元素为一行代码）（不含\t，\n，连续2个以上空格，注释，不含import,include等）
         目前注释只支持
         单行注释：//和#
         多行注释：/* */和三个'和三个"
@@ -480,8 +502,8 @@ class Pretreatment:
                 line = line[0:java_start]
             if python_start != -1:
                 line = line[0:python_start]
-            line = re.sub(r'[\u4e00-\u9fa5].*[\u4e00-\u9fa5]', "", line, flags=re.S)
-            if len(line) < limit:
+            # line = re.sub(r'[\u4e00-\u9fa5].*[\u4e00-\u9fa5]', "", line, flags=re.S)
+            if len(line) < limit or re.match("(import .*)|(include .*)|(from .*)", line):
                 continue
             codes.append(line)
         return codes
@@ -567,7 +589,10 @@ class Pretreatment:
                                     break
                     if article_paragraphs:
                         print("段落如下：")
-                        pprint(article_paragraphs)
+                        j = 1
+                        for article_paragraph in article_paragraphs:
+                            print("[{}]>>>".format(j)+article_paragraph)
+                            j += 1
                     article_sentences = list()
                     sentences = result.get('sentences')
                     if sentences is not None:
@@ -580,7 +605,10 @@ class Pretreatment:
                                     break
                     if article_sentences:
                         print("句子如下：")
-                        pprint(article_sentences)
+                        j = 1
+                        for article_sentence in article_sentences:
+                            print("[{}]>>>".format(j) + article_sentence)
+                            j += 1
             print("url共有{}个".format(len(article_urls)))
         return related_paragraphs, related_sentences, find
 
@@ -612,17 +640,23 @@ class Pretreatment:
 
 
 if __name__ == '__main__':
-    url = "https://blog.csdn.net/Louis210/article/details/117415546"
+    # url = "https://blog.csdn.net/Louis210/article/details/117415546"
     # url = "https://www.cnblogs.com/yuyueq/p/15119512.html"
     # url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
     # url = "https://www.jianshu.com/p/92373a603d42"
     #
     # url = "https://blog.csdn.net/Louis210/article/details/119666026"
+    url = "https://blog.csdn.net/Baigker/article/details/118353220"
+    # url = "https://blog.csdn.net/weixin_46219578/article/details/117462868"
+    # url = "https://blog.csdn.net/m0_51250400/article/details/118405807"
+    # url = "https://blog.csdn.net/buckbarnes/article/details/118547420"
+    print("---------url>>>" + url)
     similarity = Pretreatment.split_txt(url)
     print("---------head---------")
     print(similarity['head'])
     print("---------text---------")
     print(similarity['text'])
+    # print(similarity['text'].encode('unicode_escape').decode())
     print("---------paragraphs共{}个---------".format(len(similarity['paragraphs'])))
     pprint(similarity['paragraphs'])
     print("---------sentences共{}个---------".format(len(similarity['sentences'])))

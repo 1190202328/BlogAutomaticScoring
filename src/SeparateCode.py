@@ -81,26 +81,47 @@ class SeparateCode:
         sentences = text.split("\n")
         code_like_sentences_list = list()
         code_like_sentences = list()
+        sentences_flag = list()
         for sentence in sentences:
             pre_sentence = sentence.lower().strip()
-            pre_sentence = SeparateCode.clean_code_line(pre_sentence, low_limit=0, high_limit=100)
-            if pre_sentence == "" or re.match(r'[\u4e00-\u9fa5]+', pre_sentence):
+            pre_sentence = SeparateCode.clean_code_line(pre_sentence, low_limit=7, high_limit=100)
+            if pre_sentence == "" or re.match('[_. ]+', pre_sentence) or re.match("((https)|(http)).*", pre_sentence) \
+                    or re.match('(\\d+)(\\.\\d+)*.*', pre_sentence) or re.match(r'[\u4e00-\u9fa5]+', pre_sentence) \
+                    or re.match('((\\(\\d+\\))|(（\\d+）)).*', pre_sentence):
+                sentences_flag.append(1)
                 continue
             if re.match(r'.*[\u4e00-\u9fa5]+.*', pre_sentence):
-                if not re.match(r'([^\u4e00-\u9fa5]*".*?"[^\u4e00-\u9fa5]*)+', sentence):
+                if not re.match(r'([^\u4e00-\u9fa5]+".*?"[^\u4e00-\u9fa5]+)+', pre_sentence):
+                    sentences_flag.append(1)
                     continue
-            code_like_sentences.append(sentence)
-            pre_sentence = re.split("[ .]", pre_sentence)
-            # pre_sentence = jieba.lcut(pre_sentence)
-            code_like_sentences_list.append(pre_sentence)
+            sentences_flag.append(0)
+            # code_like_sentences.append(sentence)
+            # pre_sentence = re.split("[ .]", pre_sentence)
+            # code_like_sentences_list.append(pre_sentence)
         # pprint(sentences)
+        for i in range(1, len(sentences_flag) - 1):
+            if sentences_flag[i - 1] == 1 and sentences_flag[i] == 0 and sentences_flag[i + 1] == 1:
+                sentences_flag[i] = 1
+        for i in range(1, len(sentences_flag) - 2):
+            if sentences_flag[i - 1] == 1 and sentences_flag[i] == 0 and sentences_flag[i + 1] == 0 and sentences_flag[i + 2] == 1:
+                sentences_flag[i] = 1
+                sentences_flag[i+1] = 1
+        for i in range(len(sentences_flag)):
+            if sentences_flag[i] == 0:
+                code_like_sentences.append(sentences[i])
+                pre_sentence = sentences[i].lower().strip()
+                pre_sentence = SeparateCode.clean_code_line(pre_sentence, low_limit=7, high_limit=100)
+                pre_sentence = re.split("[ .]", pre_sentence)
+                code_like_sentences_list.append(pre_sentence)
         if not code_like_sentences:
             return codes
-        print("可能是代码的如下:")
-        pprint(code_like_sentences)
+        # print("可能是代码的如下(共{}个):".format(len(code_like_sentences)))
+        # i = 1
+        # for code_like_sentence in code_like_sentences:
+        #     print("[{}]>>>".format(i) + code_like_sentence)
+        #     i += 1
         code_indexes = [1] * len(code_like_sentences_list)
         sequences = SeparateCode.get_sequences(code_like_sentences_list, embedding_len)
-        # print(sequences)
         path = "../src/saved_model/"
         filename = "code_separate_model.h5"
         model = tf.keras.models.load_model(path + filename)
@@ -108,15 +129,17 @@ class SeparateCode:
         for i in range(len(results)):
             if results[i][0] > results[i][1]:
                 code_indexes[i] = 0
-        # pprint(code_indexes)
         for i in range(1, len(code_indexes) - 1):
             if code_indexes[i] == 1 and code_indexes[i - 1] == 0 and code_indexes[i + 1] == 0:
                 code_indexes[i] = 0
         for i in range(len(code_indexes)):
             if code_indexes[i] == 0:
                 codes.append(code_like_sentences[i])
-        print("检测出的代码的如下:")
-        pprint(codes)
+        i = 1
+        # print("检测出的代码的如下(共{}个):".format(len(codes)))
+        # for code in codes:
+        #     print("[{}]>>>".format(i) + code)
+        #     i += 1
         return codes
 
 
@@ -129,3 +152,6 @@ if __name__ == '__main__':
     text = f.read()
     f.close()
     pprint(SeparateCode.get_codes(text))
+
+    # pre_sentence = '① "+"号修饰，表示属性或者方法的访问权限是public。'
+    # print(re.match(r'([^\u4e00-\u9fa5]+".*?"[^\u4e00-\u9fa5]+)+', pre_sentence))
