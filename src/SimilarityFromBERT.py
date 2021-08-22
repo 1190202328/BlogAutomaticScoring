@@ -134,6 +134,7 @@ class SimilarityFromBERT:
         sentences_similarity = []
         print("不相关段落如下(小于0.80的)")
         paragraphs = SimilarityFromBERT.get_text_related(paragraphs, text, limit=0.80)
+        invalid_count = 0
         for paragraph in paragraphs:
             if EDU:
                 sentences = demo.get_EDUs(paragraph)
@@ -144,8 +145,14 @@ class SimilarityFromBERT:
             for sentence in sentences:
                 if sentence != "" and len(sentence) > sentence_lenth_limit:
                     print("开始搜索句子[{}]".format(sentence))
-                    related_paragraphs, related_sentences, _ = Pretreatment.get_related_paragraphs_and_sentences(
-                        sentence, paragraph_number=paragraph_number, sentence_number=sentence_number, url=url)
+                    related_paragraphs, related_sentences, _, invalid = Pretreatment.get_related_paragraphs_and_sentences \
+                        (sentence, paragraph_number=paragraph_number, sentence_number=sentence_number, url=url)
+                    if invalid == 2:
+                        invalid_count += 1
+                    else:
+                        invalid_count = 0
+                    if invalid_count >= 3:
+                        return None
                     paragraph_similarity = SimilarityFromBERT.get_similarity([paragraph] + related_paragraphs)[:1][0][
                                            1:]
                     paragraph_similarity = padding(paragraph_similarity, paragraph_number)
@@ -173,12 +180,18 @@ class SimilarityFromBERT:
                     code_similarity = []
                     j = 1
                     for related_code in related_codes:
-                        print("[{}]>>>".format(j) + related_code)
+                        print("[{}]>>>".format(j) + related_code.__str__())
                         j += 1
                         if SimilarityFromPMD.is_similar(line, related_code):
-                            code_similarity.append(1)
+                            if SimilarityFromBERT.get_similarity([line, related_code])[:1][0][1] < 0.05:
+                                code_similarity.append(0)
+                            else:
+                                code_similarity.append(1)
                         else:
-                            code_similarity.append(0)
+                            if SimilarityFromBERT.get_similarity([line, related_code])[:1][0][1] > 0.95:
+                                code_similarity.append(1)
+                            else:
+                                code_similarity.append(0)
                     code_similarity = padding(code_similarity, code_number)
                     codes_similarity.append(code_similarity)
                     print("------code相似度------")
@@ -254,13 +267,13 @@ if __name__ == '__main__':
     #              "contains和indexof都可以作为判断是否包含的方法", "并且"]
     # print(SimilarityFromBERT.get_similarity(sentences))
 
-    # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
+    url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
     # url = "https://blog.csdn.net/Louis210/article/details/119666026"
     # url = "https://www.cnblogs.com/yuyueq/p/15119512.html"
     # url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
 
     # url = "https://blog.csdn.net/zhuzyibooooo/article/details/118527726?spm=1001.2014.3001.5501"
-    url = "https://blog.csdn.net/Louis210/article/details/119666026?spm=1001.2014.3001.5501"
+    # url = "https://blog.csdn.net/Louis210/article/details/119666026?spm=1001.2014.3001.5501"
     head_number = 10
     text_number = 10
     paragraph_number = 10

@@ -519,18 +519,19 @@ class Pretreatment:
         :param url: 可选，源文章第url地址，输入之后不会重复找到该文章，如果找到，则返回find=True
         :param page_limit: 百度搜索的页码限制
         :param original_sentence: 源句子
-        :return: 相关段落的列表，相关句子的列表，find
+        :return: 相关段落的列表，相关句子的列表，find, invalid（如果为2则表示此次查找ip被封掉，失败）
         """
         pn = 0
         article_count = 1
         total_urls = list()
         find = False
+        invalid = 0
         related_sentences = list()
         related_paragraphs = list()
         baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&rn=50" + "&oq=" + original_sentence + "&ie=utf-8"
         while True:
             if len(related_paragraphs) >= paragraph_number and len(related_sentences) >= sentence_number:
-                return related_paragraphs, related_sentences, find
+                return related_paragraphs, related_sentences, find, invalid
             article_urls = list()
             html = Pretreatment.get_raw_html(baidu_url)
             baidu_url = Pretreatment.get_next_baidu_url(html)
@@ -545,7 +546,7 @@ class Pretreatment:
             contents = bf.find_all("div", class_="c-container")
             for content in contents:
                 if len(related_paragraphs) >= paragraph_number and len(related_sentences) >= sentence_number:
-                    return related_paragraphs, related_sentences, find
+                    return related_paragraphs, related_sentences, find, invalid
                 real_url = ""
                 red_strings = set()
                 flag = False
@@ -610,7 +611,9 @@ class Pretreatment:
                             print("[{}]>>>".format(j) + article_sentence)
                             j += 1
             print("url共有{}个".format(len(article_urls)))
-        return related_paragraphs, related_sentences, find
+            if len(article_urls) == 0:
+                invalid += 1
+        return related_paragraphs, related_sentences, find, invalid
 
     @staticmethod
     def clean_with_low_frequency(documents, stopwords_set=""):

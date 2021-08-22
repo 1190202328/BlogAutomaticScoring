@@ -1,3 +1,4 @@
+import threading
 from pprint import pprint
 import csv
 import json
@@ -27,9 +28,12 @@ class InfoReadAndWrite:
         :return: urls列表
         """
         urls = list()
+        # tags = list()
         f = open(path + filename, "r")
         for line in f.readlines():
-            urls.append(line[:-1])
+            r = line.split("\t")
+            urls.append(r[1])
+            # tags.append(r[3])
         f.close()
         return urls
 
@@ -51,11 +55,19 @@ class InfoReadAndWrite:
 
     @staticmethod
     def get_results():
+        """
+        获得根据urls得到的results
+        :return: results
+        """
         with open('../src/text/results.txt', 'r') as f:
             return json.loads(f.read())
 
     @staticmethod
     def show_results_data():
+        """
+        分析results
+        :return: 无
+        """
         results = InfoReadAndWrite.get_results()
         print("共{}个可能的结果".format(len(results)))
         valid_results_len = 0
@@ -101,7 +113,16 @@ class InfoReadAndWrite:
         plt.show()
 
     @staticmethod
-    def write_similarity_to_file(similarity, paragraph_len=50, sentence_len=70, code_len=10):
+    def write_similarity_to_file(similarity, file_path, paragraph_len=50, sentence_len=70, code_len=10):
+        """
+        将similarity格式化地写入到文件中
+        :param similarity: 相似度列表
+        :param file_path: 文件路径
+        :param paragraph_len: 标准段落数
+        :param sentence_len: 标准句子数
+        :param code_len: 标准代码数
+        :return: 无
+        """
         heads = similarity['head']
         texts = similarity['text']
         paragraphs = similarity['paragraph']
@@ -119,12 +140,16 @@ class InfoReadAndWrite:
             results += sentence
         for code in codes:
             results += code
-        with open('../src/text/similarities.csv', 'a') as f:
+        with open(file_path, 'w') as f:
             writer = csv.writer(f)
             writer.writerows([results])
 
     @staticmethod
     def get_similarities():
+        """
+        获取similarities
+        :return: similarities
+        """
         similarities = list()
         with open('../src/text/similarities.csv', 'r') as f:
             reader = csv.reader(f)
@@ -132,16 +157,52 @@ class InfoReadAndWrite:
                 similarities.append(row)
         return np.array(similarities).astype(np.float)
 
+    @staticmethod
+    def get_similarities_and_write(url, num):
+        """
+        获取similarit并且将其格式化地写入文件，文件名称为similarities_num.csv
+        :param url: url地址
+        :param num: 第多少个url
+        :return: 无
+        """
+        print("url>>>" + url)
+        similarity = SimilarityFromBERT.get_5d_similarities(url)
+        if not similarity:
+            print("到此url停止>>>" + url)
+            return 0
+        InfoReadAndWrite.write_similarity_to_file(similarity, '../src/text/similarities_{}.csv'.format(num))
+
+    @staticmethod
+    def n_threads_run(urls, start, end):
+        """
+        开启n个线程，一次性跑end-start篇文章(跑第urls[start],urls[start+1),...,urls[end-1]
+        :param urls: urls列表
+        :param start: 开始标号
+        :param end: 结束标号
+        :return: 无
+        """
+        threads = list()
+        for i in range(start, end):
+            thread = threading.Thread(target=InfoReadAndWrite.get_similarities_and_write, args=(urls[i], i))
+            threads.append(thread)
+        for thread in threads:
+            thread.start()
+
 
 if __name__ == '__main__':
     path = "../src/text/"
-    filename = "url总集.txt"
+    filename = "urls.txt"
     urls = InfoReadAndWrite.get_urls(path, filename)
     # InfoReadAndWrite.write_result(urls)
 
     # InfoReadAndWrite.show_results_data()
 
-    for url in urls[:5]:
-        similarity = SimilarityFromBERT.get_5d_similarities(url)
-        InfoReadAndWrite.write_similarity_to_file(similarity)
+    # i = 0
+    # pprint(urls)
+    # for url in urls:
+    #     with open('../src/text/urls.txt', 'a') as f:
+    #         f.write(i.__str__() + "\t" + url + "\n")
+    #         i += 1
+
     print(InfoReadAndWrite.get_similarities().shape)
+    # InfoReadAndWrite.n_threads_run(urls, 33, 35)
