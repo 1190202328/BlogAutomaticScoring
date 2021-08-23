@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 
 import torch
@@ -21,6 +22,9 @@ def get_EDUs(text):
     :param text: 文本，要求没有换行符，是连续紧凑的文本（即：一篇文章为一行）
     :return: EDU列表
     """
+    pattern = '[,.，。；：！、？]'
+    if len(re.split(pattern, text)) == 1 or (len(re.split(pattern, text)) == 2 and re.match('(.*[,.，。；：！、？])|([,.，。；：！、？].*)',text)):
+        return [text]
     model_3 = NetEDU(768, 7, 1).cpu()
     model_1 = NetTrans(768, 2, 1).cpu()
     model_2 = NetRlat(768, 4, 4, 1).cpu()

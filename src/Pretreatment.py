@@ -8,6 +8,8 @@ import requests
 import re
 from datetime import date
 from baiduspider import BaiduSpider
+from tqdm import tqdm
+
 from src.BERT import demo
 from src.SeparateCode import SeparateCode
 
@@ -228,9 +230,10 @@ class Pretreatment:
             return None
 
     @staticmethod
-    def get_related_head(text_head, number, page_limit=10, url=""):
+    def get_related_head(text_head, number, page_limit=10, url="", verbose=True):
         """
         根据标题在百度搜索相关文章，取出前number篇文章的标题
+        :param verbose: 选择是否输出杂多的信息:True:复杂输出;False：简单输出
         :param url: 可选，源文章第url地址，输入之后不会重复找到该文章，如果找到，则返回find=True
         :param page_limit: 最大页码数
         :param number: 需要相关文章的篇数
@@ -244,12 +247,14 @@ class Pretreatment:
         find = False
         while True:
             results = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
-            print("pn = {}".format(pn))
+            if verbose:
+                print("pn = {}".format(pn))
             pn += 1
             if pn > page_limit:
                 return total_titles, find
             for result in results:
-                print(result)
+                if verbose:
+                    print(result)
                 if count >= number:
                     break
                 if result.get('title') is None:
@@ -265,7 +270,8 @@ class Pretreatment:
                     continue
                 total_titles.append(title[0])
                 total_urls.append(real_url)
-                print("count = {}".format(count))
+                if verbose:
+                    print("count = {}".format(count))
                 count += 1
             if count >= number:
                 break
@@ -331,7 +337,7 @@ class Pretreatment:
         return main_url
 
     @staticmethod
-    def get_related_texts(text_head, number, page_limit=10, url=""):
+    def get_related_texts(text_head, number, page_limit=10, url="", verbose=True):
         """
         根据text_head在百度搜索，取出前number篇文章
         :param page_limit: 百度搜索的最大页码限制
@@ -347,7 +353,8 @@ class Pretreatment:
         pn = 1
         while True:
             results = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
-            print("pn = {}".format(pn))
+            if verbose:
+                print("pn = {}".format(pn))
             pn += 1
             if pn > page_limit:
                 break
@@ -368,10 +375,12 @@ class Pretreatment:
                         related_texts.append(result['text'])
                         total_urls.append(real_url)
                         count += 1
-                        print("count = {}".format(count))
+                        if verbose:
+                            print("count = {}".format(count))
             if count >= number:
                 break
-        print(total_urls)
+        if verbose:
+            print(total_urls)
         return related_texts, find
 
     @staticmethod
@@ -434,7 +443,7 @@ class Pretreatment:
         return ""
 
     @staticmethod
-    def get_related_codes(code, number, limit=7):
+    def get_related_codes(code, number, limit=7, verbose=True):
         """
         根据code获取相关的code
         :param limit: 每行代码的最短长度，小于该长度的代码行将会被过滤
@@ -442,7 +451,8 @@ class Pretreatment:
         :param number: 需要获取相关code的数量，最多100行相关的code
         :return: 相关code的列表(code中不含中文注释)
         """
-        print("开始搜索：" + code)
+        if verbose:
+            print("开始搜索：" + code)
         count = 0
         related_codes = []
         api = "https://searchcode.com/api/codesearch_I/?q=" + code + "&p=0&per_page=100"
@@ -511,7 +521,8 @@ class Pretreatment:
     @staticmethod
     def get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, sentence_number=10,
                                              page_limit=2,
-                                             url=""):
+                                             url="",
+                                             verbose=True):
         """
         在百度上获取相关的句子
         :param sentence_number: 需要搜索的相关句子的数
@@ -535,7 +546,8 @@ class Pretreatment:
             article_urls = list()
             html = Pretreatment.get_raw_html(baidu_url)
             baidu_url = Pretreatment.get_next_baidu_url(html)
-            print("第{}页".format(pn + 1))
+            if verbose:
+                print("第{}页".format(pn + 1))
             pn += 1
             if baidu_url == "":
                 baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=" + str(
@@ -572,8 +584,9 @@ class Pretreatment:
                         if child.name == "em" and child.string != "":
                             red_strings.add(child.string)
                     total_urls.append(real_url)
-                    print("第{}篇文章>>>>>>>>>".format(article_count) + real_url + ">>>>", end="")
-                    print(red_strings)
+                    if verbose:
+                        print("第{}篇文章>>>>>>>>>".format(article_count) + real_url + ">>>>", end="")
+                        print(red_strings)
                     article_count += 1
                     article_paragraphs = list()
                     result = Pretreatment.split_txt(real_url)
@@ -588,12 +601,13 @@ class Pretreatment:
                                     related_paragraphs.append(paragraph)
                                     article_paragraphs.append(paragraph)
                                     break
-                    if article_paragraphs:
-                        print("段落如下：")
-                        j = 1
-                        for article_paragraph in article_paragraphs:
-                            print("[{}]>>>".format(j)+article_paragraph)
-                            j += 1
+                    if verbose:
+                        if article_paragraphs:
+                            print("段落如下：")
+                            j = 1
+                            for article_paragraph in article_paragraphs:
+                                print("[{}]>>>".format(j)+article_paragraph)
+                                j += 1
                     article_sentences = list()
                     sentences = result.get('sentences')
                     if sentences is not None:
@@ -604,13 +618,15 @@ class Pretreatment:
                                     related_sentences.append(sentence)
                                     article_sentences.append(sentence)
                                     break
-                    if article_sentences:
-                        print("句子如下：")
-                        j = 1
-                        for article_sentence in article_sentences:
-                            print("[{}]>>>".format(j) + article_sentence)
-                            j += 1
-            print("url共有{}个".format(len(article_urls)))
+                    if verbose:
+                        if article_sentences:
+                            print("句子如下：")
+                            j = 1
+                            for article_sentence in article_sentences:
+                                print("[{}]>>>".format(j) + article_sentence)
+                                j += 1
+            if verbose:
+                print("url共有{}个".format(len(article_urls)))
             if len(article_urls) == 0:
                 invalid += 1
         return related_paragraphs, related_sentences, find, invalid

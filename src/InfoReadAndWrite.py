@@ -165,7 +165,7 @@ class InfoReadAndWrite:
         :param num: 第多少个url
         :return: 无
         """
-        print("url>>>" + url)
+        # print("url>>>" + url)
         similarity = SimilarityFromBERT.get_5d_similarities(url)
         if not similarity:
             print("到此url停止>>>" + url)
@@ -237,8 +237,8 @@ if __name__ == '__main__':
     #         f.write(i.__str__() + "\t" + url + "\n")
     #         i += 1
 
-    # print(InfoReadAndWrite.get_similarities().shape)
-    # InfoReadAndWrite.n_threads_run(urls, 33, 35)
+    print(InfoReadAndWrite.get_similarities().shape)
+    InfoReadAndWrite.n_threads_run(urls, 43, 63)
 
     # InfoReadAndWrite.n_threads_run_interval(urls, [])
     # InfoReadAndWrite.merge_to_main_csv(1, 5)
