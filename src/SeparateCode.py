@@ -125,9 +125,9 @@ class SeparateCode:
         path = "../src/saved_model/"
         filename = "code_separate_model.h5"
         model = tf.keras.models.load_model(path + filename)
-        results = model.predict(sequences)
-        for i in range(len(results)):
-            if results[i][0] > results[i][1]:
+        rs = model.predict(sequences)
+        for i in range(len(rs)):
+            if rs[i][0] > rs[i][1]:
                 code_indexes[i] = 0
         for i in range(1, len(code_indexes) - 1):
             if code_indexes[i] == 1 and code_indexes[i - 1] == 0 and code_indexes[i + 1] == 0:

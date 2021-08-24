@@ -1,3 +1,4 @@
+import os
 import threading
 from pprint import pprint
 import csv
@@ -140,9 +141,12 @@ class InfoReadAndWrite:
             results += sentence
         for code in codes:
             results += code
-        with open(file_path, 'w') as f:
-            writer = csv.writer(f)
-            writer.writerows([results])
+        if os.path.exists(file_path):
+            print(file_path + ">>>已存在")
+        else:
+            with open(file_path, mode='w') as f:
+                writer = csv.writer(f)
+                writer.writerows([results])
 
     @staticmethod
     def get_similarities():
@@ -166,7 +170,7 @@ class InfoReadAndWrite:
         :return: 无
         """
         # print("url>>>" + url)
-        similarity = SimilarityFromBERT.get_5d_similarities(url)
+        similarity = SimilarityFromBERT.get_5d_similarities(url, EDU=False, verbose=False)
         if not similarity:
             print("到此url停止>>>" + url)
             return 0
@@ -237,8 +241,17 @@ if __name__ == '__main__':
     #         f.write(i.__str__() + "\t" + url + "\n")
     #         i += 1
 
-    print(InfoReadAndWrite.get_similarities().shape)
-    InfoReadAndWrite.n_threads_run(urls, 43, 63)
+    # print(InfoReadAndWrite.get_similarities().shape)
+    # InfoReadAndWrite.n_threads_run(urls, 71, 91)
 
-    # InfoReadAndWrite.n_threads_run_interval(urls, [])
-    # InfoReadAndWrite.merge_to_main_csv(1, 5)
+    InfoReadAndWrite.n_threads_run_interval(urls, [49, 60, 64, 69, 75, 77, 78, 83, 84, 85, 88])
+
+    # InfoReadAndWrite.merge_to_main_csv(48, 48)
+    # print(InfoReadAndWrite.get_similarities().shape)
+
+    # num = 49
+    # similarity = SimilarityFromBERT.get_5d_similarities(urls[num], EDU=False, verbose=True, pre_verbose=True)
+    # if not similarity:
+    #     print("到此url停止>>>")
+    # else:
+    #     InfoReadAndWrite.write_similarity_to_file(similarity, '../src/text/similarities_{}.csv'.format(num))

@@ -1,8 +1,10 @@
 import json
+import time
 from pprint import pprint
 
 import bs4
 import jieba
+import urllib3
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -35,7 +37,7 @@ class Pretreatment:
     """
 
     @staticmethod
-    def split_txt(txt_url, EDU=False):
+    def split_txt(txt_url, EDU=False, verbose=True):
         """
         根据url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；
         5。date：日期；6。text：全文（不含代码段）；
@@ -55,8 +57,8 @@ class Pretreatment:
         clean_text_for_EDU_element = ""
 
         is_illegal = False
-        url = Pretreatment.get_real_url(txt_url)
-        html = Pretreatment.get_raw_html(url)
+        url = Pretreatment.get_real_url(txt_url, verbose=verbose)
+        html = Pretreatment.get_raw_html(url, verbose=verbose)
         if html == "":
             return None
         bf = BeautifulSoup(html, "html.parser")
@@ -246,13 +248,13 @@ class Pretreatment:
         pn = 1
         find = False
         while True:
-            results = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
+            rs = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
             if verbose:
                 print("pn = {}".format(pn))
             pn += 1
             if pn > page_limit:
                 return total_titles, find
-            for result in results:
+            for result in rs:
                 if verbose:
                     print(result)
                 if count >= number:
@@ -262,7 +264,7 @@ class Pretreatment:
                 title = result.get('title').split("_")
                 if len(title) == 1:
                     title = result.get('title').split("-")
-                real_url = Pretreatment.get_real_url(result.get('url'))
+                real_url = Pretreatment.get_real_url(result.get('url'), verbose=verbose)
                 if real_url in total_urls:
                     continue
                 if url.find(real_url) != -1:
@@ -278,13 +280,13 @@ class Pretreatment:
         return total_titles, find
 
     @staticmethod
-    def get_urls(main_url):
+    def get_urls(main_url, verbose=True):
         """
         根据学生主页面获取所有博客的url地址
         :param main_url: 主页面地址，包括（1。csdn2。cnblogs3。github4。简书）
         :return: 所有博客的ulr地址
         """
-        html = Pretreatment.get_raw_html(main_url)
+        html = Pretreatment.get_raw_html(main_url, verbose=verbose)
         bf = BeautifulSoup(html, "html.parser")
         urls = set()
         contents = bf.find_all("a")
@@ -307,7 +309,7 @@ class Pretreatment:
                 if content.get("href") is not None and re.match("/p/\\w+", content.get("href")):
                     if not re.match(".*#comments.*", content.get("href")):
                         urls.add("https://www.jianshu.com" + content.get("href"))
-        return urls
+        return list(urls)
 
     @staticmethod
     def get_main_url(url):
@@ -316,7 +318,7 @@ class Pretreatment:
         :param url: url地址（1。csdn2。cnblogs3。github4。简书）
         :return: 主页的URL地址，如果找不到则返回""
         """
-        main_url = ""
+        main_url = None
         if re.match(pattern_csdn_main, url):
             temps = url.split("/")
             main_url = "https://blog.csdn.net/" + temps[3]
@@ -352,18 +354,18 @@ class Pretreatment:
         count = 0
         pn = 1
         while True:
-            results = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
+            rs = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
             if verbose:
                 print("pn = {}".format(pn))
             pn += 1
             if pn > page_limit:
                 break
-            for result in results:
+            for result in rs:
                 if count >= number:
                     break
                 if result.get('url') is None:
                     continue
-                real_url = Pretreatment.get_real_url(result.get('url'))
+                real_url = Pretreatment.get_real_url(result.get('url'), verbose=verbose)
                 if real_url in total_urls:
                     continue
                 if url.find(real_url) != -1:
@@ -384,7 +386,7 @@ class Pretreatment:
         return related_texts, find
 
     @staticmethod
-    def get_raw_html(url):
+    def get_raw_html(url, verbose=False):
         """
         根据url获取html文档
         :param url: url地址
@@ -398,16 +400,23 @@ class Pretreatment:
             'Connection': 'keep-alive',
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
         }
+        # # proxy = "127.0.0.1:11000" # QuickQ
+        # proxy = "127.0.0.1:7890"  # clashX
+        # proxies = {
+        #     'http': 'http://' + proxy,
+        #     'https': 'https://' + proxy
+        # }, proxies=proxies
         try:
             r = requests.get(url=url, headers=headers, timeout=10)
             r.raise_for_status()
             return r.text
         except Exception as e:
-            print(e.args)
+            if verbose:
+                print(e.args)
             return ""
 
     @staticmethod
-    def get_real_url(url):
+    def get_real_url(url, verbose=False):
         """
         根据url获得真实的url地址
         :param url: 源url地址
@@ -426,7 +435,8 @@ class Pretreatment:
             r.raise_for_status()
             return r.url
         except Exception as e:
-            print(e.args)
+            if verbose:
+                print(e.args)
             return ""
 
     @staticmethod
@@ -460,10 +470,10 @@ class Pretreatment:
         if text == "":
             return related_codes
         api_result = json.loads(text)
-        results = api_result.get('results')
-        if results is None:
+        rs = api_result.get('results')
+        if rs is None:
             return related_codes
-        for result in results:
+        for result in rs:
             lines = result['lines']
             # print(lines)
             ids = list()
@@ -545,6 +555,7 @@ class Pretreatment:
                 return related_paragraphs, related_sentences, find, invalid
             article_urls = list()
             html = Pretreatment.get_raw_html(baidu_url)
+            time.sleep(10)
             baidu_url = Pretreatment.get_next_baidu_url(html)
             if verbose:
                 print("第{}页".format(pn + 1))
@@ -567,7 +578,7 @@ class Pretreatment:
                         continue
                     for c in child.children:
                         if c.name == "a" and c.parent.name == "h3":
-                            real_url = Pretreatment.get_real_url(c.attrs['href'])
+                            real_url = Pretreatment.get_real_url(c.attrs['href'], verbose=verbose)
                             if real_url != "":
                                 flag = True
                                 article_urls.append(real_url)
@@ -589,7 +600,7 @@ class Pretreatment:
                         print(red_strings)
                     article_count += 1
                     article_paragraphs = list()
-                    result = Pretreatment.split_txt(real_url)
+                    result = Pretreatment.split_txt(real_url, verbose=verbose)
                     if result is None:
                         continue
                     paragraphs = result.get('paragraphs')
@@ -606,7 +617,7 @@ class Pretreatment:
                             print("段落如下：")
                             j = 1
                             for article_paragraph in article_paragraphs:
-                                print("[{}]>>>".format(j)+article_paragraph)
+                                print("[{}]>>>".format(j) + article_paragraph)
                                 j += 1
                     article_sentences = list()
                     sentences = result.get('sentences')

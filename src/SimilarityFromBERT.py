@@ -97,7 +97,7 @@ class SimilarityFromBERT:
     @staticmethod
     def get_5d_similarities(url, head_number=10, text_number=10, paragraph_number=10, sentence_number=10,
                             code_number=10,
-                            sentence_lenth_limit=5, EDU=False, result=None, verbose=True):
+                            sentence_lenth_limit=5, EDU=False, result=None, verbose=True, pre_verbose=False):
         """
         通过url链接获取5个维度的相似度：1。标题 2。全文 3。段落 4。句子 5。代码（都进行了停用词处理）（搜索结果中不包含自己）
         :param verbose: 选择是否输出杂多的信息:True:复杂输出;False：简单输出
@@ -112,10 +112,13 @@ class SimilarityFromBERT:
         :param url: url链接
         :return: 字典，head:标题对应相似度。text:全文对应相似度。paragraph:段落对应相似度。sentence:句子对应相似度。code:代码对应相似度
         """
+        paragraph_len = 50
+        code_len = 10
+
         total_count = 2
         similarity = dict()
         if not result:
-            result = Pretreatment.split_txt(url)
+            result = Pretreatment.split_txt(url, verbose=verbose)
         head = result['head']
         text = result['text']
         paragraphs = result['paragraphs']
@@ -123,8 +126,9 @@ class SimilarityFromBERT:
         if verbose:
             print("不相关段落如下(小于0.80的)")
         paragraphs = SimilarityFromBERT.get_text_related(paragraphs, text, limit=0.80, verbose=verbose)
+        paragraphs = paragraphs[:paragraph_len]
         to_search_sentences = []
-        if not verbose:
+        if pre_verbose:
             notice = tqdm(total=len(paragraphs), bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.BLUE, Fore.RESET))
             notice.set_description(">>> " + url + " >>>Pre>>>")
         for paragraph in paragraphs:
@@ -141,15 +145,19 @@ class SimilarityFromBERT:
                     clean_sentences.append(sentence)
                     total_count += 1
             to_search_sentences.append(clean_sentences)
-            if not verbose:
+            if pre_verbose:
                 notice.update(1)
-        if not verbose:
+        if pre_verbose:
             notice.close()
         to_search_codes = []
         if codes:
             for code in codes:
+                if len(to_search_codes) >= code_len:
+                    break
                 lines = Pretreatment.clean_code(code)
                 for line in lines:
+                    if len(to_search_codes) >= code_len:
+                        break
                     to_search_codes.append(line)
                     total_count += 1
         if not verbose:
@@ -214,7 +222,7 @@ class SimilarityFromBERT:
         # 代码相似度
         codes_similarity = []
         for line in to_search_codes:
-            related_codes = Pretreatment.get_related_codes(line, code_number,verbose=verbose)
+            related_codes = Pretreatment.get_related_codes(line, code_number, verbose=verbose)
             if verbose:
                 print("相关codes如下:")
             code_similarity = []

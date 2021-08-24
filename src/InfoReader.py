@@ -1,3 +1,5 @@
+import re
+
 from openpyxl import load_workbook
 
 from src.Student import Student
@@ -9,14 +11,14 @@ class InfoReader:
     """
 
     @staticmethod
-    def get_student_info(filename):
+    def get_student_info(path, filename):
         """
             :arg
                 filename:文件名称，如"学生个人博客信息.xlsx"
             :returns
                 学生的列表
         """
-        workbook = load_workbook('../src/text/' + filename)
+        workbook = load_workbook(path + filename)
         sheets = workbook.get_sheet_names()
         booksheet = workbook.get_sheet_by_name(sheets[0])
         rows = booksheet.rows
@@ -26,6 +28,8 @@ class InfoReader:
             id = booksheet.cell(row=i, column=1).value
             name = booksheet.cell(row=i, column=2).value
             url = booksheet.cell(row=i, column=3).value
+            if url is not None and not re.match("https://.*", url):
+                url = "https://"+url
             if id is None:
                 break
             id = str(id)
@@ -33,3 +37,12 @@ class InfoReader:
             students.append(student)
             i = i + 1
         return students
+
+
+if __name__ == '__main__':
+    students = InfoReader.get_student_info("学生个人博客信息.xlsx")
+    for student in students:
+        if student.url is None:
+            continue
+        else:
+            print(student.url)
