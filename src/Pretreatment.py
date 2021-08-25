@@ -250,7 +250,9 @@ class Pretreatment:
         find = False
         while True:
             rs = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
-            time.sleep(random.randrange(2, 10, 1))
+            time.sleep(random.randrange(5, 30, 1))
+            if not rs:
+                time.sleep(random.randrange(100, 200, 1))
             if verbose:
                 print("pn = {}".format(pn))
             pn += 1
@@ -357,7 +359,9 @@ class Pretreatment:
         pn = 1
         while True:
             rs = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
-            time.sleep(random.randrange(2, 10, 1))
+            time.sleep(random.randrange(5, 30, 1))
+            if not rs:
+                time.sleep(random.randrange(100, 200, 1))
             if verbose:
                 print("pn = {}".format(pn))
             pn += 1
@@ -437,7 +441,7 @@ class Pretreatment:
                             clean_line = clean_line.replace("\n", "")
                         except:
                             pass
-                        related_codes.append(clean_line)
+                        related_codes.append(clean_line.__str__())
                         count += 1
                         if count >= number:
                             return related_codes
@@ -504,7 +508,7 @@ class Pretreatment:
                 return related_paragraphs, related_sentences, find, invalid
             article_urls = list()
             html = Pretreatment.get_raw_html(baidu_url)
-            time.sleep(random.randrange(2, 10, 1))
+            time.sleep(random.randrange(5, 30, 1))
             pre_baidu_url = baidu_url
             baidu_url = Pretreatment.get_next_baidu_url(html)
             if verbose:
@@ -589,11 +593,10 @@ class Pretreatment:
             if verbose:
                 print("url共有{}个".format(len(article_urls)))
             if len(article_urls) == 0:
-                if verbose:
-                    print(baidu_url)
+                print("此url第{}次暂时无法访问>>>".format(invalid+1), pre_baidu_url)
                 if invalid >= 1:
-                    time.sleep(300)
-                time.sleep(120)
+                    time.sleep(random.randrange(200, 300, 1))
+                time.sleep(random.randrange(100, 200, 1))
                 invalid += 1
         return related_paragraphs, related_sentences, find, invalid
 
@@ -685,10 +688,11 @@ if __name__ == '__main__':
     # url = "https://www.jianshu.com/p/92373a603d42"
     #
     # url = "https://blog.csdn.net/Louis210/article/details/119666026"
-    url = "https://blog.csdn.net/Baigker/article/details/118353220"
+    # url = "https://blog.csdn.net/Baigker/article/details/118353220"
     # url = "https://blog.csdn.net/weixin_46219578/article/details/117462868"
     # url = "https://blog.csdn.net/m0_51250400/article/details/118405807"
     # url = "https://blog.csdn.net/buckbarnes/article/details/118547420"
+    url = "https://bit-ranger.github.io/blog/java/effective-java/"
     print("---------url>>>" + url)
     similarity = Pretreatment.split_txt(url)
     print("---------head---------")

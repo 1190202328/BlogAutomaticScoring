@@ -1,2 +1,2 @@
-class Vertex<L> { ... }
- Class<V> vertexIdClass = (Class<V>) conf.getClass(
+private class PairIterator implements Iterator<E> {
+ * A pair of objects of the same class

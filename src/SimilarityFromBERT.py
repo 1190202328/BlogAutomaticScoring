@@ -123,9 +123,9 @@ class SimilarityFromBERT:
         text = result['text']
         paragraphs = result['paragraphs']
         codes = result['codes']
-        if not pre_verbose:
+        if verbose:
             print("不相关段落如下(小于0.80的)")
-        paragraphs = SimilarityFromBERT.get_text_related(paragraphs, text, limit=0.80, verbose=not pre_verbose)
+        paragraphs = SimilarityFromBERT.get_text_related(paragraphs, text, limit=0.80, verbose=verbose)
         paragraphs = paragraphs[:paragraph_len]
         to_search_sentences = []
         if pre_verbose:
@@ -136,9 +136,9 @@ class SimilarityFromBERT:
                 sentences = demo.get_EDUs(paragraph)
             else:
                 sentences = re.split("[,.，。]", paragraph)
-            if not pre_verbose:
+            if verbose:
                 print("不相关句子如下(小于0.85的)")
-            sentences = SimilarityFromBERT.get_text_related(sentences, text, limit=0.85, verbose=not pre_verbose)
+            sentences = SimilarityFromBERT.get_text_related(sentences, text, limit=0.85, verbose=verbose)
             clean_sentences = []
             for sentence in sentences:
                 if sentence != "" and len(sentence) > sentence_lenth_limit:

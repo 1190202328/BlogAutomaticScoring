@@ -73,11 +73,11 @@ vocab_list.append("<paddle>")
 vocab_list.append("<unk>")
 vocab_list += list(sorted(vocab))
 
-f = open("../src/text/vocab_list.txt", 'w')
-for vocab in vocab_list:
-    f.write(vocab)
-    f.write("\n")
-f.close()
+# f = open("../src/text/vocab_list.txt", 'w')
+# for vocab in vocab_list:
+#     f.write(vocab)
+#     f.write("\n")
+# f.close()
 
 token_list = []
 embedding_len = 100
@@ -100,6 +100,7 @@ model = tf.keras.Model(input_token, output)
 model.compile(optimizer='adam', loss=tf.keras.losses.sparse_categorical_crossentropy, metrics=['accuracy'])
 
 print(model.summary())
+print(x_train.shape)
 model.fit(x_train, y_train, epochs=epochs, validation_split=0.1, validation_freq=2, verbose=verbose,
           batch_size=batch_size)
 

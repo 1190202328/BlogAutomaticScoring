@@ -241,10 +241,10 @@ if __name__ == '__main__':
     #         f.write(i.__str__() + "\t" + url + "\n")
     #         i += 1
 
-    # print(InfoReadAndWrite.get_similarities().shape)
-    # InfoReadAndWrite.n_threads_run(urls, 71, 91)
+    print(InfoReadAndWrite.get_similarities().shape)
+    # InfoReadAndWrite.n_threads_run(urls, 111, 131)
 
-    # InfoReadAndWrite.n_threads_run_interval(urls, [60, 64, 69, 75, 77, 78, 83, 84, 85, 88])
+    InfoReadAndWrite.n_threads_run_interval(urls, [60, 64, 69, 75, 84, 85, 92, 93, 100])
 
     # InfoReadAndWrite.get_similarities_and_write(urls[49], 49, verbose=True, pre_verbose=True)
 
