@@ -589,9 +589,11 @@ class Pretreatment:
             if verbose:
                 print("url共有{}个".format(len(article_urls)))
             if len(article_urls) == 0:
-                time.sleep(60)
                 if verbose:
                     print(baidu_url)
+                if invalid >= 1:
+                    time.sleep(300)
+                time.sleep(120)
                 invalid += 1
         return related_paragraphs, related_sentences, find, invalid
 
@@ -643,7 +645,7 @@ class Pretreatment:
         #     'https': 'https://' + proxy
         # }, proxies=proxies
         try:
-            r = requests.get(url=url, headers=headers, timeout=10)
+            r = requests.get(url=url, headers=headers, timeout=5)
             r.raise_for_status()
             return r.text
         except Exception as e:
@@ -667,7 +669,7 @@ class Pretreatment:
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
         }
         try:
-            r = requests.get(url=url, headers=headers, timeout=10)
+            r = requests.get(url=url, headers=headers, timeout=5)
             r.raise_for_status()
             return r.url
         except Exception as e:

@@ -244,11 +244,11 @@ if __name__ == '__main__':
     # print(InfoReadAndWrite.get_similarities().shape)
     # InfoReadAndWrite.n_threads_run(urls, 71, 91)
 
-    # InfoReadAndWrite.n_threads_run_interval(urls, [49, 60, 64, 69, 75, 77, 78, 83, 84, 85, 88])
+    # InfoReadAndWrite.n_threads_run_interval(urls, [60, 64, 69, 75, 77, 78, 83, 84, 85, 88])
 
-    InfoReadAndWrite.get_similarities_and_write(urls[49], 49, verbose=True, pre_verbose=True)
+    # InfoReadAndWrite.get_similarities_and_write(urls[49], 49, verbose=True, pre_verbose=True)
 
-    # InfoReadAndWrite.merge_to_main_csv(48, 48)
+    # InfoReadAndWrite.merge_to_main_csv(60, 60)
     # print(InfoReadAndWrite.get_similarities().shape)
 
     # num = 49

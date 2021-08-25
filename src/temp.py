@@ -58,7 +58,5 @@ urls = ["", url2, url1, url3]
 # r = requests.get(url=url1, headers=headers, timeout=10, proxies=proxies)
 # print(r.status_code)
 # r.raise_for_status()
-# "http://icanhazip.com/ "
-for i in range(30):
-    print(BaiduSpider().search_web(i.__str__(), pn=1, exclude=['all']).get('results'))
-    time.sleep(random.randrange(2, 10, 1))
+url = "http://icanhazip.com/ "
+print(Pretreatment.get_raw_html(url))

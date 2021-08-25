@@ -1,2 +1,2 @@
- B b = new B(10);
-$dbs = new DateTime( '@' . $thdtl['start'] ); $dbe = new DateTime( '@' . $thdtl['end'] );
+class Vertex<L> { ... }
+ Class<V> vertexIdClass = (Class<V>) conf.getClass(
