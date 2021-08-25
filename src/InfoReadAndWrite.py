@@ -162,7 +162,7 @@ class InfoReadAndWrite:
         return np.array(similarities).astype(np.float)
 
     @staticmethod
-    def get_similarities_and_write(url, num):
+    def get_similarities_and_write(url, num, verbose=False, pre_verbose=False):
         """
         获取similarit并且将其格式化地写入文件，文件名称为similarities_num.csv
         :param url: url地址
@@ -170,7 +170,7 @@ class InfoReadAndWrite:
         :return: 无
         """
         # print("url>>>" + url)
-        similarity = SimilarityFromBERT.get_5d_similarities(url, EDU=False, verbose=False)
+        similarity = SimilarityFromBERT.get_5d_similarities(url, EDU=False, verbose=verbose, pre_verbose=pre_verbose)
         if not similarity:
             print("到此url停止>>>" + url)
             return 0
@@ -244,7 +244,9 @@ if __name__ == '__main__':
     # print(InfoReadAndWrite.get_similarities().shape)
     # InfoReadAndWrite.n_threads_run(urls, 71, 91)
 
-    InfoReadAndWrite.n_threads_run_interval(urls, [49, 60, 64, 69, 75, 77, 78, 83, 84, 85, 88])
+    # InfoReadAndWrite.n_threads_run_interval(urls, [49, 60, 64, 69, 75, 77, 78, 83, 84, 85, 88])
+
+    InfoReadAndWrite.get_similarities_and_write(urls[49], 49, verbose=True, pre_verbose=True)
 
     # InfoReadAndWrite.merge_to_main_csv(48, 48)
     # print(InfoReadAndWrite.get_similarities().shape)

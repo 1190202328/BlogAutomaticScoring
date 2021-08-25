@@ -1,4 +1,5 @@
 import json
+import random
 import time
 from pprint import pprint
 
@@ -232,7 +233,7 @@ class Pretreatment:
             return None
 
     @staticmethod
-    def get_related_head(text_head, number, page_limit=10, url="", verbose=True):
+    def get_related_head(text_head, number, page_limit=3, url="", verbose=True):
         """
         根据标题在百度搜索相关文章，取出前number篇文章的标题
         :param verbose: 选择是否输出杂多的信息:True:复杂输出;False：简单输出
@@ -249,6 +250,7 @@ class Pretreatment:
         find = False
         while True:
             rs = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
+            time.sleep(random.randrange(2, 10, 1))
             if verbose:
                 print("pn = {}".format(pn))
             pn += 1
@@ -339,7 +341,7 @@ class Pretreatment:
         return main_url
 
     @staticmethod
-    def get_related_texts(text_head, number, page_limit=10, url="", verbose=True):
+    def get_related_texts(text_head, number, page_limit=3, url="", verbose=True):
         """
         根据text_head在百度搜索，取出前number篇文章
         :param page_limit: 百度搜索的最大页码限制
@@ -355,6 +357,7 @@ class Pretreatment:
         pn = 1
         while True:
             rs = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
+            time.sleep(random.randrange(2, 10, 1))
             if verbose:
                 print("pn = {}".format(pn))
             pn += 1
@@ -384,60 +387,6 @@ class Pretreatment:
         if verbose:
             print(total_urls)
         return related_texts, find
-
-    @staticmethod
-    def get_raw_html(url, verbose=False):
-        """
-        根据url获取html文档
-        :param url: url地址
-        :return: html文档
-        """
-        headers = {
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Encoding': 'gzip, deflate, compress',
-            'Accept-Language': 'en-us;q=0.5,en;q=0.3',
-            'Cache-Control': 'max-age=0',
-            'Connection': 'keep-alive',
-            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
-        }
-        # # proxy = "127.0.0.1:11000" # QuickQ
-        # proxy = "127.0.0.1:7890"  # clashX
-        # proxies = {
-        #     'http': 'http://' + proxy,
-        #     'https': 'https://' + proxy
-        # }, proxies=proxies
-        try:
-            r = requests.get(url=url, headers=headers, timeout=10)
-            r.raise_for_status()
-            return r.text
-        except Exception as e:
-            if verbose:
-                print(e.args)
-            return ""
-
-    @staticmethod
-    def get_real_url(url, verbose=False):
-        """
-        根据url获得真实的url地址
-        :param url: 源url地址
-        :return: 真实url地址
-        """
-        headers = {
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Encoding': 'gzip, deflate, compress',
-            'Accept-Language': 'en-us;q=0.5,en;q=0.3',
-            'Cache-Control': 'max-age=0',
-            'Connection': 'keep-alive',
-            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
-        }
-        try:
-            r = requests.get(url=url, headers=headers, timeout=10)
-            r.raise_for_status()
-            return r.url
-        except Exception as e:
-            if verbose:
-                print(e.args)
-            return ""
 
     @staticmethod
     def get_next_baidu_url(baidu_html):
@@ -555,7 +504,8 @@ class Pretreatment:
                 return related_paragraphs, related_sentences, find, invalid
             article_urls = list()
             html = Pretreatment.get_raw_html(baidu_url)
-            time.sleep(10)
+            time.sleep(random.randrange(2, 10, 1))
+            pre_baidu_url = baidu_url
             baidu_url = Pretreatment.get_next_baidu_url(html)
             if verbose:
                 print("第{}页".format(pn + 1))
@@ -639,6 +589,9 @@ class Pretreatment:
             if verbose:
                 print("url共有{}个".format(len(article_urls)))
             if len(article_urls) == 0:
+                time.sleep(60)
+                if verbose:
+                    print(baidu_url)
                 invalid += 1
         return related_paragraphs, related_sentences, find, invalid
 
@@ -653,7 +606,7 @@ class Pretreatment:
         if stopwords_set:
             my_stopwords = stopwords_set
         else:
-            stopwords_file = open("./src/text/stopwords.txt")
+            stopwords_file = open("../src/text/stopwords.txt")
             stopwords_string = stopwords_file.read()
             stopwords_file.close()
             my_stopwords = stopwords_string.split("\n")
@@ -667,6 +620,60 @@ class Pretreatment:
                 text.append(word)
             texts.append(text)
         return texts
+
+    @staticmethod
+    def get_raw_html(url, verbose=False):
+        """
+        根据url获取html文档
+        :param url: url地址
+        :return: html文档
+        """
+        headers = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, compress',
+            'Accept-Language': 'en-us;q=0.5,en;q=0.3',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive',
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
+        }
+        # # proxy = "127.0.0.1:11000" # QuickQ
+        # proxy = "127.0.0.1:7890"  # clashX
+        # proxies = {
+        #     'http': 'http://' + proxy,
+        #     'https': 'https://' + proxy
+        # }, proxies=proxies
+        try:
+            r = requests.get(url=url, headers=headers, timeout=10)
+            r.raise_for_status()
+            return r.text
+        except Exception as e:
+            if verbose:
+                print(e.args)
+            return ""
+
+    @staticmethod
+    def get_real_url(url, verbose=False):
+        """
+        根据url获得真实的url地址
+        :param url: 源url地址
+        :return: 真实url地址
+        """
+        headers = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, compress',
+            'Accept-Language': 'en-us;q=0.5,en;q=0.3',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive',
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
+        }
+        try:
+            r = requests.get(url=url, headers=headers, timeout=10)
+            r.raise_for_status()
+            return r.url
+        except Exception as e:
+            if verbose:
+                print(e.args)
+            return ""
 
 
 if __name__ == '__main__':
