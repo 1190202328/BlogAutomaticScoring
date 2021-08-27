@@ -113,6 +113,7 @@ class SimilarityFromBERT:
         :return: 字典，head:标题对应相似度。text:全文对应相似度。paragraph:段落对应相似度。sentence:句子对应相似度。code:代码对应相似度
         """
         paragraph_len = 50
+        sentence_len = 70
         code_len = 10
 
         total_count = 2
@@ -141,7 +142,7 @@ class SimilarityFromBERT:
             sentences = SimilarityFromBERT.get_text_related(sentences, text, limit=0.85, verbose=verbose)
             clean_sentences = []
             for sentence in sentences:
-                if sentence != "" and len(sentence) > sentence_lenth_limit:
+                if sentence != "" and len(sentence) > sentence_lenth_limit and total_count-2 < sentence_len:
                     clean_sentences.append(sentence)
                     total_count += 1
             to_search_sentences.append(clean_sentences)

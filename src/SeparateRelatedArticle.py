@@ -2,7 +2,7 @@ import json
 import re
 import numpy as np
 from sklearn.metrics import classification_report
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
 import tensorflow as tf
 
 from src.Pretreatment import Pretreatment
@@ -132,64 +132,64 @@ class SeparateRelatedArticle:
 
 
 if __name__ == '__main__':
-    # texts, labels = SeparateRelatedArticle.get_texts_and_labels()
-    # labels = np.array(labels)
-    # texts = Pretreatment.clean_with_low_frequency(texts)
-    # x_train, x_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=0)
-    # vocab = set()
-    # for x in x_train:
-    #     for word in x:
-    #         vocab.add(word)
-    #
-    # # 深度学习分类
-    # vocab_list = list()
-    # vocab_list.append("<paddle>")
-    # vocab_list.append("<unk>")
-    # vocab_list += list(sorted(vocab))
-    #
-    # f = open("../src/text/vocab_list_text.txt", 'w')
-    # for vocab in vocab_list:
-    #     f.write(vocab)
-    #     f.write("\n")
-    # f.close()
-    #
-    # token_list = []
-    # embedding_len = 200
-    # output_dim = 64
-    # batch_size = 128
-    # epochs = 10
-    # verbose = 2
-    # vocab_len = len(vocab_list)
-    # print("词典大小:{}".format(vocab_len))
-    #
-    # x_train = SeparateRelatedArticle.get_sequences(x_train, embedding_len, vocab_list)
-    # x_test = SeparateRelatedArticle.get_sequences(x_test, embedding_len, vocab_list)
-    #
-    # input_token = tf.keras.Input(shape=(embedding_len,))
-    # embedding = tf.keras.layers.Embedding(input_dim=vocab_len, output_dim=output_dim)(input_token)
-    # embedding = tf.keras.layers.Bidirectional(tf.keras.layers.GRU(output_dim))(embedding)
-    # embedding = tf.keras.layers.Dropout(0.5)(embedding)
-    # output = tf.keras.layers.Dense(2, activation=tf.nn.softmax)(embedding)
-    # model = tf.keras.Model(input_token, output)
-    # model.compile(optimizer='adam', loss=tf.keras.losses.sparse_categorical_crossentropy, metrics=['accuracy'])
-    #
-    # print(model.summary())
-    # model.fit(x_train, y_train, epochs=epochs, validation_split=0.1, validation_freq=2, verbose=verbose,
-    #           batch_size=batch_size)
-    #
-    # path = "../src/saved_model/"
-    # filename = "ralated_text_separate_model.h5"
-    # model.save(path + filename)
-    # model = tf.keras.models.load_model(path + filename)
-    #
-    # y_predict = list()
-    # y_pred = model.predict(x_test)
-    # for y in y_pred:
-    #     if y[0] > y[1]:
-    #         y_predict.append(0)
-    #     else:
-    #         y_predict.append(1)
-    # print(classification_report(y_test, y_predict))
-    main_url = Pretreatment.get_main_url("https://blog.csdn.net/Louis210/article/details/119666026")
-    urls = Pretreatment.get_urls(main_url, verbose=False)
-    print(SeparateRelatedArticle.get_course_related_urls(urls))
+    texts, labels = SeparateRelatedArticle.get_texts_and_labels()
+    labels = np.array(labels)
+    texts = np.array(Pretreatment.clean_with_low_frequency(texts), dtype=object)
+
+    k_fold = KFold(n_splits=10, random_state=40, shuffle=True)
+    for train_index, test_index in k_fold.split(texts, labels):
+        x_train, x_test, y_train, y_test = texts[train_index], texts[test_index], labels[train_index], labels[
+            test_index]
+        vocab = set()
+        for x in x_train:
+            for word in x:
+                vocab.add(word)
+
+        # 深度学习分类
+        vocab_list = list()
+        vocab_list.append("<paddle>")
+        vocab_list.append("<unk>")
+        vocab_list += list(sorted(vocab))
+        # f = open("../src/text/vocab_list_text.txt", 'w')
+        # for vocab in vocab_list:
+        #     f.write(vocab)
+        #     f.write("\n")
+        # f.close()
+        token_list = []
+        embedding_len = 200
+        output_dim = 64
+        batch_size = 128
+        epochs = 10
+        verbose = 2
+        vocab_len = len(vocab_list)
+
+        x_train = SeparateRelatedArticle.get_sequences(x_train, embedding_len, vocab_list)
+        x_test = SeparateRelatedArticle.get_sequences(x_test, embedding_len, vocab_list)
+
+        input_token = tf.keras.Input(shape=(embedding_len,))
+        embedding = tf.keras.layers.Embedding(input_dim=vocab_len, output_dim=output_dim)(input_token)
+        embedding = tf.keras.layers.Bidirectional(tf.keras.layers.GRU(output_dim))(embedding)
+        embedding = tf.keras.layers.Dropout(0.5)(embedding)
+        output = tf.keras.layers.Dense(2, activation=tf.nn.softmax)(embedding)
+        model = tf.keras.Model(input_token, output)
+        model.compile(optimizer='adam', loss=tf.keras.losses.sparse_categorical_crossentropy, metrics=['accuracy'])
+
+        print(model.summary())
+        model.fit(x_train, y_train, epochs=epochs, validation_split=0.1, validation_freq=2, verbose=verbose,
+                  batch_size=batch_size)
+        # path = "../src/saved_model/"
+        # filename = "ralated_text_separate_model.h5"
+        # model.save(path + filename)
+        # model = tf.keras.models.load_model(path + filename)
+        y_predict = list()
+        y_pred = model.predict(x_test)
+        for y in y_pred:
+            if y[0] > y[1]:
+                y_predict.append(0)
+            else:
+                y_predict.append(1)
+        print(classification_report(y_test, y_predict))
+    # main_url = Pretreatment.get_main_url("https://blog.csdn.net/Louis210/article/details/119666026")
+    # urls = Pretreatment.get_urls(main_url, verbose=False)
+    # print(SeparateRelatedArticle.get_course_related_urls(urls))
+

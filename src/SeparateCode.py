@@ -1,9 +1,8 @@
 import re
-from pprint import pprint
-
-import jieba
 import numpy as np
 import tensorflow as tf
+from sklearn.metrics import classification_report
+from sklearn.model_selection import KFold
 
 
 class SeparateCode:
@@ -42,7 +41,7 @@ class SeparateCode:
         return code_line
 
     @staticmethod
-    def get_sequences(sentences, embedding_len, vocab_list=""):
+    def get_sequences(sentences, embedding_len, vocab_list=None):
         """
         获取句子对应的词序列
         :param sentences: 句子（一行为一个句子）（每个句子为一个列表，列表中每个元素为一个词）
@@ -103,9 +102,10 @@ class SeparateCode:
             if sentences_flag[i - 1] == 1 and sentences_flag[i] == 0 and sentences_flag[i + 1] == 1:
                 sentences_flag[i] = 1
         for i in range(1, len(sentences_flag) - 2):
-            if sentences_flag[i - 1] == 1 and sentences_flag[i] == 0 and sentences_flag[i + 1] == 0 and sentences_flag[i + 2] == 1:
+            if sentences_flag[i - 1] == 1 and sentences_flag[i] == 0 and sentences_flag[i + 1] == 0 and sentences_flag[
+                i + 2] == 1:
                 sentences_flag[i] = 1
-                sentences_flag[i+1] = 1
+                sentences_flag[i + 1] = 1
         for i in range(len(sentences_flag)):
             if sentences_flag[i] == 0:
                 code_like_sentences.append(sentences[i])
@@ -142,16 +142,111 @@ class SeparateCode:
         #     i += 1
         return codes
 
+    @staticmethod
+    def get_key_words(path, file):
+        key_words = set()
+        f = open(path + file, "r")
+        for line in f.readlines():
+            key_words.add(line.lower().strip().replace("\n", ""))
+        f.close()
+        return key_words
+
+    @staticmethod
+    def get_sentences_and_labels():
+        sentences = list()
+        labels = list()
+        f = open("../src/text/扩大的代码.txt", "r")
+        for line in f.readlines():
+            if line != "":
+                line = re.sub("[\\t ]+", " ", line)
+                line = line.replace("\n", "")
+                words = re.split("[ .]", line.lower().strip())
+                # words = jieba.lcut(line.lower().strip())
+                sentences.append(words)
+                labels.append(0)
+        f.close()
+        print(len(sentences))
+        f = open("../src/text/ptb.txt", "r")
+        for line in f.readlines():
+            if line != "":
+                line = re.sub("[\\t ]+", " ", line)
+                line = line.replace("\n", "")
+                words = re.split("[ .]", line.lower().strip())
+                # words = jieba.lcut(line.lower().strip())
+                sentences.append(words)
+                labels.append(1)
+        f.close()
+        print(len(sentences))
+        return sentences, labels
+
 
 if __name__ == '__main__':
-    # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
-    # text = Pretreatment.split_txt(url).get('hole_text')
-    # text = "public static void main\nI love you"
+    # # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
+    # # text = Pretreatment.split_txt(url).get('hole_text')
+    # # text = "public static void main\nI love you"
+    #
+    # f = open("../src/text/江江.txt")
+    # text = f.read()
+    # f.close()
+    # pprint(SeparateCode.get_codes(text))
+    #
+    # # pre_sentence = '① "+"号修饰，表示属性或者方法的访问权限是public。'
+    # # print(re.match(r'([^\u4e00-\u9fa5]+".*?"[^\u4e00-\u9fa5]+)+', pre_sentence))
+    sentences, labels = SeparateCode.get_sentences_and_labels()
+    labels = np.array(labels)
+    sentences = np.array(sentences)
 
-    f = open("../src/text/江江.txt")
-    text = f.read()
-    f.close()
-    pprint(SeparateCode.get_codes(text))
+    k_fold = KFold(n_splits=10, random_state=40, shuffle=True)
+    for train_index, test_index in k_fold.split(sentences, labels):
+        x_train, x_test, y_train, y_test = sentences[train_index], sentences[test_index], labels[train_index], labels[
+            test_index]
+        vocab = set()
+        for x in x_train:
+            for word in x:
+                vocab.add(word)
 
-    # pre_sentence = '① "+"号修饰，表示属性或者方法的访问权限是public。'
-    # print(re.match(r'([^\u4e00-\u9fa5]+".*?"[^\u4e00-\u9fa5]+)+', pre_sentence))
+        # 深度学习分类
+        vocab_list = list()
+        vocab_list.append("<paddle>")
+        vocab_list.append("<unk>")
+        vocab_list += list(sorted(vocab))
+        # f = open("../src/text/vocab_list.txt", 'w')
+        # for vocab in vocab_list:
+        #     f.write(vocab)
+        #     f.write("\n")
+        # f.close()
+        token_list = []
+        embedding_len = 100
+        output_dim = 64
+        learning_rate = 0.1
+        batch_size = 330
+        epochs = 1
+        verbose = 2
+        vocab_len = len(vocab_list)
+        print("词典大小:{}".format(vocab_len))
+
+        x_train = SeparateCode.get_sequences(x_train, embedding_len, vocab_list)
+        x_test = SeparateCode.get_sequences(x_test, embedding_len, vocab_list)
+
+        input_token = tf.keras.Input(shape=(embedding_len,))
+        embedding = tf.keras.layers.Embedding(input_dim=vocab_len, output_dim=output_dim)(input_token)
+        embedding = tf.keras.layers.Bidirectional(tf.keras.layers.GRU(output_dim))(embedding)
+        output = tf.keras.layers.Dense(2, activation=tf.nn.softmax)(embedding)
+        model = tf.keras.Model(input_token, output)
+        model.compile(optimizer='adam', loss=tf.keras.losses.sparse_categorical_crossentropy, metrics=['accuracy'])
+
+        print(model.summary())
+        model.fit(x_train, y_train, epochs=epochs, validation_split=0.1, validation_freq=2, verbose=verbose,
+                  batch_size=batch_size)
+        # path = "../src/saved_model/"
+        # filename = "code_separate_model.h5"
+        # model.save(path + filename)
+        # model = tf.keras.models.load_model(path + filename)
+        y_predict = list()
+        y_pred = model.predict(x_test)
+        for y in y_pred:
+            if y[0] > y[1]:
+                y_predict.append(0)
+            else:
+                y_predict.append(1)
+        print(classification_report(y_test, y_predict))

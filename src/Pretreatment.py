@@ -69,7 +69,8 @@ class Pretreatment:
             # head
             content = bf.find("h1", class_="title-article")
             if content is None:
-                print("这个url标题有问题：" + txt_url)
+                if verbose:
+                    print("这个url标题有问题：" + txt_url)
                 return None
             head = content.text.replace("\n", "")
             # text
@@ -93,7 +94,8 @@ class Pretreatment:
             if content is None:
                 content = bf.find("a", id="cb_post_title_url")
                 if content is None:
-                    print("这个url标题有问题：" + txt_url)
+                    if verbose:
+                        print("这个url标题有问题：" + txt_url)
                     return None
             head = content.text.replace("\n", "")
             # text
@@ -119,7 +121,8 @@ class Pretreatment:
                 if content is None:
                     content = bf.find("h1", class_="article-title")
                     if content is None:
-                        print("这个url标题有问题：" + txt_url)
+                        if verbose:
+                            print("这个url标题有问题：" + txt_url)
                         return None
             head = content.text.replace("\n", "")
             # text
@@ -154,7 +157,8 @@ class Pretreatment:
             # head
             content = bf.find("h1", class_="_1RuRku")
             if content is None:
-                print("这个url标题有问题：" + txt_url)
+                if verbose:
+                    print("这个url标题有问题：" + txt_url)
                 return None
             head = content.text.replace("\n", "")
             # text
@@ -209,7 +213,8 @@ class Pretreatment:
                 total_num = len(clean_text_for_EDU)
                 j = 1
                 for text in clean_text_for_EDU:
-                    print("第{}小篇(共{}小篇)".format(j, total_num))
+                    if verbose:
+                        print("第{}小篇(共{}小篇)".format(j, total_num))
                     j += 1
                     local_sentences = demo.get_EDUs(text)
                     sentences.extend(local_sentences)
@@ -250,7 +255,7 @@ class Pretreatment:
         find = False
         while True:
             rs = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
-            time.sleep(random.randrange(5, 30, 1))
+            time.sleep(random.randrange(30, 60, 1))
             if not rs:
                 time.sleep(random.randrange(100, 200, 1))
             if verbose:
@@ -359,7 +364,7 @@ class Pretreatment:
         pn = 1
         while True:
             rs = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
-            time.sleep(random.randrange(5, 30, 1))
+            time.sleep(random.randrange(30, 60, 1))
             if not rs:
                 time.sleep(random.randrange(100, 200, 1))
             if verbose:
@@ -508,7 +513,7 @@ class Pretreatment:
                 return related_paragraphs, related_sentences, find, invalid
             article_urls = list()
             html = Pretreatment.get_raw_html(baidu_url)
-            time.sleep(random.randrange(5, 30, 1))
+            time.sleep(random.randrange(30, 60, 1))
             pre_baidu_url = baidu_url
             baidu_url = Pretreatment.get_next_baidu_url(html)
             if verbose:
