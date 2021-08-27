@@ -120,6 +120,8 @@ class SimilarityFromBERT:
         similarity = dict()
         if not result:
             result = Pretreatment.split_txt(url, verbose=verbose)
+        if not result:
+            return None
         head = result['head']
         text = result['text']
         paragraphs = result['paragraphs']

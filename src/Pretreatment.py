@@ -2,17 +2,14 @@ import json
 import random
 import time
 from pprint import pprint
-
 import bs4
 import jieba
-import urllib3
 from bs4 import BeautifulSoup
 import requests
 import re
-from datetime import date
 from baiduspider import BaiduSpider
-from tqdm import tqdm
 
+from src.Crawl import Crawl
 from src.BERT import demo
 from src.SeparateCode import SeparateCode
 
@@ -512,16 +509,16 @@ class Pretreatment:
             if len(related_paragraphs) >= paragraph_number and len(related_sentences) >= sentence_number:
                 return related_paragraphs, related_sentences, find, invalid
             article_urls = list()
-            html = Pretreatment.get_raw_html(baidu_url)
-            time.sleep(random.randrange(30, 60, 1))
+            html = Crawl.get_raw_html(baidu_url, verbose=verbose)
+            # time.sleep(random.randrange(30, 60, 1))
             pre_baidu_url = baidu_url
             baidu_url = Pretreatment.get_next_baidu_url(html)
             if verbose:
                 print("第{}页".format(pn + 1))
-            pn += 1
             if baidu_url == "":
                 baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=" + str(
                     pn * 50) + "&rn=50" + "&oq=" + original_sentence + "&ie=utf-8"
+            pn += 1
             if pn > page_limit:
                 break
             bf = BeautifulSoup(html, "html.parser")

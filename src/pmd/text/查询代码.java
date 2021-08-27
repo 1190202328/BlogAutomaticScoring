@@ -1,2 +1,2 @@
-git add filename 
-git add filename-side1c &&
+ } else if (initialCapacity == 0) {
+ if (size == 0) {

@@ -1,5 +1,7 @@
 import os
+import random
 import threading
+import time
 from pprint import pprint
 import csv
 import json
@@ -162,7 +164,7 @@ class InfoReadAndWrite:
         return np.array(similarities).astype(np.float)
 
     @staticmethod
-    def get_similarities_and_write(url, num, verbose=False, pre_verbose=False):
+    def get_similarities_and_write(url, num, verbose=False, pre_verbose=True):
         """
         获取similarit并且将其格式化地写入文件，文件名称为similarities_num.csv
         :param url: url地址
@@ -190,6 +192,7 @@ class InfoReadAndWrite:
             thread = threading.Thread(target=InfoReadAndWrite.get_similarities_and_write, args=(urls[i], i))
             threads.append(thread)
         for thread in threads:
+            time.sleep(random.randrange(5, 10, 1))
             thread.start()
 
     @staticmethod
@@ -223,6 +226,7 @@ class InfoReadAndWrite:
             thread = threading.Thread(target=InfoReadAndWrite.get_similarities_and_write, args=(urls[number], number))
             threads.append(thread)
         for thread in threads:
+            time.sleep(random.randrange(5, 10, 1))
             thread.start()
 
 
@@ -242,11 +246,10 @@ if __name__ == '__main__':
     #         i += 1
 
     print(InfoReadAndWrite.get_similarities().shape)
-    # InfoReadAndWrite.n_threads_run(urls, 148, 171)
-    # InfoReadAndWrite.n_threads_run(urls, 171, 191)
+    InfoReadAndWrite.n_threads_run(urls, 170, 190)
 
-    InfoReadAndWrite.n_threads_run_interval(urls, [84, 119, 120, 135, 137, 139, 141, 142, 144])
-    # InfoReadAndWrite.n_threads_run_interval(urls, [118])  # 长篇
+    InfoReadAndWrite.n_threads_run_interval(urls, [153, 155, 156, 165])
+    # InfoReadAndWrite.n_threads_run_interval(urls, [118, 120, 167, 168])  # 长篇
 
     # InfoReadAndWrite.get_similarities_and_write(urls[49], 49, verbose=True, pre_verbose=True)
 
