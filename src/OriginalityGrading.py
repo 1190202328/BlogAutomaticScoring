@@ -34,8 +34,8 @@ class OriginalityGrading:
                 if i > num:
                     break
                 i += 1
-                line = re.sub("\\t+", "\\t", line)
-                label = eval(line.split("\t")[2][:-1])
+                line = re.sub("[\\t ]+", "\t", line)
+                label = int(line.split("\t")[2].replace("\n", ""))
                 if label < 3:
                     labels.append(0)
                 else:
@@ -77,19 +77,19 @@ def train_6d():
 
 def train_2d():
     embedding_len = 1320
-    learning_rate = 1e-1
-    batch_size = 330
-    epochs = 10
+    learning_rate = 1e-3
+    batch_size = 10
+    epochs = 30
     verbose = 2
     opt = tf.optimizers.Adam(learning_rate)
     input_ = tf.keras.Input(shape=(embedding_len,))
-    hindden = tf.keras.layers.Dense(256, activation='relu')(input_)
-    hindden = tf.keras.layers.Dense(128, activation='relu')(hindden)
+    hindden = tf.keras.layers.Dense(64, activation='relu')(input_)
+    # hindden = tf.keras.layers.Dense(128, activation='relu')(hindden)
     output = tf.keras.layers.Dense(2, activation='softmax')(hindden)
     model = tf.keras.Model(input_, output)
     model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
     print(model.summary())
-    labels = OriginalityGrading.get_labels_2d(84)
+    labels = OriginalityGrading.get_labels_2d(118)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities()
     k_fold = KFold(n_splits=5, random_state=40, shuffle=True)

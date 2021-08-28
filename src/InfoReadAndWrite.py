@@ -144,7 +144,7 @@ class InfoReadAndWrite:
         for code in codes:
             results += code
         if os.path.exists(file_path):
-            print(file_path + ">>>已存在")
+            print("\n" + file_path + ">>>已存在\n", end="")
         else:
             with open(file_path, mode='w') as f:
                 writer = csv.writer(f)
@@ -174,26 +174,9 @@ class InfoReadAndWrite:
         # print("url>>>" + url)
         similarity = SimilarityFromBERT.get_5d_similarities(url, EDU=False, verbose=verbose, pre_verbose=pre_verbose)
         if not similarity:
-            print("到此url停止>>>" + url)
+            print("\n到此url停止>>>{}\n".format(url), end="")
             return 0
         InfoReadAndWrite.write_similarity_to_file(similarity, '../src/text/similarities_{}.csv'.format(num))
-
-    @staticmethod
-    def n_threads_run(urls, start, end):
-        """
-        开启n个线程，一次性跑end-start篇文章(跑第urls[start],urls[start+1),...,urls[end-1]
-        :param urls: urls列表
-        :param start: 开始标号
-        :param end: 结束标号
-        :return: 无
-        """
-        threads = list()
-        for i in range(start, end):
-            thread = threading.Thread(target=InfoReadAndWrite.get_similarities_and_write, args=(urls[i], i))
-            threads.append(thread)
-        for thread in threads:
-            time.sleep(random.randrange(5, 10, 1))
-            thread.start()
 
     @staticmethod
     def merge_to_main_csv(start, end):
@@ -214,20 +197,23 @@ class InfoReadAndWrite:
             writer.writerows(similarities)
 
     @staticmethod
-    def n_threads_run_interval(urls, numbers):
+    def n_threads_run(urls, number_list, num_worker=20):
         """
-        开启n个线程，一次性跑len(numbers)篇文章(跑第urls[numbers[0]],urls[numbers[1]),...,urls[numbers[n-1]]
-        :param urls: urls列表
-        :param numbers: 序号列表
+        保持总有num_worker个线程在运行
+        :param urls: url列表
+        :param number_list: 序号列表
+        :param num_worker: 线程数
         :return: 无
         """
-        threads = list()
-        for number in numbers:
-            thread = threading.Thread(target=InfoReadAndWrite.get_similarities_and_write, args=(urls[number], number))
-            threads.append(thread)
-        for thread in threads:
-            time.sleep(random.randrange(5, 10, 1))
-            thread.start()
+        while True:
+            if len(threading.enumerate()) < num_worker + 1:
+                if not number_list:
+                    break
+                i = min(number_list)
+                number_list.remove(i)
+                thread = threading.Thread(target=InfoReadAndWrite.get_similarities_and_write, args=(urls[i], i))
+                thread.start()
+            time.sleep(60)
 
 
 if __name__ == '__main__':
@@ -246,14 +232,14 @@ if __name__ == '__main__':
     #         i += 1
 
     print(InfoReadAndWrite.get_similarities().shape)
-    InfoReadAndWrite.n_threads_run(urls, 170, 190)
+    number_list = [118, 120, 153, 155, 156, 170, 171, 173, 177, 181, 182, 184] + list(range(200, 300))
+    InfoReadAndWrite.n_threads_run(urls, number_list)
 
-    InfoReadAndWrite.n_threads_run_interval(urls, [153, 155, 156, 165])
-    # InfoReadAndWrite.n_threads_run_interval(urls, [118, 120, 167, 168])  # 长篇
+    # InfoReadAndWrite.n_threads_run(urls, start=210, end=220, numbers=[184, 196, 197, 198])
 
     # InfoReadAndWrite.get_similarities_and_write(urls[49], 49, verbose=True, pre_verbose=True)
 
-    # InfoReadAndWrite.merge_to_main_csv(84, 84)
+    # InfoReadAndWrite.merge_to_main_csv(118, 118)
     # print(InfoReadAndWrite.get_similarities().shape)
 
     # num = 49

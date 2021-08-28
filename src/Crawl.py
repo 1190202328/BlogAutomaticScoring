@@ -88,24 +88,25 @@ class Crawl:
             'Connection': 'keep-alive',
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
         }
-        retry_count = 4
+        retry_count = 5
         proxy = Crawl.get_proxy().get("proxy")
-        while not Crawl.is_valid(proxy, verbose=verbose) and proxy is not None:
+        while proxy and not Crawl.is_valid(proxy, verbose=verbose):
             if verbose:
                 print("ip地址被删除>>>", proxy)
             Crawl.delete_proxy(proxy)
             proxy = Crawl.get_proxy().get("proxy")
         if verbose:
             print("获得的ip地址>>>", proxy)
-        time.sleep(random.randrange(10, 20, 1))
+        time.sleep(random.randrange(20, 30, 1))
         while retry_count > 0:
             try:
                 if verbose:
-                    print("第{}次尝试".format(5 - retry_count))
-                if retry_count == 1:
+                    print("第{}次尝试".format(6 - retry_count))
+                if retry_count == 1 or not proxy:
                     r = requests.get(url,
                                      headers=headers,
                                      timeout=5)
+                    time.sleep(random.randrange(10, 30, 1))
                 else:
                     r = requests.get(url,
                                      headers=headers,
@@ -119,12 +120,12 @@ class Crawl:
                 if verbose:
                     print("失败")
                 retry_count -= 1
-                while not Crawl.is_valid(proxy, verbose=verbose) and proxy is not None:
+                while proxy and not Crawl.is_valid(proxy, verbose=verbose):
                     if verbose:
                         print("ip地址被删除>>>", proxy)
                     Crawl.delete_proxy(proxy)
                     proxy = Crawl.get_proxy().get("proxy")
-                time.sleep(random.randrange(10, 20, 1))
+                time.sleep(random.randrange(20, 30, 1))
                 continue
         if verbose:
             print("无法访问")

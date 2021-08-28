@@ -595,7 +595,7 @@ class Pretreatment:
             if verbose:
                 print("url共有{}个".format(len(article_urls)))
             if len(article_urls) == 0:
-                print("此url第{}次暂时无法访问>>>".format(invalid+1), pre_baidu_url)
+                print("\n此url第{}次暂时无法访问>>>{}\n".format(invalid+1, pre_baidu_url), end="")
                 if invalid >= 1:
                     time.sleep(random.randrange(200, 300, 1))
                 time.sleep(random.randrange(100, 200, 1))
