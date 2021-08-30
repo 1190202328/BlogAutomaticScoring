@@ -80,10 +80,11 @@ class SimilarityFromBERT:
         if len(sentences) <= 1:
             return related_contents
         similarities = cosine_similarity(bc.encode(sentences))[:1][0][1:]
-        # for i in range(len(similarities)):
-        #     print(similarities[i], end="")
-        #     print(">>>>>>>>>", end="")
-        #     print(origin_sentences[i + 1])
+        # if verbose:
+        #     for i in range(len(similarities)):
+        #         print(similarities[i], end="")
+        #         print(">>>>>>>>>", end="")
+        #         print(origin_sentences[i + 1])
         count = 1
         for i in range(len(similarities)):
             if similarities[i] >= limit:
@@ -133,7 +134,7 @@ class SimilarityFromBERT:
         to_search_sentences = []
         if pre_verbose:
             notice = tqdm(total=len(paragraphs), bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.BLUE, Fore.RESET))
-            notice.set_description(">>> " + url + " >>>Pre>>>")
+            notice.set_description(url + " >>>Pre")
         for paragraph in paragraphs:
             if EDU:
                 sentences = demo.get_EDUs(paragraph)
@@ -165,7 +166,7 @@ class SimilarityFromBERT:
                     total_count += 1
         if not verbose:
             notice = tqdm(total=total_count, bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.GREEN, Fore.RESET))
-            notice.set_description(">>> " + url + " >>>")
+            notice.set_description(url + " >>>")
         # 标题相似度
         related_heads, _ = Pretreatment.get_related_head(head, head_number, url=url, verbose=verbose)
         head_similarity = SimilarityFromBERT.get_similarity([head] + related_heads)[:1][0][1:]
@@ -198,7 +199,7 @@ class SimilarityFromBERT:
                 related_paragraphs, related_sentences, _, invalid = Pretreatment.get_related_paragraphs_and_sentences \
                     (sentence, paragraph_number=paragraph_number, sentence_number=sentence_number, url=url,
                      verbose=verbose)
-                if invalid == 2:
+                if invalid >= 2:
                     invalid_count += 1
                 else:
                     invalid_count = 0
@@ -330,7 +331,8 @@ if __name__ == '__main__':
     # url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
 
     # url = "https://blog.csdn.net/zhuzyibooooo/article/details/118527726?spm=1001.2014.3001.5501"
-    url = "https://blog.csdn.net/Louis210/article/details/119666026?spm=1001.2014.3001.5501"
+    # url = "https://blog.csdn.net/Louis210/article/details/119666026?spm=1001.2014.3001.5501"
+    url = "https://blog.csdn.net/weixin_46219578/article/details/117462868"
     head_number = 10
     text_number = 10
     paragraph_number = 10
@@ -340,7 +342,8 @@ if __name__ == '__main__':
                                                     sentence_number,
                                                     code_number,
                                                     EDU=False,
-                                                    verbose=False
+                                                    verbose=True,
+                                                    pre_verbose=False
                                                     )
     print("-----------标题相似度---------")
     pprint(result['head'])
@@ -352,26 +355,3 @@ if __name__ == '__main__':
     pprint(result['sentence'])
     print("-----------code相似度---------")
     pprint(result['code'])
-
-    # url = "https://blog.csdn.net/Louis210/article/details/119649950"
-    # result1 = SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number, sentence_number,
-    #                                                  code_number,
-    #                                                  EDU=True,
-    #                                                  )
-    # print("-----------标题相似度---------")
-    # pprint(result1['head'])
-    # print("-----------全文相似度---------")
-    # pprint(result1['text'])
-    # print("-----------段落相似度---------")
-    # pprint(result1['paragraph'])
-    # print("-----------句子相似度---------")
-    # pprint(result1['sentence'])
-    # print("-----------code相似度---------")
-    # pprint(result1['code'])
-
-    # is_contribute = 0.1
-    # for j in range(9):
-    #     print(">>>>>>>>>>is_contribute={}".format(is_contribute + j * 0.1))
-    #     SimilarityFromBERT.get_score(result, head_number, text_number, paragraph_number, sentence_number, code_number,
-    #                                  is_contribute=is_contribute + j * 0.1)
-    # SimilarityFromBERT.get_score(result1, head_number, text_number, paragraph_number, sentence_number, code_number)

@@ -166,7 +166,7 @@ class InfoReadAndWrite:
     @staticmethod
     def get_similarities_and_write(url, num, verbose=False, pre_verbose=True):
         """
-        获取similarit并且将其格式化地写入文件，文件名称为similarities_num.csv
+        获取similarity并且将其格式化地写入文件，文件名称为similarities_num.csv
         :param url: url地址
         :param num: 第多少个url
         :return: 无
@@ -220,31 +220,10 @@ if __name__ == '__main__':
     path = "../src/text/"
     filename = "urls.txt"
     urls = InfoReadAndWrite.get_urls(path, filename)
-    # InfoReadAndWrite.write_result(urls)
-
-    # InfoReadAndWrite.show_results_data()
-
-    # i = 0
-    # pprint(urls)
-    # for url in urls:
-    #     with open('../src/text/urls.txt', 'a') as f:
-    #         f.write(i.__str__() + "\t" + url + "\n")
-    #         i += 1
-
     print(InfoReadAndWrite.get_similarities().shape)
-    number_list = [118, 120, 153, 155, 156, 170, 171, 173, 177, 181, 182, 184] + list(range(200, 300))
-    InfoReadAndWrite.n_threads_run(urls, number_list)
 
-    # InfoReadAndWrite.n_threads_run(urls, start=210, end=220, numbers=[184, 196, 197, 198])
+    number_list = [242, 243, 248, 259, 262, 292] + list(range(284, 291)) + list(range(294, 351))
+    InfoReadAndWrite.n_threads_run(urls, number_list, num_worker=20)
 
-    # InfoReadAndWrite.get_similarities_and_write(urls[49], 49, verbose=True, pre_verbose=True)
-
-    # InfoReadAndWrite.merge_to_main_csv(118, 118)
+    # InfoReadAndWrite.merge_to_main_csv(240, 241)
     # print(InfoReadAndWrite.get_similarities().shape)
-
-    # num = 49
-    # similarity = SimilarityFromBERT.get_5d_similarities(urls[num], EDU=False, verbose=True, pre_verbose=True)
-    # if not similarity:
-    #     print("到此url停止>>>")
-    # else:
-    #     InfoReadAndWrite.write_similarity_to_file(similarity, '../src/text/similarities_{}.csv'.format(num))

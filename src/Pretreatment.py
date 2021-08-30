@@ -506,6 +506,9 @@ class Pretreatment:
         related_paragraphs = list()
         baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&rn=50" + "&oq=" + original_sentence + "&ie=utf-8"
         while True:
+            pn += 1
+            if pn > page_limit:
+                break
             if len(related_paragraphs) >= paragraph_number and len(related_sentences) >= sentence_number:
                 return related_paragraphs, related_sentences, find, invalid
             article_urls = list()
@@ -514,13 +517,10 @@ class Pretreatment:
             pre_baidu_url = baidu_url
             baidu_url = Pretreatment.get_next_baidu_url(html)
             if verbose:
-                print("第{}页".format(pn + 1))
+                print("第{}页".format(pn))
             if baidu_url == "":
                 baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=" + str(
                     pn * 50) + "&rn=50" + "&oq=" + original_sentence + "&ie=utf-8"
-            pn += 1
-            if pn > page_limit:
-                break
             bf = BeautifulSoup(html, "html.parser")
             contents = bf.find_all("div", class_="c-container")
             for content in contents:
@@ -596,9 +596,14 @@ class Pretreatment:
                 print("url共有{}个".format(len(article_urls)))
             if len(article_urls) == 0:
                 print("\n此url第{}次暂时无法访问>>>{}\n".format(invalid+1, pre_baidu_url), end="")
-                if invalid >= 1:
+                baidu_url = pre_baidu_url
+                if invalid == 1:
+                    pn -= 1
+                    time.sleep(random.randrange(100, 200, 1))
+                elif invalid == 2:
                     time.sleep(random.randrange(200, 300, 1))
-                time.sleep(random.randrange(100, 200, 1))
+                else:
+                    time.sleep(random.randrange(100, 200, 1))
                 invalid += 1
         return related_paragraphs, related_sentences, find, invalid
 
@@ -694,7 +699,9 @@ if __name__ == '__main__':
     # url = "https://blog.csdn.net/weixin_46219578/article/details/117462868"
     # url = "https://blog.csdn.net/m0_51250400/article/details/118405807"
     # url = "https://blog.csdn.net/buckbarnes/article/details/118547420"
-    url = "https://bit-ranger.github.io/blog/java/effective-java/"
+    # url = "https://bit-ranger.github.io/blog/java/effective-java/"
+
+    url = "https://blog.csdn.net/z741481546/article/details/93514166"
     print("---------url>>>" + url)
     similarity = Pretreatment.split_txt(url)
     print("---------head---------")

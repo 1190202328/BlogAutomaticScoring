@@ -1,6 +1,9 @@
 import json
 import re
+from pprint import pprint
+
 import numpy as np
+from openpyxl import load_workbook
 from sklearn.metrics import classification_report
 from sklearn.model_selection import KFold
 import tensorflow as tf
@@ -10,7 +13,7 @@ from src.Pretreatment import Pretreatment
 
 class SeparateRelatedArticle:
     """
-    将文章列表分离出软讲座主题相关文章的工具类
+    将文章列表分离出软件构造主题相关文章的工具类
     """
 
     @staticmethod
@@ -116,7 +119,10 @@ class SeparateRelatedArticle:
         course_related_urls = list()
         texts = list()
         embedding_len = 200
+        count = 1
         for url in urls:
+            print("[{}]>>>{}".format(count, url))
+            count += 1
             result = Pretreatment.split_txt(url, False, verbose=False)
             if result and result.get('text'):
                 valid_urls.append(url)
@@ -131,11 +137,10 @@ class SeparateRelatedArticle:
         return course_related_urls
 
 
-if __name__ == '__main__':
+def machine_learning():
     texts, labels = SeparateRelatedArticle.get_texts_and_labels()
     labels = np.array(labels)
     texts = np.array(Pretreatment.clean_with_low_frequency(texts), dtype=object)
-
     k_fold = KFold(n_splits=10, random_state=40, shuffle=True)
     for train_index, test_index in k_fold.split(texts, labels):
         x_train, x_test, y_train, y_test = texts[train_index], texts[test_index], labels[train_index], labels[
@@ -189,7 +194,61 @@ if __name__ == '__main__':
             else:
                 y_predict.append(1)
         print(classification_report(y_test, y_predict))
-    # main_url = Pretreatment.get_main_url("https://blog.csdn.net/Louis210/article/details/119666026")
-    # urls = Pretreatment.get_urls(main_url, verbose=False)
-    # print(SeparateRelatedArticle.get_course_related_urls(urls))
 
+
+def get_total_urls():
+    workbook = load_workbook("../src/text/blog.xlsx")
+    sheets = workbook.get_sheet_names()
+    urls = list()
+    for sheet in sheets:
+        booksheet = workbook.get_sheet_by_name(sheet)
+        rows = booksheet.rows
+        i = 2
+        for _ in rows:
+            url = booksheet.cell(row=i, column=1).value
+            i += 1
+            if url is None or url == "":
+                continue
+            url = re.sub("\\s+", "", str(url))
+            if not re.match("(https://.*)|(http://.*)", url):
+                url = "https://" + url
+            if re.match('https://=HYPERLINK.*', url):
+                url = url.split('"')[1]
+            urls.append(url)
+    return urls
+
+
+def refresh_index():
+    lines = list()
+    with open('../src/text/按原创性分类.txt', mode='r') as f:
+        i = 0
+        for line in f.readlines():
+            lines.append(str(i) + line[line.find('\t'):])
+            i += 1
+    print(len(lines))
+    f1 = open('../src/text/按原创性分类的更新.txt', mode='w')
+    for line in lines:
+        f1.write(line)
+    f1.close()
+
+
+if __name__ == '__main__':
+    # machine_learning()
+
+    # total_urls = []
+    # urls = get_total_urls()
+    # for url in urls:
+    #     main_url = Pretreatment.get_main_url(url)
+    #     if main_url is not None and main_url != "":
+    #         # print(main_url)
+    #         local_urls = Pretreatment.get_urls(main_url, verbose=False)
+    #         total_urls += local_urls
+    # print(len(total_urls))
+    # course_related_urls = SeparateRelatedArticle.get_course_related_urls(total_urls)
+    # with open('../src/text/按原创性分类.txt', "w") as f:
+    #     i = 0
+    #     for url in course_related_urls:
+    #         f.write('{}\t{}\n'.format(i, url))
+    #         i += 1
+
+    refresh_index()

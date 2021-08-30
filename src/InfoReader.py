@@ -28,7 +28,7 @@ class InfoReader:
             id = booksheet.cell(row=i, column=1).value
             name = booksheet.cell(row=i, column=2).value
             url = booksheet.cell(row=i, column=3).value
-            if url is not None and not re.match("https://.*", url):
+            if url is not None and not re.match("(https://.*)|(http://.*)", url):
                 url = "https://"+url
             if id is None:
                 break
