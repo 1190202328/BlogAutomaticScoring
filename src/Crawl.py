@@ -111,7 +111,7 @@ class Crawl:
                 r = requests.get(url,
                                  headers=headers,
                                  timeout=5)
-                time.sleep(random.randrange(10, 30, 1))
+                time.sleep(random.randrange(30, 60, 1))
                 if verbose:
                     print("成功")
                 return r.text

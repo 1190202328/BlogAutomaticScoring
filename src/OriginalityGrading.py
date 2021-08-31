@@ -13,10 +13,10 @@ class OriginalityGrading:
     """
 
     @staticmethod
-    def get_labels(num):
+    def get_labels(filepath, num):
         i = 1
         labels = list()
-        with open("../src/text/urls.txt", "r") as f:
+        with open(filepath, "r") as f:
             for line in f.readlines():
                 if i > num:
                     break
@@ -26,10 +26,10 @@ class OriginalityGrading:
         return labels
 
     @staticmethod
-    def get_labels_2d(num):
+    def get_labels_2d(filepath, num):
         i = 1
         labels = list()
-        with open("../src/text/urls.txt", "r") as f:
+        with open(filepath, "r") as f:
             for line in f.readlines():
                 if i > num:
                     break
@@ -43,10 +43,10 @@ class OriginalityGrading:
         return labels
 
     @staticmethod
-    def get_labels_3d(num):
+    def get_labels_3d(filepath, num):
         i = 1
         labels = list()
-        with open("../src/text/urls.txt", "r") as f:
+        with open(filepath, "r") as f:
             for line in f.readlines():
                 if i > num:
                     break
@@ -62,7 +62,7 @@ class OriginalityGrading:
         return labels
 
 
-def train_6d():
+def train_6d(data_filepath, label_filepath):
     embedding_len = 1320
     learning_rate = 1e-1
     batch_size = 330
@@ -76,10 +76,12 @@ def train_6d():
     model = tf.keras.Model(input_, output)
     model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
     print(model.summary())
-    labels = OriginalityGrading.get_labels(84)
+    labels = OriginalityGrading.get_labels(label_filepath, 351)
     labels = np.array(labels, dtype=int)
-    vectors = InfoReadAndWrite.get_similarities()
+    vectors = InfoReadAndWrite.get_similarities(data_filepath)
     k_fold = KFold(n_splits=10, random_state=40, shuffle=True)
+    total_y_predict = []
+    total_y_test = []
     for train_index, test_index in k_fold.split(vectors, labels):
         x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], labels[
             test_index]
@@ -90,30 +92,39 @@ def train_6d():
         # filepath = "../src/saved_model/originality_grading_model.h5"
         # model.save(filepath)
         # model = tf.keras.models.load_model(filepath)
-        y_predict = tf.argmax(model.predict(x_test), axis=-1)
+        y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
+        total_y_predict.extend(y_predict)
+        total_y_test.extend(y_test)
         print(classification_report(y_test, y_predict))
+    print("总结果")
+    print(classification_report(total_y_test, total_y_predict))
 
 
-def train_2d():
+def train_2d(data_filepath, label_filepath):
     embedding_len = 1320
-    learning_rate = 1e-4
-    batch_size = 30
-    epochs = 100
+    learning_rate = 1e-2
+    batch_size = 300
+    epochs = 50
     verbose = 2
     opt = tf.optimizers.Adam(learning_rate)
-    input_ = tf.keras.Input(shape=(embedding_len,))
-    hindden = tf.keras.layers.Dense(128, activation='relu')(input_)
-    hindden = tf.keras.layers.BatchNormalization()(hindden)
-    hindden = tf.keras.layers.Dense(32, activation='relu')(hindden)
-    hindden = tf.keras.layers.BatchNormalization()(hindden)
-    output = tf.keras.layers.Dense(2, activation='softmax')(hindden)
+    # input_ = tf.keras.Input(shape=(embedding_len,))
+    input_ = tf.keras.Input(shape=(embedding_len, 1,))
+    hidden = tf.keras.layers.Bidirectional(tf.keras.layers.GRU(128))(input_)
+    hidden = tf.keras.layers.BatchNormalization()(hidden)
+    # hidden = tf.keras.layers.Dense(128, activation='relu')(input_)
+    # hidden = tf.keras.layers.BatchNormalization()(hidden)
+    hidden = tf.keras.layers.Dense(32, activation='relu')(hidden)
+    hidden = tf.keras.layers.BatchNormalization()(hidden)
+    output = tf.keras.layers.Dense(2, activation='softmax')(hidden)
     model = tf.keras.Model(input_, output)
     model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
     print(model.summary())
-    labels = OriginalityGrading.get_labels_2d(240)
+    labels = OriginalityGrading.get_labels_2d(label_filepath, 351)
     labels = np.array(labels, dtype=int)
-    vectors = InfoReadAndWrite.get_similarities()
-    k_fold = KFold(n_splits=5, random_state=30, shuffle=True)
+    vectors = InfoReadAndWrite.get_similarities(data_filepath)
+    k_fold = KFold(n_splits=10, random_state=30, shuffle=True)
+    total_y_predict = []
+    total_y_test = []
     for train_index, test_index in k_fold.split(vectors, labels):
         x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], labels[
             test_index]
@@ -124,11 +135,15 @@ def train_2d():
         # filepath = "../src/saved_model/originality_grading_model.h5"
         # model.save(filepath)
         # model = tf.keras.models.load_model(filepath)
-        y_predict = tf.argmax(model.predict(x_test), axis=-1)
+        y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
+        total_y_predict.extend(y_predict)
+        total_y_test.extend(y_test)
         print(classification_report(y_test, y_predict))
+    print("总结果")
+    print(classification_report(total_y_test, total_y_predict))
 
 
-def train_3d():
+def train_3d(data_filepath, label_filepath):
     embedding_len = 1320
     learning_rate = 1e-4
     batch_size = 30
@@ -144,10 +159,12 @@ def train_3d():
     model = tf.keras.Model(input_, output)
     model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
     print(model.summary())
-    labels = OriginalityGrading.get_labels_3d(240)
+    labels = OriginalityGrading.get_labels_3d(label_filepath, 351)
     labels = np.array(labels, dtype=int)
-    vectors = InfoReadAndWrite.get_similarities()
+    vectors = InfoReadAndWrite.get_similarities(data_filepath)
     k_fold = KFold(n_splits=10, random_state=30, shuffle=True)
+    total_y_predict = []
+    total_y_test = []
     for train_index, test_index in k_fold.split(vectors, labels):
         x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], labels[
             test_index]
@@ -158,11 +175,15 @@ def train_3d():
         # filepath = "../src/saved_model/originality_grading_model.h5"
         # model.save(filepath)
         # model = tf.keras.models.load_model(filepath)
-        y_predict = tf.argmax(model.predict(x_test), axis=-1)
+        y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
+        total_y_predict.extend(y_predict)
+        total_y_test.extend(y_test)
         print(classification_report(y_test, y_predict))
+    print("总结果")
+    print(classification_report(total_y_test, total_y_predict))
 
 
 if __name__ == '__main__':
-    # train_6d()
-    # train_2d()
-    train_3d()
+    # train_6d("../src/text/similarities.csv", "../src/text/urls.txt")
+    train_2d("../src/text/similarities.csv", "../src/text/urls.txt")
+    # train_3d("../src/text/similarities.csv", "../src/text/urls.txt")

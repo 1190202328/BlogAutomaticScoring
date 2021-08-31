@@ -23,16 +23,15 @@ class InfoReadAndWrite:
     """
 
     @staticmethod
-    def get_urls(path, filename):
+    def get_urls(filepath):
         """
         从磁盘中读如urls
-        :param path: 路径
-        :param filename: 文件名
+        :param filepath: 路径
         :return: urls列表
         """
         urls = list()
         # tags = list()
-        f = open(path + filename, "r")
+        f = open(filepath, "r")
         for line in f.readlines():
             r = line.split("\t")
             urls.append(r[1])
@@ -116,7 +115,7 @@ class InfoReadAndWrite:
         plt.show()
 
     @staticmethod
-    def write_similarity_to_file(similarity, file_path, paragraph_len=50, sentence_len=70, code_len=10):
+    def write_similarity_to_file(similarity, file_path, paragraph_len=80, sentence_len=80, code_len=60):
         """
         将similarity格式化地写入到文件中
         :param similarity: 相似度列表
@@ -151,13 +150,13 @@ class InfoReadAndWrite:
                 writer.writerows([results])
 
     @staticmethod
-    def get_similarities():
+    def get_similarities(filepath):
         """
         获取similarities
         :return: similarities
         """
         similarities = list()
-        with open('../src/text/similarities.csv', 'r') as f:
+        with open(filepath, 'r') as f:
             reader = csv.reader(f)
             for row in reader:
                 similarities.append(row)
@@ -171,12 +170,11 @@ class InfoReadAndWrite:
         :param num: 第多少个url
         :return: 无
         """
-        # print("url>>>" + url)
-        similarity = SimilarityFromBERT.get_5d_similarities(url, EDU=False, verbose=verbose, pre_verbose=pre_verbose, save=num)
+        similarity = SimilarityFromBERT.get_5d_similarities(url, EDU=False, verbose=verbose, pre_verbose=pre_verbose)
         if not similarity:
             print("\n到此url停止>>>{}\n".format(url), end="")
             return 0
-        InfoReadAndWrite.write_similarity_to_file(similarity, '../src/text/similarities_{}.csv'.format(num))
+        InfoReadAndWrite.write_similarity_to_file(similarity, '../src/text/similarities_bigger{}.csv'.format(num))
 
     @staticmethod
     def merge_to_main_csv(start, end):
@@ -188,11 +186,11 @@ class InfoReadAndWrite:
         """
         similarities = list()
         for i in range(start, end):
-            with open('../src/text/similarities_{}.csv'.format(i), 'r') as f:
+            with open('../src/text/similarities_bigger{}.csv'.format(i), 'r') as f:
                 reader = csv.reader(f)
                 for row in reader:
                     similarities.append(row)
-        with open('../src/text/similarities.csv', 'a') as f:
+        with open('../src/text/similarities_bigger.csv', 'a') as f:
             writer = csv.writer(f)
             writer.writerows(similarities)
 
@@ -217,14 +215,13 @@ class InfoReadAndWrite:
 
 
 if __name__ == '__main__':
-    path = "../src/text/"
-    filename = "urls.txt"
-    urls = InfoReadAndWrite.get_urls(path, filename)
-    print(InfoReadAndWrite.get_similarities().shape)
+    filepath = "../src/text/按原创性分类.txt"
+    data_filepath = "../src/text/similarities_bigger.csv"
+    urls = InfoReadAndWrite.get_urls(filepath)
+    # print(InfoReadAndWrite.get_similarities(data_filepath).shape)
 
-    number_list = [243, 248, 259, 262, 292, 284, 285, 289, 292, 294, 297, 298, 299, 311, 313, 314] + list(range(318, 325)) +\
-    [326, 328, 329, 330] + list(range(334, 351))
-    InfoReadAndWrite.n_threads_run(urls, number_list, num_worker=20)
+    number_list = [6, 20, 24, 32, ] + list(range(53, 66)) + list(range(67, 72)) + list(range(73, 186))
+    InfoReadAndWrite.n_threads_run(urls, number_list, num_worker=30)
 
-    # InfoReadAndWrite.merge_to_main_csv(240, 241)
-    # print(InfoReadAndWrite.get_similarities().shape)
+    # InfoReadAndWrite.merge_to_main_csv(0, 20)
+    # print(InfoReadAndWrite.get_similarities(data_filepath).shape)

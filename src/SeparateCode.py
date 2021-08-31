@@ -52,13 +52,18 @@ class SeparateCode:
         if not vocab_list:
             vocab_list = list()
             f = open("../src/text/vocab_list.txt", 'r')
+            # f = open("../src/text/vocab_list_1.txt", 'r')
             for line in f.readlines():
                 vocab_list.append(line[:-1])
             f.close()
         token_list = list()
         for sentence in sentences:
             token = list()
+            i = 0
             for word in sentence:
+                if i >= embedding_len:
+                    break
+                i += 1
                 if word not in vocab_list:
                     token.append(1)
                 else:
@@ -77,6 +82,7 @@ class SeparateCode:
         """
         codes = list()
         embedding_len = 100
+        # embedding_len = 50
         sentences = text.split("\n")
         code_like_sentences_list = list()
         code_like_sentences = list()
@@ -124,6 +130,7 @@ class SeparateCode:
         sequences = SeparateCode.get_sequences(code_like_sentences_list, embedding_len)
         path = "../src/saved_model/"
         filename = "code_separate_model.h5"
+        # filename = "code_separate_model_1.h5"
         model = tf.keras.models.load_model(path + filename)
         rs = model.predict(sequences)
         for i in range(len(rs)):
@@ -166,9 +173,13 @@ class SeparateCode:
                 labels.append(0)
         f.close()
         print(len(sentences))
-        f = open("../src/text/ptb.txt", "r")
+        f = open("../src/text/ptb.train.txt", "r")
+        i = 0
         for line in f.readlines():
             if line != "":
+                if i > 14000:
+                    break
+                i += 1
                 line = re.sub("[\\t ]+", " ", line)
                 line = line.replace("\n", "")
                 words = re.split("[ .]", line.lower().strip())
@@ -180,68 +191,66 @@ class SeparateCode:
         return sentences, labels
 
 
-if __name__ == '__main__':
-    # # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
-    # # text = Pretreatment.split_txt(url).get('hole_text')
-    # # text = "public static void main\nI love you"
-    #
-    # f = open("../src/text/江江.txt")
-    # text = f.read()
-    # f.close()
-    # pprint(SeparateCode.get_codes(text))
-    #
-    # # pre_sentence = '① "+"号修饰，表示属性或者方法的访问权限是public。'
-    # # print(re.match(r'([^\u4e00-\u9fa5]+".*?"[^\u4e00-\u9fa5]+)+', pre_sentence))
+def machine_learning():
     sentences, labels = SeparateCode.get_sentences_and_labels()
     labels = np.array(labels)
-    sentences = np.array(sentences)
-
-    k_fold = KFold(n_splits=10, random_state=40, shuffle=True)
+    sentences = np.array(sentences, dtype=object)
+    k_fold = KFold(n_splits=10, random_state=0, shuffle=True)
+    i = 0
     for train_index, test_index in k_fold.split(sentences, labels):
+        i += 1
+        if i != 5:
+            continue
         x_train, x_test, y_train, y_test = sentences[train_index], sentences[test_index], labels[train_index], labels[
             test_index]
         vocab = set()
         for x in x_train:
             for word in x:
                 vocab.add(word)
-
         # 深度学习分类
         vocab_list = list()
         vocab_list.append("<paddle>")
         vocab_list.append("<unk>")
         vocab_list += list(sorted(vocab))
-        # f = open("../src/text/vocab_list.txt", 'w')
-        # for vocab in vocab_list:
-        #     f.write(vocab)
-        #     f.write("\n")
-        # f.close()
-        token_list = []
-        embedding_len = 100
-        output_dim = 64
-        learning_rate = 0.1
-        batch_size = 330
-        epochs = 1
+        f = open("../src/text/vocab_list_1.txt", 'w')
+        for vocab in vocab_list:
+            f.write(vocab)
+            f.write("\n")
+        f.close()
+        # embedding_len = 100
+        # output_dim = 64
+        # learning_rate = 0.1
+        # batch_size = 330
+        # epochs = 1
+        embedding_len = 50
+        output_dim = 32
+        learning_rate = 1e-2
+        batch_size = 320
+        epochs = 2
         verbose = 2
+        opt = tf.optimizers.Adam(learning_rate)
         vocab_len = len(vocab_list)
         print("词典大小:{}".format(vocab_len))
 
-        x_train = SeparateCode.get_sequences(x_train, embedding_len, vocab_list)
-        x_test = SeparateCode.get_sequences(x_test, embedding_len, vocab_list)
-
         input_token = tf.keras.Input(shape=(embedding_len,))
         embedding = tf.keras.layers.Embedding(input_dim=vocab_len, output_dim=output_dim)(input_token)
+        embedding = tf.keras.layers.BatchNormalization()(embedding)
         embedding = tf.keras.layers.Bidirectional(tf.keras.layers.GRU(output_dim))(embedding)
+        embedding = tf.keras.layers.Dense(16, activation=tf.nn.relu)(embedding)
+        embedding = tf.keras.layers.BatchNormalization()(embedding)
         output = tf.keras.layers.Dense(2, activation=tf.nn.softmax)(embedding)
         model = tf.keras.Model(input_token, output)
-        model.compile(optimizer='adam', loss=tf.keras.losses.sparse_categorical_crossentropy, metrics=['accuracy'])
-
+        model.compile(optimizer=opt, loss=tf.keras.losses.sparse_categorical_crossentropy, metrics=['accuracy'])
         print(model.summary())
+
+        x_train = SeparateCode.get_sequences(x_train, embedding_len, vocab_list)
+        x_test = SeparateCode.get_sequences(x_test, embedding_len, vocab_list)
         model.fit(x_train, y_train, epochs=epochs, validation_split=0.1, validation_freq=2, verbose=verbose,
                   batch_size=batch_size)
-        # path = "../src/saved_model/"
-        # filename = "code_separate_model.h5"
-        # model.save(path + filename)
-        # model = tf.keras.models.load_model(path + filename)
+        path = "../src/saved_model/"
+        filename = "code_separate_model_1.h5"
+        model.save(path + filename)
+        model = tf.keras.models.load_model(path + filename)
         y_predict = list()
         y_pred = model.predict(x_test)
         for y in y_pred:
@@ -250,3 +259,7 @@ if __name__ == '__main__':
             else:
                 y_predict.append(1)
         print(classification_report(y_test, y_predict))
+
+
+if __name__ == '__main__':
+    machine_learning()

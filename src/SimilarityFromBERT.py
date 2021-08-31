@@ -117,12 +117,12 @@ class SimilarityFromBERT:
         :param url: url链接
         :return: 字典，head:标题对应相似度。text:全文对应相似度。paragraph:段落对应相似度。sentence:句子对应相似度。code:代码对应相似度
         """
-        paragraph_len = 50
-        sentence_len = 70
-        code_len = 10
+        sentence_len = 80
+        code_len = 60
 
         total_count = 2
         similarity = dict()
+        num = "ukn"
         if not result:
             result = Pretreatment.split_txt(url, verbose=verbose)
         if not result:
@@ -132,6 +132,7 @@ class SimilarityFromBERT:
         paragraphs = result['paragraphs']
         codes = result['codes']
         if save is not None:
+            num = save
             search_result = dict()
             search_result['head'] = []
             search_result['text'] = []
@@ -141,13 +142,14 @@ class SimilarityFromBERT:
         if verbose:
             print("不相关段落如下(小于0.80的)")
         paragraphs = SimilarityFromBERT.get_text_related(paragraphs, text, limit=0.80, verbose=verbose)
-        paragraphs = paragraphs[:paragraph_len]
         to_search_sentences = []
         if pre_verbose:
             notice = tqdm(total=len(paragraphs), bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.BLUE, Fore.RESET))
-            notice.set_description(url + " >>>Pre")
+            notice.set_description("[{}] ".format(num) + url + " >>>Pre")
         i = 0
         for paragraph in paragraphs:
+            if total_count - 2 >= sentence_len:
+                break
             if EDU:
                 sentences = demo.get_EDUs(paragraph)
             else:
@@ -183,7 +185,7 @@ class SimilarityFromBERT:
                     total_count += 1
         if not verbose:
             notice = tqdm(total=total_count, bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.GREEN, Fore.RESET))
-            notice.set_description(url + " >>>")
+            notice.set_description("[{}] ".format(num) + url + " >>>")
         # 标题相似度
         related_heads, _ = Pretreatment.get_related_head(head, head_number, url=url, verbose=verbose)
         if save is not None:
@@ -372,14 +374,14 @@ if __name__ == '__main__':
     paragraph_number = 3
     sentence_number = 3
     code_number = 3
-    result =SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number,
-                                 sentence_number,
-                                 code_number,
-                                 EDU=False,
-                                 verbose=True,
-                                 pre_verbose=False,
-                                 save=0
-                                 )
+    result = SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number,
+                                                    sentence_number,
+                                                    code_number,
+                                                    EDU=False,
+                                                    verbose=True,
+                                                    pre_verbose=False,
+                                                    save=0
+                                                    )
     print("-----------标题相似度---------")
     pprint(result['head'])
     print("-----------全文相似度---------")
@@ -409,4 +411,3 @@ if __name__ == '__main__':
         for code in result['codes']:
             print(code)
             print(result['codes'][code])
-

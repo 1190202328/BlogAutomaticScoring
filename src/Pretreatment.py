@@ -700,8 +700,9 @@ if __name__ == '__main__':
     # url = "https://blog.csdn.net/m0_51250400/article/details/118405807"
     # url = "https://blog.csdn.net/buckbarnes/article/details/118547420"
     # url = "https://bit-ranger.github.io/blog/java/effective-java/"
+    # url = "https://blog.csdn.net/z741481546/article/details/93514166"
 
-    url = "https://blog.csdn.net/z741481546/article/details/93514166"
+    url = "https://blog.csdn.net/cobracanary/article/details/119612536"
     print("---------url>>>" + url)
     similarity = Pretreatment.split_txt(url)
     print("---------head---------")
@@ -721,79 +722,3 @@ if __name__ == '__main__':
         print(code)
     print("---------date---------")
     print(similarity['date'])
-
-    # similarity = Pretreatment.split_txt(url, EDU=True)
-    # print("---------EDU-sentences--------")
-    # pprint(similarity['sentences'])
-
-    # url = "https://blog.csdn.net/Louis210/article/deJava中的List类的contains和indexOf方法的区别tails/117415546"
-    # original_sentence = "Java中的List类的contains和indexOf方法的区别"
-    # # baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=100&rn=50"+"&oq="+original_sentence+"&ie=utf-8"
-    # baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&rn=50" + "&oq=" + original_sentence + "&ie=utf-8"
-    # # print(baidu_url)
-    # # html = Pretreatment.get_raw_html(baidu_url)
-    # # bf = BeautifulSoup(html, "html.parser")
-    # # print(bf.prettify())
-    # f = open("../src/text/html.txt")
-    # html = f.read()
-    # # print(html)
-    # f.close()
-    # # print(Pretreatment.get_next_baidu_url(html))
-    #
-    # bf = BeautifulSoup(html, "html.parser")
-    # contents = bf.find_all("div", class_="c-container")
-    # i = 1
-    # article_urls = list()
-    # red_strings = list()
-    # print("下一页>>>>>>>>>>>" + Pretreatment.get_next_baidu_url(html))
-    # print(len(contents))
-    # for content in contents:
-    #     # print("------------第{}个开始--------------".format(i))
-    #     # print(content)
-    #     # print("------------第{}个结束--------------".format(i))
-    #     red_string = set()
-    #     i += 1
-    #     temp = dict()
-    #     article_url = ""
-    #     flag = False
-    #     for child in content.children:
-    #         if isinstance(child, bs4.element.NavigableString):
-    #             continue
-    #         for c in child.children:
-    #             if c.name == "a" and c.parent.name == "h3":
-    #                 article_url = c.attrs['href']
-    #                 # print(">>>>>>>>>>>>", end="")
-    #                 real_url = Pretreatment.get_real_url(article_url)
-    #                 if real_url != "":
-    #                     flag = True
-    #                     article_urls.append(real_url)
-    #                 # print()
-    #     if flag:
-    #         for child in content.descendants:
-    #             if child.name == "em" and child.string != "":
-    #                 red_string.add(child.string)
-    #         red_strings.append(red_string)
-    #
-    # print(len(article_urls))
-    # print(len(red_strings))
-    # pprint(article_urls)
-    # pprint(red_strings)
-
-    # url = "https://blog.csdn.net/Louis210/article/details/117415546"
-    # original_sentence = "Java中的List类的contains和indexOf方法的区别"
-    # pprint(Pretreatment.get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, sentence_number=10,
-    #                                                          url=url))
-
-    # url = "https://blog.csdn.net/Louis210/article/details/117415546?spm=1001.2014.3001.5501"
-    # # url = "https://www.cnblogs.com/yuyueq/p/15119512.html"x
-    # # url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
-    # # url = "https://www.jianshu.com/p/92373a603d42"
-    # similarity = Pretreatment.split_txt(url)
-    # i = 1
-    # for code in similarity['codes']:
-    #     codes = Pretreatment.clean_code(code)
-    #     print("------第{}个代码段------".format(i))
-    #     i += 1
-    #     for line in codes:
-    #         print("开始搜索：" + line)
-    #         print(Pretreatment.get_related_codes(line, 5))
