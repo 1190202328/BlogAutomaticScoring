@@ -1,3 +1,5 @@
+import json
+import os
 import re
 from pprint import pprint
 from colorama import Fore
@@ -98,9 +100,11 @@ class SimilarityFromBERT:
     @staticmethod
     def get_5d_similarities(url, head_number=10, text_number=10, paragraph_number=10, sentence_number=10,
                             code_number=10,
-                            sentence_lenth_limit=5, EDU=False, result=None, verbose=True, pre_verbose=False):
+                            sentence_lenth_limit=5, EDU=False, result=None, verbose=True, pre_verbose=False, save=None):
         """
         通过url链接获取5个维度的相似度：1。标题 2。全文 3。段落 4。句子 5。代码（都进行了停用词处理）（搜索结果中不包含自己）
+        :param pre_verbose: 选择是否输出预处理阶段杂多的信息:True:复杂输出;False：简单输出
+        :param save: 是否保存中间找到的数据；如果不为None：以该存档save.txt为文件名保存为json格式
         :param verbose: 选择是否输出杂多的信息:True:复杂输出;False：简单输出
         :param result:  是否自己提供result，而不用现成求
         :param EDU: 是否使用EDU来划分句子
@@ -127,6 +131,13 @@ class SimilarityFromBERT:
         text = result['text']
         paragraphs = result['paragraphs']
         codes = result['codes']
+        if save is not None:
+            search_result = dict()
+            search_result['head'] = []
+            search_result['text'] = []
+            search_result['paragraphs'] = dict()
+            search_result['sentences'] = dict()
+            search_result['codes'] = dict()
         if verbose:
             print("不相关段落如下(小于0.80的)")
         paragraphs = SimilarityFromBERT.get_text_related(paragraphs, text, limit=0.80, verbose=verbose)
@@ -135,6 +146,7 @@ class SimilarityFromBERT:
         if pre_verbose:
             notice = tqdm(total=len(paragraphs), bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.BLUE, Fore.RESET))
             notice.set_description(url + " >>>Pre")
+        i = 0
         for paragraph in paragraphs:
             if EDU:
                 sentences = demo.get_EDUs(paragraph)
@@ -142,15 +154,20 @@ class SimilarityFromBERT:
                 sentences = re.split("[,.，。]", paragraph)
             if verbose:
                 print("不相关句子如下(小于0.85的)")
+            if save is not None:
+                search_result['paragraphs'][paragraph] = []
             sentences = SimilarityFromBERT.get_text_related(sentences, text, limit=0.85, verbose=verbose)
             clean_sentences = []
             for sentence in sentences:
-                if sentence != "" and len(sentence) > sentence_lenth_limit and total_count-2 < sentence_len:
+                if sentence != "" and len(sentence) > sentence_lenth_limit and total_count - 2 < sentence_len:
+                    if save is not None:
+                        search_result['sentences'][sentence] = []
                     clean_sentences.append(sentence)
                     total_count += 1
             to_search_sentences.append(clean_sentences)
             if pre_verbose:
                 notice.update(1)
+            i += 1
         if pre_verbose:
             notice.close()
         to_search_codes = []
@@ -169,6 +186,8 @@ class SimilarityFromBERT:
             notice.set_description(url + " >>>")
         # 标题相似度
         related_heads, _ = Pretreatment.get_related_head(head, head_number, url=url, verbose=verbose)
+        if save is not None:
+            search_result['head'] = related_heads
         head_similarity = SimilarityFromBERT.get_similarity([head] + related_heads)[:1][0][1:]
         similarity['head'] = padding(head_similarity, head_number)
         if verbose:
@@ -179,6 +198,8 @@ class SimilarityFromBERT:
             notice.update(1)
         # 全文相似度
         related_texts, _ = Pretreatment.get_related_texts(head, text_number, url=url, verbose=verbose)
+        if save is not None:
+            search_result['text'] = related_texts
         related_texts = [text] + related_texts
         text_similarity = SimilarityFromBERT.get_similarity(related_texts)[:1][0][1:]
         similarity['text'] = padding(text_similarity, text_number)
@@ -199,6 +220,9 @@ class SimilarityFromBERT:
                 related_paragraphs, related_sentences, _, invalid = Pretreatment.get_related_paragraphs_and_sentences \
                     (sentence, paragraph_number=paragraph_number, sentence_number=sentence_number, url=url,
                      verbose=verbose)
+                if save is not None:
+                    search_result['paragraphs'][paragraphs[i]] = related_paragraphs
+                    search_result['sentences'][sentence] = related_sentences
                 if invalid >= 2:
                     invalid_count += 1
                 else:
@@ -227,6 +251,8 @@ class SimilarityFromBERT:
         codes_similarity = []
         for line in to_search_codes:
             related_codes = Pretreatment.get_related_codes(line, code_number, verbose=verbose)
+            if save is not None:
+                search_result['codes'][line] = related_codes
             if verbose:
                 print("相关codes如下:")
             code_similarity = []
@@ -255,6 +281,13 @@ class SimilarityFromBERT:
         similarity['code'] = codes_similarity
         if not verbose:
             notice.close()
+        if save is not None:
+            if os.path.exists('../src/text/存档{}.txt'.format(save)):
+                print("\n" + '../src/text/存档{}.txt'.format(save) + ">>>已存在\n", end="")
+            else:
+                f = open('../src/text/存档{}.txt'.format(save), 'w')
+                f.write(json.dumps(search_result, ensure_ascii=False, indent=2))
+                f.close()
         return similarity
 
     @staticmethod
@@ -332,19 +365,21 @@ if __name__ == '__main__':
 
     # url = "https://blog.csdn.net/zhuzyibooooo/article/details/118527726?spm=1001.2014.3001.5501"
     # url = "https://blog.csdn.net/Louis210/article/details/119666026?spm=1001.2014.3001.5501"
-    url = "https://blog.csdn.net/weixin_46219578/article/details/117462868"
-    head_number = 10
-    text_number = 10
-    paragraph_number = 10
-    sentence_number = 10
-    code_number = 10
-    result = SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number,
-                                                    sentence_number,
-                                                    code_number,
-                                                    EDU=False,
-                                                    verbose=True,
-                                                    pre_verbose=False
-                                                    )
+    # url = "https://blog.csdn.net/weixin_46219578/article/details/117462868"
+    url = "https://blog.csdn.net/Louis210/article/details/119649950"
+    head_number = 3
+    text_number = 3
+    paragraph_number = 3
+    sentence_number = 3
+    code_number = 3
+    result =SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number,
+                                 sentence_number,
+                                 code_number,
+                                 EDU=False,
+                                 verbose=True,
+                                 pre_verbose=False,
+                                 save=0
+                                 )
     print("-----------标题相似度---------")
     pprint(result['head'])
     print("-----------全文相似度---------")
@@ -355,3 +390,23 @@ if __name__ == '__main__':
     pprint(result['sentence'])
     print("-----------code相似度---------")
     pprint(result['code'])
+
+    with open('../src/text/存档0.txt', 'r') as f:
+        result = json.loads(f.read())
+        print("<<<head>>>")
+        print(result['head'])
+        print("<<<text>>>")
+        print(result['text'])
+        print("<<<paragraphs>>>")
+        for paragraph in result['paragraphs']:
+            print(paragraph)
+            print(result['paragraphs'][paragraph])
+        print("<<<sentences>>>")
+        for sentence in result['sentences']:
+            print(sentence)
+            print(result['sentences'][sentence])
+        print("<<<codes>>>")
+        for code in result['codes']:
+            print(code)
+            print(result['codes'][code])
+

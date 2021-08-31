@@ -11,7 +11,7 @@ class Crawl:
     """
 
     @staticmethod
-    def is_valid(proxy, verbose=True):
+    def is_valid(proxy, url, verbose=True):
         """
         检验代理是否可用
         :param proxy:
@@ -27,13 +27,14 @@ class Crawl:
             'Connection': 'keep-alive',
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
         }
-        baidu_url = "http://baidu.com/s?wd=java&rn=50&oq=java&ie=utf-8"
-        retry_count = 2
+        # baidu_url = "http://baidu.com/s?wd=java&rn=50&oq=java&ie=utf-8"
+        baidu_url = url
+        retry_count = 3
 
         while retry_count > 0:
             try:
                 if verbose:
-                    print("检测代理是否可用的第{}次尝试".format(3 - retry_count))
+                    print("检测代理是否可用的第{}次尝试".format(4 - retry_count))
                 r = requests.get(baidu_url,
                                  headers=headers,
                                  proxies={"http": "http://{}".format(proxy), "https": "https://{}".format(proxy)},
@@ -60,7 +61,7 @@ class Crawl:
                     continue
                 if verbose:
                     print("成功>>>url有{}个".format(len(article_urls)))
-                return True
+                return html
             except Exception:
                 # print("ip第{}次检测出不行>>>".format(6 - retry_count), proxy)
                 time.sleep(random.randrange(3, 6, 1))
@@ -68,7 +69,7 @@ class Crawl:
                     print("失败")
                 retry_count -= 1
                 continue
-        return False
+        return ""
 
     @staticmethod
     def get_proxy():
@@ -88,48 +89,35 @@ class Crawl:
             'Connection': 'keep-alive',
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
         }
-        retry_count = 5
+        retry_count = 20
         proxy = Crawl.get_proxy().get("proxy")
-        while proxy and not Crawl.is_valid(proxy, verbose=verbose):
+        html = ""
+        while proxy and retry_count > 0:
             if verbose:
-                print("ip地址被删除>>>", proxy)
-            Crawl.delete_proxy(proxy)
-            proxy = Crawl.get_proxy().get("proxy")
-        if verbose:
-            print("获得的ip地址>>>", proxy)
-        time.sleep(random.randrange(20, 30, 1))
-        while retry_count > 0:
-            try:
+                print("<第{}次尝试>".format(21-retry_count))
+            html = Crawl.is_valid(proxy, url, verbose=verbose)
+            if html == "":
                 if verbose:
-                    print("第{}次尝试".format(6 - retry_count))
-                if retry_count == 1 or not proxy:
-                    r = requests.get(url,
-                                     headers=headers,
-                                     timeout=5)
-                    time.sleep(random.randrange(10, 30, 1))
-                else:
-                    r = requests.get(url,
-                                     headers=headers,
-                                     proxies={"http": "http://{}".format(proxy), "https": "https://{}".format(proxy)},
-                                     timeout=5)
-                r.raise_for_status()
+                    print("ip地址被删除>>>", proxy)
+                Crawl.delete_proxy(proxy)
+                proxy = Crawl.get_proxy().get("proxy")
+                retry_count -= 1
+            else:
+                if verbose:
+                    print("获得的ip地址>>>", proxy)
+                break
+        if retry_count == 0 or not proxy:
+            try:
+                r = requests.get(url,
+                                 headers=headers,
+                                 timeout=5)
+                time.sleep(random.randrange(10, 30, 1))
                 if verbose:
                     print("成功")
                 return r.text
             except Exception:
-                if verbose:
-                    print("失败")
-                retry_count -= 1
-                while proxy and not Crawl.is_valid(proxy, verbose=verbose):
-                    if verbose:
-                        print("ip地址被删除>>>", proxy)
-                    Crawl.delete_proxy(proxy)
-                    proxy = Crawl.get_proxy().get("proxy")
-                time.sleep(random.randrange(20, 30, 1))
-                continue
-        if verbose:
-            print("无法访问")
-        return ""
+                return ""
+        return html
 
     @staticmethod
     def get_related_paragraphs_and_sentences(original_sentence):

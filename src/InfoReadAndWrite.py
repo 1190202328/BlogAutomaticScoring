@@ -172,7 +172,7 @@ class InfoReadAndWrite:
         :return: 无
         """
         # print("url>>>" + url)
-        similarity = SimilarityFromBERT.get_5d_similarities(url, EDU=False, verbose=verbose, pre_verbose=pre_verbose)
+        similarity = SimilarityFromBERT.get_5d_similarities(url, EDU=False, verbose=verbose, pre_verbose=pre_verbose, save=num)
         if not similarity:
             print("\n到此url停止>>>{}\n".format(url), end="")
             return 0
@@ -222,7 +222,8 @@ if __name__ == '__main__':
     urls = InfoReadAndWrite.get_urls(path, filename)
     print(InfoReadAndWrite.get_similarities().shape)
 
-    number_list = [242, 243, 248, 259, 262, 292] + list(range(284, 291)) + list(range(294, 351))
+    number_list = [243, 248, 259, 262, 292, 284, 285, 289, 292, 294, 297, 298, 299, 311, 313, 314] + list(range(318, 325)) +\
+    [326, 328, 329, 330] + list(range(334, 351))
     InfoReadAndWrite.n_threads_run(urls, number_list, num_worker=20)
 
     # InfoReadAndWrite.merge_to_main_csv(240, 241)

@@ -1,2 +1,2 @@
- for i in range(len(list1)):
- 'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Accounts to Reconcile', domain = [('reconcile','=',1)],),
+list5 = [0] * 5 
+ for (var i = 1; i < 4; i++) {
