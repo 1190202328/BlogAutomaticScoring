@@ -1,2 +1,2 @@
- public static void main(String[] args) {
-public static void main(String[] args) { 
+public class Example{
+ File.mtime("foo/target/classes/Example.class").should_not == tstamp

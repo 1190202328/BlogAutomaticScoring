@@ -87,8 +87,17 @@ class SeparateCode:
         code_like_sentences_list = list()
         code_like_sentences = list()
         sentences_flag = list()
+        clean_sentences = []
+        for sentence in sentences:
+            if sentence == "" or re.match("\\s+", sentence):
+                continue
+            clean_sentences.append(sentence)
+        sentences = clean_sentences
         for sentence in sentences:
             pre_sentence = sentence.lower().strip()
+            if re.match("[\\w\\.]*print.*", pre_sentence):
+                sentences_flag.append(0)
+                continue
             pre_sentence = SeparateCode.clean_code_line(pre_sentence, low_limit=7, high_limit=100)
             if pre_sentence == "" or re.match('[_. ]+', pre_sentence) or re.match("((https)|(http)).*", pre_sentence) \
                     or re.match('(\\d+)(\\.\\d+)*.*', pre_sentence) or re.match(r'[\u4e00-\u9fa5]+', pre_sentence) \
@@ -196,11 +205,11 @@ def machine_learning():
     labels = np.array(labels)
     sentences = np.array(sentences, dtype=object)
     k_fold = KFold(n_splits=10, random_state=0, shuffle=True)
-    i = 0
+    # i = 0
     for train_index, test_index in k_fold.split(sentences, labels):
-        i += 1
-        if i != 5:
-            continue
+        # i += 1
+        # if i != 5:
+        #     continue
         x_train, x_test, y_train, y_test = sentences[train_index], sentences[test_index], labels[train_index], labels[
             test_index]
         vocab = set()
@@ -212,11 +221,11 @@ def machine_learning():
         vocab_list.append("<paddle>")
         vocab_list.append("<unk>")
         vocab_list += list(sorted(vocab))
-        f = open("../src/text/vocab_list_1.txt", 'w')
-        for vocab in vocab_list:
-            f.write(vocab)
-            f.write("\n")
-        f.close()
+        # f = open("../src/text/vocab_list_1.txt", 'w')
+        # for vocab in vocab_list:
+        #     f.write(vocab)
+        #     f.write("\n")
+        # f.close()
         # embedding_len = 100
         # output_dim = 64
         # learning_rate = 0.1
@@ -226,7 +235,7 @@ def machine_learning():
         output_dim = 32
         learning_rate = 1e-2
         batch_size = 320
-        epochs = 2
+        epochs = 10
         verbose = 2
         opt = tf.optimizers.Adam(learning_rate)
         vocab_len = len(vocab_list)
@@ -247,17 +256,11 @@ def machine_learning():
         x_test = SeparateCode.get_sequences(x_test, embedding_len, vocab_list)
         model.fit(x_train, y_train, epochs=epochs, validation_split=0.1, validation_freq=2, verbose=verbose,
                   batch_size=batch_size)
-        path = "../src/saved_model/"
-        filename = "code_separate_model_1.h5"
-        model.save(path + filename)
-        model = tf.keras.models.load_model(path + filename)
-        y_predict = list()
-        y_pred = model.predict(x_test)
-        for y in y_pred:
-            if y[0] > y[1]:
-                y_predict.append(0)
-            else:
-                y_predict.append(1)
+        # path = "../src/saved_model/"
+        # filename = "code_separate_model_1.h5"
+        # model.save(path + filename)
+        # model = tf.keras.models.load_model(path + filename)
+        y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
         print(classification_report(y_test, y_predict))
 
 

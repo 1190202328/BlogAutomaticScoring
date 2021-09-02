@@ -213,15 +213,32 @@ class InfoReadAndWrite:
                 thread.start()
             time.sleep(60)
 
+    @staticmethod
+    def get_number_list(template_filepath, min_num, max_num):
+        """
+        获取还没有取爬虫获取的序号列表
+        :param template_filepath: 模板路径，例如:../src/text/similarities_bigger
+        :param max_num: 最大的序号
+        :param min_num: 最小的序号
+        :return: 还没有取爬虫获取的序号列表
+        """
+        number_list = []
+        for i in range(min_num, max_num):
+            if not os.path.exists(template_filepath + i.__str__() + ".csv"):
+                number_list.append(i)
+        return number_list
+
 
 if __name__ == '__main__':
     filepath = "../src/text/按原创性分类.txt"
     data_filepath = "../src/text/similarities_bigger.csv"
     urls = InfoReadAndWrite.get_urls(filepath)
-    # print(InfoReadAndWrite.get_similarities(data_filepath).shape)
+    print("shape=", end="")
+    print(InfoReadAndWrite.get_similarities(data_filepath).shape)
+    number_list = InfoReadAndWrite.get_number_list("../src/text/similarities_bigger", 65, 295)
+    print("未完成爬虫的序号>>>", end="")
+    print(number_list)
+    # InfoReadAndWrite.n_threads_run(urls, number_list, num_worker=30)
 
-    number_list = [6, 20, 24, 32, ] + list(range(53, 66)) + list(range(67, 72)) + list(range(73, 186))
-    InfoReadAndWrite.n_threads_run(urls, number_list, num_worker=30)
-
-    # InfoReadAndWrite.merge_to_main_csv(0, 20)
+    # InfoReadAndWrite.merge_to_main_csv(65, 65)
     # print(InfoReadAndWrite.get_similarities(data_filepath).shape)

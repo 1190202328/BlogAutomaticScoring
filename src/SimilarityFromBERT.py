@@ -213,7 +213,7 @@ class SimilarityFromBERT:
         paragraphs_similarity = []
         sentences_similarity = []
         invalid_count = 0
-        for i in range(len(paragraphs)):
+        for i in range(len(to_search_sentences)):
             if verbose:
                 print("段落>>>" + paragraphs[i])
             for sentence in to_search_sentences[i]:

@@ -176,7 +176,8 @@ class Pretreatment:
             text = re.sub("[\\t ]+", " ", text)
             text = re.sub("\n+", "\n", text)
             text = re.sub("(\n +)|( +\n)", "\n", text)
-            more_codes = SeparateCode.get_codes(text)
+            to_search_code_text = Pretreatment.clean_code_for_text(text)
+            more_codes = SeparateCode.get_codes(to_search_code_text)
             if more_codes:
                 for more_code in more_codes:
                     start = text.find(more_code)
@@ -308,7 +309,8 @@ class Pretreatment:
                     urls.add(content.get("href"))
         if re.match(pattern_github_main, main_url):
             for content in contents:
-                if content.get("href") is not None and re.match("/\\d{4}/\\d{2}/\\d{2}/.+/", content.get("href")):
+                if content.get("href") is not None and re.match("/\\d{4}/\\d{2}/\\d{2}/.+/", content.get("href")) \
+                        and not re.match("/\\d{4}/\\d{2}/\\d{2}/.+/#more", content.get("href")):
                     urls.add(main_url + content.get("href"))
         if re.match(pattern_jianshu_main, main_url):
             for content in contents:
@@ -448,6 +450,31 @@ class Pretreatment:
                         if count >= number:
                             return related_codes
         return related_codes
+
+    @staticmethod
+    def clean_code_for_text(text):
+        """
+        获得不含注释的text
+        目前注释只支持
+        单行注释：//和#
+        多行注释：/* */和三个'和三个"
+        :param text: 源代码段
+        :return: 不含注释的干净的text
+        """
+        codes = list()
+        text = re.sub("/(\\*).*?(\\*)/", "", text, flags=re.S)
+        text = re.sub("'''.*?'''", "", text, flags=re.S)
+        text = re.sub('""".*?"""', "", text, flags=re.S)
+        lines = text.split("\n")
+        for line in lines:
+            java_start = line.find("//")
+            python_start = line.find("#")
+            if java_start != -1:
+                line = line[0:java_start]
+            if python_start != -1:
+                line = line[0:python_start]
+            codes.append(line)
+        return "\n".join(codes)
 
     @staticmethod
     def clean_code(code, limit=7):
@@ -689,7 +716,7 @@ class Pretreatment:
 
 
 if __name__ == '__main__':
-    # url = "https://blog.csdn.net/Louis210/article/details/117415546"
+    url = "https://blog.csdn.net/Louis210/article/details/117415546"
     # url = "https://www.cnblogs.com/yuyueq/p/15119512.html"
     # url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
     # url = "https://www.jianshu.com/p/92373a603d42"
@@ -702,7 +729,7 @@ if __name__ == '__main__':
     # url = "https://bit-ranger.github.io/blog/java/effective-java/"
     # url = "https://blog.csdn.net/z741481546/article/details/93514166"
 
-    url = "https://blog.csdn.net/cobracanary/article/details/119612536"
+    # url = "https://blog.csdn.net/cobracanary/article/details/119612536"
     print("---------url>>>" + url)
     similarity = Pretreatment.split_txt(url)
     print("---------head---------")

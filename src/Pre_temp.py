@@ -161,7 +161,8 @@ def split_txt(txt_url, EDU=False, verbose=True):
         text = re.sub("[\\t ]+", " ", text)
         text = re.sub("\n+", "\n", text)
         text = re.sub("(\n +)|( +\n)", "\n", text)
-        more_codes = SeparateCode.get_codes(text)
+        to_search_code_text = Pretreatment.clean_code_for_text(text)
+        more_codes = SeparateCode.get_codes(to_search_code_text)
         if more_codes:
             for more_code in more_codes:
                 start = text.find(more_code)
