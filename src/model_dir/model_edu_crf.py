@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from pytorch_pretrained_bert.modeling import BertModel
 from tqdm import tqdm
 
-from src.BERT.dataset import EDUCollator
+from src.EDU.dataset import EDUCollator
 
 os.makedirs("saved_model/", exist_ok=True)
 
@@ -83,7 +83,7 @@ class NetEDU(nn.Module):  # inherit from nn.Module
                     step = 512 if (i + 512 <= input_ids.size()[1]) else input_ids.size()[1] - i
                     input_ids_list.append(input_ids.narrow(1, i, step))
                     # attention_mask_list.append(attention_mask.narrow(1, i, step))
-                # send to BERT sequentially
+                # send to EDU sequentially
                 sequence_output_list = []
                 for idx in range(0, len(input_ids_list)):
                     # sequence_output, _ = self.bert(input_ids_list[idx], attention_mask_list[idx], output_all_encoded_layers=False)
@@ -193,7 +193,7 @@ class ModelEDU():
         self.trainData = trainData
         self.testData = testData
         self.validData = validData
-        self.embeddingDim = embeddingDim  # 768(BERT)
+        self.embeddingDim = embeddingDim  # 768(EDU)
         self.tagsetSize = tagsetSize
         self.batchSize = batchSize
 

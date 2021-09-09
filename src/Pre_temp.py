@@ -10,7 +10,7 @@ import re
 from baiduspider import BaiduSpider
 
 from src.Crawl import Crawl
-from src.BERT import demo
+from src.EDU import demo
 from src.Pretreatment import Pretreatment
 from src.SeparateCode import SeparateCode
 

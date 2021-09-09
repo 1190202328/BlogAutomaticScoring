@@ -10,7 +10,7 @@ import re
 from baiduspider import BaiduSpider
 
 from src.Crawl import Crawl
-from src.BERT import demo
+from src.EDU import demo
 from src.SeparateCode import SeparateCode
 
 url_pattern = dict()

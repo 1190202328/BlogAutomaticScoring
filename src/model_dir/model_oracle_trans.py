@@ -10,7 +10,7 @@ import copy
 from collections import deque
 from tqdm import tqdm
 
-from src.BERT.dataset import TransCollator
+from src.EDU.dataset import TransCollator
 
 try:
     torch.multiprocessing.set_start_method("spawn")
@@ -42,7 +42,7 @@ class NetTrans(nn.Module):
         self.embedding_dim = embedding_dim  # 768(bert)
         self.tagset_size = tagset_size
         self.batch_size = batch_size
-        # BERT
+        # EDU
         self.bert = BertModel.from_pretrained('bert-base-chinese').cpu()
         # freeze
         # for param in self.bert.parameters():
@@ -65,7 +65,7 @@ class NetTrans(nn.Module):
 
         '''
 
-        # use sliding window approach to deal with BERT length 512 restriction
+        # use sliding window approach to deal with EDU length 512 restriction
         # use narrow(dimension, start, length) to slice tensor 
         out_list = []
         for input_ids in [input_ids1, input_ids2, input_ids3]:
@@ -76,7 +76,7 @@ class NetTrans(nn.Module):
                     step = 512 if (i+512 <= input_ids.size()[1]) else input_ids.size()[1]-i
                     input_ids_list.append(input_ids.narrow(1, i, step))
                     # attention_mask_list.append(attention_mask.narrow(1, i, step))
-                # send to BERT sequentially
+                # send to EDU sequentially
                 sequence_output_list = []
                 for idx in range(0, len(input_ids_list)):         
                     # sequence_output, _ = self.bert(input_ids_list[idx], attention_mask_list[idx], output_all_encoded_layers=False)

@@ -6,7 +6,7 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 from pytorch_pretrained_bert.modeling import BertModel
 
-from src.BERT.dataset import RlatCollator, AugCollator
+from src.EDU.dataset import RlatCollator, AugCollator
 
 try:
     torch.multiprocessing.set_start_method("spawn")
@@ -29,7 +29,7 @@ class NetRlat(nn.Module):
         self.tagset_size_center = tagset_size_center # center label size
         self.tagset_size_relation = tagset_size_relation # relation label size
         self.batch_size = batch_size
-        # BERT
+        # EDU
         # self.bert = BertModel.from_pretrained('bert-base-multilingual-cased').cpu()
         self.bert = BertModel.from_pretrained('bert-base-chinese').cpu()
         # freeze
@@ -47,7 +47,7 @@ class NetRlat(nn.Module):
                 input_ids: [batch_size, seq_length]
         '''
 
-        # use sliding window approach to deal with BERT length 512 restriction
+        # use sliding window approach to deal with EDU length 512 restriction
         # use narrow(dimension, start, length) to slice tensor 
         out_list = []
         for input_ids in [input_ids1, input_ids2]:
@@ -58,7 +58,7 @@ class NetRlat(nn.Module):
                     step = 512 if (i+512 <= input_ids.size()[1]) else input_ids.size()[1]-i
                     input_ids_list.append(input_ids.narrow(1, i, step))
                     # attention_mask_list.append(attention_mask.narrow(1, i, step))
-                # send to BERT sequentially
+                # send to EDU sequentially
                 sequence_output_list = []
                 for idx in range(0, len(input_ids_list)):         
                     # sequence_output, _ = self.bert(input_ids_list[idx], attention_mask_list[idx], output_all_encoded_layers=False)

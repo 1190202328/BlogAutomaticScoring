@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from bert_serving.client import BertClient
 from tqdm import tqdm
 
-from src.BERT import demo
+from src.EDU import demo
 from src.Pretreatment import Pretreatment
 from src.SimilarityFromPMD import SimilarityFromPMD
 

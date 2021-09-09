@@ -3,19 +3,14 @@ import re
 import cv2
 import numpy as np
 import tensorflow as tf
-from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.model_selection import KFold, GridSearchCV
-from sklearn.pipeline import make_pipeline
-from tensorflow.keras.callbacks import ModelCheckpoint
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report
 from sklearn.svm import SVC
-from sklearn import preprocessing, linear_model
-from sklearn.multiclass import OneVsRestClassifier
 
 from src.InfoReadAndWrite import InfoReadAndWrite
 
@@ -455,9 +450,9 @@ if __name__ == '__main__':
     data_filepath = "../src/text/similarities.csv"
     label_filepath = "../src/text/urls.txt"
     nd = 2
-    # train_2d_LSTM(data_filepath, label_filepath) #已完成
-    # train_2d_logic(data_filepath, label_filepath) #已完成
-    # train_3d_logic(data_filepath, label_filepath)  # 已完成
-    # train_6d_logic(data_filepath, label_filepath)  # 已完成
-    # train_ml(data_filepath, label_filepath, nd) #已完成
-    # train_2d_CNN("../src/text/similarities.csv", "../src/text/urls.txt") #已完成
+    train_2d_LSTM(data_filepath, label_filepath) #已完成
+    train_2d_logic(data_filepath, label_filepath) #已完成
+    train_3d_logic(data_filepath, label_filepath)  # 已完成
+    train_6d_logic(data_filepath, label_filepath)  # 已完成
+    train_ml(data_filepath, label_filepath, nd) #已完成
+    train_2d_CNN("../src/text/similarities.csv", "../src/text/urls.txt") #已完成

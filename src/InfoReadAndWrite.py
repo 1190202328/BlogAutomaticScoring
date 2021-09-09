@@ -1,5 +1,6 @@
 import os
 import random
+import re
 import threading
 import time
 from pprint import pprint
@@ -7,6 +8,8 @@ import csv
 import json
 import numpy as np
 import matplotlib.pyplot as plt
+import xlsxwriter
+
 from src.Pretreatment import Pretreatment
 from src.SimilarityFromBERT import SimilarityFromBERT
 
@@ -228,6 +231,31 @@ class InfoReadAndWrite:
                 number_list.append(i)
         return number_list
 
+    @staticmethod
+    def write_to_csv(filepath_read, filepath_write):
+        """
+        将以\t为分隔符的url.txt文件转换为.csv文件
+        :param filepath_write: .csv文件
+        :param filepath_read:  \t为分隔符的url.txt文件
+        :return: 无
+        """
+        urls = list()
+        tags = list()
+        with open(filepath_read, "r") as f:
+            for line in f.readlines():
+                line = re.sub('\t+', '\t', line)
+                r = line.split("\t")
+                urls.append(r[1])
+                if len(r) > 2:
+                    tags.append(r[2].replace('\n', ''))
+        workbook = xlsxwriter.Workbook(filepath_write)
+        worksheet = workbook.add_worksheet("sheet1")
+        for i in range(len(urls)):
+            worksheet.write(i, 0, urls[i])
+            if i < len(tags):
+                worksheet.write(i, 1, tags[i])
+        workbook.close()
+
 
 if __name__ == '__main__':
     filepath = "../src/text/按原创性分类.txt"
@@ -235,10 +263,10 @@ if __name__ == '__main__':
     urls = InfoReadAndWrite.get_urls(filepath)
     print("shape=", end="")
     print(InfoReadAndWrite.get_similarities(data_filepath).shape)
-    number_list = InfoReadAndWrite.get_number_list("../src/text/similarities_bigger", 65, 295)
+    number_list = InfoReadAndWrite.get_number_list("../src/text/similarities_bigger", 650, 650)
     print("未完成爬虫的序号>>>", end="")
     print(number_list)
     # InfoReadAndWrite.n_threads_run(urls, number_list, num_worker=30)
 
-    # InfoReadAndWrite.merge_to_main_csv(65, 65)
+    # InfoReadAndWrite.merge_to_main_csv(650, 650)
     # print(InfoReadAndWrite.get_similarities(data_filepath).shape)
