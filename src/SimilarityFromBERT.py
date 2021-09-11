@@ -188,6 +188,8 @@ class SimilarityFromBERT:
             notice.set_description("[{}] ".format(num) + url + " >>>")
         # 标题相似度
         related_heads, _ = Pretreatment.get_related_head(head, head_number, url=url, verbose=verbose)
+        if related_heads is None:
+            return None
         if save is not None:
             search_result['head'] = related_heads
         head_similarity = SimilarityFromBERT.get_similarity([head] + related_heads)[:1][0][1:]
@@ -200,6 +202,8 @@ class SimilarityFromBERT:
             notice.update(1)
         # 全文相似度
         related_texts, _ = Pretreatment.get_related_texts(head, text_number, url=url, verbose=verbose)
+        if related_texts is None:
+            return None
         if save is not None:
             search_result['text'] = related_texts
         related_texts = [text] + related_texts
@@ -213,6 +217,7 @@ class SimilarityFromBERT:
         paragraphs_similarity = []
         sentences_similarity = []
         invalid_count = 0
+        invalid_count_max = 1
         for i in range(len(to_search_sentences)):
             if verbose:
                 print("段落>>>" + paragraphs[i])
@@ -229,7 +234,7 @@ class SimilarityFromBERT:
                     invalid_count += 1
                 else:
                     invalid_count = 0
-                if invalid_count >= 3:
+                if invalid_count >= invalid_count_max:
                     notice.close()
                     return None
                 paragraph_similarity = SimilarityFromBERT.get_similarity([paragraphs[i]] + related_paragraphs)[:1][0][

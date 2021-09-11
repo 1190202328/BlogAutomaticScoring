@@ -182,7 +182,7 @@ class ModelRlat():
             running_loss3 = 0.0            
             running_loss4 = 0.0            
 
-            self.model.train()
+            self.model.train_logic()
             i = 0
 
             trange = tqdm(enumerate(zip(train_data, aug_data)),

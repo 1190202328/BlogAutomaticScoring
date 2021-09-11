@@ -252,10 +252,12 @@ class Pretreatment:
         pn = 1
         find = False
         while True:
+            local_total_urls = 0
             rs = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
             time.sleep(random.randrange(30, 60, 1))
             if not rs:
                 time.sleep(random.randrange(100, 200, 1))
+                return None, find
             if verbose:
                 print("pn = {}".format(pn))
             pn += 1
@@ -272,6 +274,7 @@ class Pretreatment:
                 if len(title) == 1:
                     title = result.get('title').split("-")
                 real_url = Pretreatment.get_real_url(result.get('url'), verbose=verbose)
+                local_total_urls += 1
                 if real_url in total_urls:
                     continue
                 if url.find(real_url) != -1:
@@ -282,6 +285,9 @@ class Pretreatment:
                 if verbose:
                     print("count = {}".format(count))
                 count += 1
+            if local_total_urls == 0:
+                time.sleep(random.randrange(100, 200, 1))
+                return None, find
             if count >= number:
                 break
         return total_titles, find
@@ -362,10 +368,12 @@ class Pretreatment:
         count = 0
         pn = 1
         while True:
+            local_total_urls = 0
             rs = BaiduSpider().search_web(text_head, pn=pn, exclude=['all']).get('results')
             time.sleep(random.randrange(30, 60, 1))
             if not rs:
                 time.sleep(random.randrange(100, 200, 1))
+                return None, find
             if verbose:
                 print("pn = {}".format(pn))
             pn += 1
@@ -377,6 +385,7 @@ class Pretreatment:
                 if result.get('url') is None:
                     continue
                 real_url = Pretreatment.get_real_url(result.get('url'), verbose=verbose)
+                local_total_urls += 1
                 if real_url in total_urls:
                     continue
                 if url.find(real_url) != -1:
@@ -390,6 +399,9 @@ class Pretreatment:
                         count += 1
                         if verbose:
                             print("count = {}".format(count))
+            if local_total_urls == 0:
+                time.sleep(random.randrange(100, 200, 1))
+                return None, find
             if count >= number:
                 break
         if verbose:
