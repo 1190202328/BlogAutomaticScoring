@@ -1,4 +1,5 @@
 import os
+import random
 import re
 from pprint import pprint
 
@@ -8,7 +9,7 @@ import tensorflow as tf
 from keras.callbacks import ModelCheckpoint
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression, LinearRegression
-from sklearn.model_selection import KFold, GridSearchCV
+from sklearn.model_selection import KFold, GridSearchCV, train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -17,6 +18,7 @@ from sklearn.svm import SVC
 import matplotlib.pyplot as plt
 
 from src.InfoReadAndWrite import InfoReadAndWrite
+from src.SplitDataset import SplitDataset
 
 
 class OriginalityGradingNEW:
@@ -93,7 +95,6 @@ class OriginalityGradingNEW:
 
     @staticmethod
     def reshape(vectors, similarity_len, paragraph_len, sentence_len, code_len):
-        # 每个句子只取前5个相似的句子
         print(vectors.shape)
         new_vectors = []
         for vector in vectors:
@@ -113,7 +114,7 @@ class OriginalityGradingNEW:
         return vectors
 
     @staticmethod
-    def get_results(y_true, y_pred, test_index, label_filepath, filepath):
+    def get_results(y_true, y_pred, test_index=None, label_filepath=None, filepath=None):
         """
         获得标签的差异值
         :param label_filepath: 存储标签的文件
@@ -124,25 +125,31 @@ class OriginalityGradingNEW:
         :return: 无
         """
         dictionary = dict()
-        with open(label_filepath, "r") as f:
-            for line in f.readlines():
-                line = re.sub("[\\t ]+", "\t", line)
-                line = line.split("\t")
-                if len(line) >= 3:
-                    dictionary[int(line[0])] = line[1]
+        abs_result = []
+        if test_index and label_filepath and filepath:
+            with open(label_filepath, "r") as f:
+                for line in f.readlines():
+                    line = re.sub("[\\t ]+", "\t", line)
+                    line = line.split("\t")
+                    if len(line) >= 3:
+                        dictionary[int(line[0])] = line[1]
         result = []
         for i in range(len(y_true)):
             sub = abs(int(y_pred[i]) - int(y_true[i]))
             if sub != 0:
-                result.append(
-                    '{}\t{}\t\t{}\t{}'.format(test_index[i], dictionary[test_index[i]], int(y_true[i]), int(y_pred[i])))
-        if os.path.exists(filepath):
-            print("\n" + filepath + ">>>已存在\n", end="")
-            return 1
-        with open(filepath, "w") as f:
-            for r in result:
-                f.write(r)
-                f.write('\n')
+                abs_result.append(sub)
+                if test_index and label_filepath and filepath:
+                    result.append('{}\t{}\t\t{}\t{}'.format(test_index[i], dictionary[test_index[i]], int(y_true[i]),
+                                                            int(y_pred[i])))
+        if test_index and label_filepath and filepath:
+            if os.path.exists(filepath):
+                print("\n" + filepath + ">>>已存在\n", end="")
+                return 1
+            with open(filepath, "w") as f:
+                for r in result:
+                    f.write(r)
+                    f.write('\n')
+        return abs_result
 
     @staticmethod
     def show_history(history, is_accuracy=False):
@@ -171,12 +178,80 @@ class OriginalityGradingNEW:
         plt.legend(['Train', 'Test'], loc='upper left')
         plt.show()
 
+    @staticmethod
+    def reduce_dimension(vectors, head: bool, text: bool, paragraphs: bool, sentences: bool, codes: bool):
+        """
+        减少维度
+        :param vectors: 原矩阵
+        :param head: 是否不需要head
+        :param text: 是否不需要text
+        :param paragraphs: 是否不需要paragraphs
+        :param sentences: 是否不需要sentences
+        :param codes: 是否不需要codes
+        :return: 新矩阵
+        """
+        new_vectors = []
+        for vector in vectors:
+            new_vector = []
+            if head:
+                new_vector += vector[:10]
+            if text:
+                new_vector += vector[10:20]
+            if paragraphs:
+                new_vector += vector[20:820]
+            if sentences:
+                new_vector += vector[820:1620]
+            if codes:
+                new_vector += vector[1620:]
+            new_vectors.append(new_vector)
+        return np.float32(new_vectors)
 
-def train_ml(data_filepath, label_filepath):
-    n_splits = 10
+    @staticmethod
+    def one_dimension(vectors, mode: str):
+        """
+        将每个句子等的n个相似度取max,min,mean,median。
+        :param vectors: 源矩阵
+        :param mode: 模式。max：取最大值；min：取最小值；mean：取平均值；median。
+        :return: 新矩阵
+        """
+        new_vectors = []
+        for vector in vectors:
+            new_vector = []
+            for i in range(0, 2220, 10):
+                if mode == 'max':
+                    new_vector.append(np.max(vector[i:i + 10]))
+                if mode == 'min':
+                    new_vector.append(np.min(vector[i:i + 10]))
+                if mode == 'mean':
+                    new_vector.append(np.mean(vector[i:i + 10]))
+                if mode == 'median':
+                    new_vector.append(np.median(vector[i:i + 10]))
+            new_vectors.append(new_vector)
+        return np.float32(new_vectors)
+
+    @staticmethod
+    def random_select(vectors, dimension: int):
+        """
+        随机选取一些维度
+        :param vectors: 原矩阵
+        :param dimension: 期望维度
+        :return: 新矩阵
+        """
+        new_vectors = []
+        for vector in vectors:
+            sample_list = [i for i in range(len(vector))]
+            sample_list = random.sample(sample_list, dimension)
+            new_vector = vector[sample_list]
+            new_vectors.append(new_vector)
+        return np.float32(new_vectors)
+
+
+def traditional_ml(data_filepath, label_filepath):
+    n_splits = 5
     random_state = 40
 
     labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
+    OriginalityGradingNEW.change_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
     k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
@@ -207,7 +282,7 @@ def train_ml(data_filepath, label_filepath):
         clf = LogisticRegression(penalty='l1', solver='liblinear').fit(x_train, y_train)
         answer_clf = clf.predict(x_test)
         total_y_predict_clf.extend(answer_clf)
-        #
+
         # tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-1, 1e-2, 1e-3], 'C': [1, 10, 100, 1000]},
         #                     {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
         #
@@ -267,7 +342,7 @@ def train_ml(data_filepath, label_filepath):
         answer_svm = svm.predict(x_test)
         total_y_predict_SVM.extend(answer_svm)
 
-        rf = RandomForestClassifier(n_estimators=140).fit(x_train, y_train)
+        rf = RandomForestClassifier(n_estimators=60).fit(x_train, y_train)
         answer_rf = rf.predict(x_test)
         total_y_predict_RF.extend(answer_rf)
 
@@ -294,7 +369,126 @@ def train_ml(data_filepath, label_filepath):
     print(classification_report(total_y_test, total_y_predict_clf))
 
 
-def logic(data_filepath, label_filepath):
+def grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
+                      n_splits, nd, random_state, validation_freq, vectors, verbose, get_model):
+    max_accuracy = 0
+    best_batch_size = 0
+    best_learning_rate = 0
+    best_epoch = 0
+    k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
+    for epoch in epochs:
+        for learning_rate in learning_rates:
+            model = get_model(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
+            for batch_size in batch_sizes:
+                train_index, test_index = k_fold.split(vectors, labels)[0]
+                x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], \
+                                                   labels[test_index]
+                y_train = np.int32(tf.keras.utils.to_categorical(y_train, num_classes=nd))
+
+                model.fit(x_train, y_train, epochs=epoch, verbose=verbose, batch_size=batch_size,
+                          validation_split=0.2,
+                          validation_freq=validation_freq, callbacks=callbacks)
+                model.evaluate(x_train, y_train)
+
+                y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
+                report = classification_report(y_test, y_predict, output_dict=True)
+                print(report['accuracy'])
+                if report['accuracy'] > max_accuracy:
+                    max_accuracy = report['accuracy']
+                    best_batch_size = batch_size
+                    best_learning_rate = learning_rate
+                    best_epoch = epoch
+    print('最大准确率：', max_accuracy, '\tlearning_rate=', best_learning_rate, '\tbatch_size=', best_batch_size, '\tepoch=',
+          best_epoch)
+
+
+def train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors,
+          verbose):
+    k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
+    total_y_predict = []
+    total_y_test = []
+    vectors, x_valid, labels, y_valid = train_test_split(vectors, labels, test_size=0.2, shuffle=True,
+                                                         random_state=random_state)
+    y_valid = np.int32(tf.keras.utils.to_categorical(y_valid, num_classes=nd))
+    for train_index, test_index in k_fold.split(vectors, labels):
+        x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], labels[
+            test_index]
+        y_train = np.int32(tf.keras.utils.to_categorical(y_train, num_classes=nd))
+
+        # history = model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size,
+        #                     validation_split=0.2,
+        #                     validation_freq=validation_freq, callbacks=callbacks, shuffle=True)
+        history = model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size,
+                            validation_data=(x_valid, y_valid), callbacks=callbacks, shuffle=True)
+
+        OriginalityGradingNEW.show_history(history, is_accuracy=True)
+        # model = tf.keras.models.load_model(filepath)
+        # print(model.predict(x_train))
+        model.evaluate(x_train, y_train)
+        y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
+        report = classification_report(y_test, y_predict)
+        print(report)
+        # OriginalityGradingNEW.get_results(y_test, y_predict, test_index, label_filepath,
+        #                                   filepath='../src/text/差距大的文章3.txt')
+        total_y_predict.extend(y_predict)
+        total_y_test.extend(y_test)
+        # split_result_show(labels, model, test_index, vectors)
+        # return 0
+    print("总结果")
+    print(classification_report(total_y_test, total_y_predict))
+    print(OriginalityGradingNEW.get_results(total_y_test, total_y_predict))
+
+
+def split_result_show(labels, model, test_index, vectors):
+    sp = SplitDataset('../src/text/按原创性分类.txt')
+    data_set = sp.data_split(test_index, language_rate=0.9, length=200, code_rate=0.3)
+    if data_set['chinese']:
+        y_predict = list(tf.argmax(model.predict(vectors[data_set['chinese']], ), axis=-1))
+        report = classification_report(labels[data_set['chinese']], y_predict)
+        print('<<<chinese>>>')
+        print(report)
+    if data_set['english']:
+        y_predict = list(tf.argmax(model.predict(vectors[data_set['english']], ), axis=-1))
+        report = classification_report(labels[data_set['english']], y_predict)
+        print('<<<english>>>')
+        print(report)
+    if data_set['mixed']:
+        y_predict = list(tf.argmax(model.predict(vectors[data_set['mixed']], ), axis=-1))
+        report = classification_report(labels[data_set['mixed']], y_predict)
+        print('<<<mixed>>>')
+        print(report)
+    if data_set['long']:
+        y_predict = list(tf.argmax(model.predict(vectors[data_set['long']], ), axis=-1))
+        report = classification_report(labels[data_set['long']], y_predict)
+        print('<<<long>>>')
+        print(report)
+    if data_set['short']:
+        y_predict = list(tf.argmax(model.predict(vectors[data_set['short']], ), axis=-1))
+        report = classification_report(labels[data_set['short']], y_predict)
+        print('<<<short>>>')
+        print(report)
+    if data_set['text']:
+        y_predict = list(tf.argmax(model.predict(vectors[data_set['text']], ), axis=-1))
+        report = classification_report(labels[data_set['text']], y_predict)
+        print('<<<text>>>')
+        print(report)
+    if data_set['code']:
+        y_predict = list(tf.argmax(model.predict(vectors[data_set['code']], ), axis=-1))
+        report = classification_report(labels[data_set['code']], y_predict)
+        print('<<<code>>>')
+        print(report)
+    multi_topics, single_topic = sp.one_more_topics(test_index)
+    y_predict = list(tf.argmax(model.predict(vectors[multi_topics], ), axis=-1))
+    report = classification_report(labels[multi_topics], y_predict)
+    print('<<<multi_topics>>>')
+    print(report)
+    y_predict = list(tf.argmax(model.predict(vectors[single_topic], ), axis=-1))
+    report = classification_report(labels[single_topic], y_predict)
+    print('<<<single_topics>>>')
+    print(report)
+
+
+def dense(data_filepath, label_filepath):
     verbose = 2
     nd = 5
     filepath = "../src/saved_model/originality_grading_model.h5"
@@ -309,8 +503,86 @@ def logic(data_filepath, label_filepath):
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
 
     embedding_len = 2220
-    random_state = 30
-    # random_state = 40
+    # random_state = 30  # 0.71
+    random_state = 40  # 0.72
+    validation_freq = 1
+    n_splits = 5
+    drop_out_rate = 0.3
+    l1 = 0.01
+    l2 = 0.01
+    # callbacks.append(early_stopping)
+    # callbacks.append(check_pointer)
+
+    similarity_len = 10
+    paragraph_len = 50
+    sentence_len = 50
+    code_len = 50
+    embedding_len = 222
+    # vectors = OriginalityGradingNEW.reshape(vectors, similarity_len, paragraph_len, sentence_len, code_len)
+    vectors = OriginalityGradingNEW.one_dimension(vectors, 'max')
+    # vectors = OriginalityGradingNEW.random_select(vectors, 100)
+    print(vectors.shape)
+    print(vectors)
+
+    # epochs = [3000, 2000, 1000]
+    # learning_rates = [1e-1, 1e-2, 1e-3]
+    # batch_sizes = [3000, 300, 30]
+    # grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
+    #                   n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_logic)
+    # return 0
+    learning_rate = 1e-3
+    # batch_size = 6000,9000 # 0.75
+    batch_size = 6000
+    epochs = 2000
+    # 总的准确率0.71
+    model = get_model_logic(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
+    train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors,
+          verbose)
+
+
+def get_model_logic(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
+    model = tf.keras.Sequential([
+        tf.keras.layers.InputLayer(input_shape=(embedding_len,)),
+        tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
+        tf.keras.layers.Dense(256, activation='relu'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dense(512, activation='relu'),
+        tf.keras.layers.Dropout(drop_out_rate),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dense(64, activation='relu'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dense(nd, activation='softmax')
+    ])
+    print(model.summary())
+    opt = tf.optimizers.Adam(learning_rate)
+    # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
+    # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
+    #               metrics=[tf.keras.metrics.mae, tf.keras.metrics.categorical_crossentropy, ['accuracy']])
+    model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
+                  metrics=[tf.keras.metrics.categorical_crossentropy, ['accuracy']])
+    return model
+
+
+def cnn(data_filepath, label_filepath):
+    verbose = 2
+    nd = 5
+    filepath = "../src/saved_model/originality_grading_model.h5"
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
+                                                      patience=100, verbose=verbose, mode='auto',
+                                                      baseline=None, restore_best_weights=False)
+    check_pointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
+    callbacks = []
+    labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
+    labels = np.array(labels, dtype=int)
+    vectors = InfoReadAndWrite.get_similarities(data_filepath)
+    reshaped_vectors = []
+    for x_ in vectors:
+        reshaped_vectors.append(tf.expand_dims(tf.reshape(x_, [60, 37]), axis=-1))
+    vectors = np.array(reshaped_vectors)
+
+    embedding_len = 2220
+    # random_state = 30  # 0.71
+    random_state = 40  # 0.72
     validation_freq = 1
     n_splits = 5
     drop_out_rate = 0.3
@@ -325,85 +597,98 @@ def logic(data_filepath, label_filepath):
     # code_len = 10
     # vectors = OriginalityGradingNEW.reshape(vectors, similarity_len, paragraph_len, sentence_len, code_len)
 
-    learning_rates = [1e-1, 1e-2, 1e-3]
-    batch_sizes = [3000, 300, 30]
-    epochs = [3000, 2000, 1000]
-    grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
-                      n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_logic)
-    return 0
-    learning_rate = 1e-3
-    batch_size = 2000
-    epochs = 2000
-    model = get_model_logic(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
-    train_logic(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors, verbose)
+    # epochs = [3000, 2000, 1000]
+    # learning_rates = [1e-1, 1e-2, 1e-3]
+    # batch_sizes = [3000, 300, 30]
+    # grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
+    #                   n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_cnn)
+    # return 0
+    learning_rate = 1e-2
+    # batch_size = 6000,9000 # 0.75
+    batch_size = 3000
+    epochs = 200
+    # 总的准确率0.71
+    model = get_model_cnn(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
+    train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors,
+          verbose)
 
 
-def grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
-                      n_splits, nd, random_state, validation_freq, vectors, verbose, get_model):
-    max_accuracy = 0
-    best_batch_size = 0
-    best_learning_rate = 0
-    best_epoch = 0
-    k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
-    for epoch in epochs:
-        for learning_rate in learning_rates:
-            model = get_model(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
-            for batch_size in batch_sizes:
-                for train_index, test_index in k_fold.split(vectors, labels):
-                    x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], \
-                                                       labels[test_index]
-                    y_train = np.int32(tf.keras.utils.to_categorical(y_train, num_classes=nd))
-
-                    model.fit(x_train, y_train, epochs=epoch, verbose=verbose, batch_size=batch_size,
-                              validation_split=0.2,
-                              validation_freq=validation_freq, callbacks=callbacks)
-                    model.evaluate(x_train, y_train)
-
-                    y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
-                    report = classification_report(y_test, y_predict, output_dict=True)
-                    print(report['accuracy'])
-                    if report['accuracy'] > max_accuracy:
-                        max_accuracy = report['accuracy']
-                        best_batch_size = batch_size
-                        best_learning_rate = learning_rate
-                        best_epoch = epoch
-                    break
-    print('最大准确率：', max_accuracy, '\tlearning_rate=', best_learning_rate, '\tbatch_size=', best_batch_size, '\tepoch=',
-          best_epoch)
-
-
-def train_logic(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors, verbose):
-    k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
-    total_y_predict = []
-    total_y_test = []
-    for train_index, test_index in k_fold.split(vectors, labels):
-        x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], labels[
-            test_index]
-        y_train = np.int32(tf.keras.utils.to_categorical(y_train, num_classes=nd))
-
-        history = model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size,
-                            validation_split=0.2,
-                            validation_freq=validation_freq, callbacks=callbacks)
-        OriginalityGradingNEW.show_history(history, is_accuracy=True)
-        # model = tf.keras.models.load_model(filepath)
-        # print(model.predict(x_train))
-        model.evaluate(x_train, y_train)
-        y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
-        report = classification_report(y_test, y_predict)
-        print(report)
-        # OriginalityGradingNEW.get_results(y_test, y_predict, test_index, label_filepath,
-        #                                   filepath='../src/text/差距大的文章3.txt')
-        total_y_predict.extend(y_predict)
-        total_y_test.extend(y_test)
-        break
-    print("总结果")
-    print(classification_report(total_y_test, total_y_predict))
-
-
-def get_model_logic(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
+def get_model_cnn(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
+    opt = tf.optimizers.Adam(learning_rate)
     model = tf.keras.Sequential([
-        tf.keras.Input(shape=(embedding_len,)),
+        tf.keras.layers.InputLayer(input_shape=[60, 37, 1]),
         tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
+        tf.keras.layers.Conv2D(32, 3, padding="SAME", activation=tf.nn.relu),
+        # tf.keras.layers.MaxPool2D(strides=[1, 1]),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Conv2D(64, 3, padding="SAME", activation=tf.nn.relu),
+        tf.keras.layers.MaxPool2D(strides=[1, 1]),
+        # tf.keras.layers.Conv2D(128, 3, padding="SAME", activation=tf.nn.relu),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(64, activation=tf.nn.relu),
+        # tf.keras.layers.Dropout(drop_out_rate),
+        tf.keras.layers.Dense(nd, activation=tf.nn.softmax)
+    ])
+    model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
+    # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
+    #               metrics=[tf.keras.metrics.mae, tf.keras.metrics.categorical_crossentropy, ['accuracy']])
+    print(model.summary())
+    return model
+
+
+def rnn(data_filepath, label_filepath):
+    verbose = 2
+    nd = 5
+    filepath = "../src/saved_model/originality_grading_model.h5"
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
+                                                      patience=100, verbose=verbose, mode='auto',
+                                                      baseline=None, restore_best_weights=False)
+    check_pointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
+    callbacks = []
+    labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
+    labels = OriginalityGradingNEW.change_labels(labels)
+    labels = np.array(labels, dtype=int)
+    vectors = InfoReadAndWrite.get_similarities(data_filepath)
+
+    embedding_len = 2220
+    # random_state = 30  # 0.71
+    random_state = 40  # 0.72
+    validation_freq = 1
+    n_splits = 5
+    drop_out_rate = 0.3
+    l1 = 0.01
+    l2 = 0.01
+    # callbacks.append(early_stopping)
+    # callbacks.append(check_pointer)
+
+    # similarity_len = 10
+    # paragraph_len = 60
+    # sentence_len = 60
+    # code_len = 10
+    # vectors = OriginalityGradingNEW.reshape(vectors, similarity_len, paragraph_len, sentence_len, code_len)
+
+    # epochs = [3000, 2000, 1000]
+    # learning_rates = [1e-1, 1e-2, 1e-3]
+    # batch_sizes = [3000, 300, 30]
+    # grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
+    #                   n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_gru)
+    # return 0
+    learning_rate = 1e-1
+    # batch_size = 6000,9000 # 0.75
+    batch_size = 3000
+    epochs = 200
+    # 总的准确率0.71
+    model = get_model_rnn(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
+    train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors,
+          verbose)
+
+
+def get_model_rnn(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
+    opt = tf.optimizers.Adam(learning_rate)
+    model = tf.keras.Sequential([
+        tf.keras.layers.InputLayer(input_shape=(embedding_len, 1,)),
+        tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
+        tf.keras.layers.SimpleRNN(128, ),
         tf.keras.layers.Dense(256, activation='relu'),
         tf.keras.layers.BatchNormalization(),
         tf.keras.layers.Dense(512, activation='relu'),
@@ -413,101 +698,161 @@ def get_model_logic(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
         tf.keras.layers.BatchNormalization(),
         tf.keras.layers.Dense(nd, activation='softmax')
     ])
-    # model = tf.keras.Sequential([
-    #     tf.keras.Input(shape=(embedding_len,)),
-    #     tf.keras.layers.Dense(256, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(l2),
-    #                           activity_regularizer=tf.keras.regularizers.l1(l1)),
-    #     tf.keras.layers.BatchNormalization(),
-    #     tf.keras.layers.Dense(512, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(l2),
-    #                           activity_regularizer=tf.keras.regularizers.l1(l1)),
-    #     tf.keras.layers.Dropout(drop_out_rate),
-    #     tf.keras.layers.BatchNormalization(),
-    #     tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(l2),
-    #                           activity_regularizer=tf.keras.regularizers.l1(l1)),
-    #     tf.keras.layers.BatchNormalization(),
-    #     tf.keras.layers.Dense(nd, activation='softmax')
-    # ])
-    print(model.summary())
-    opt = tf.optimizers.Adam(learning_rate)
     # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
     model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
                   metrics=[tf.keras.metrics.mae, tf.keras.metrics.categorical_crossentropy, ['accuracy']])
-    # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
-    #               metrics=[tf.keras.metrics.categorical_crossentropy, ['accuracy']])
+    print(model.summary())
     return model
 
 
-def train_CNN(data_filepath, label_filepath):
+def lstm(data_filepath, label_filepath):
+    verbose = 2
     nd = 5
     filepath = "../src/saved_model/originality_grading_model.h5"
-    embedding_len = 2220
-
-    learning_rate = 1e-3
-    batch_size = 128
-    verbose = 2
-    validation_freq = 10
-    n_splits = 10
-    random_state = 30
-    epochs = 300
-
-    opt = tf.optimizers.Adam(learning_rate)
-    # checkpointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
-    input_ = tf.keras.Input(shape=[60, 37, 1])
-    # hidden = tf.keras.layers.Conv2D(32, 3, padding="SAME", activation=tf.nn.relu)(input_)
-    hidden = tf.keras.layers.Conv2D(32, 3, activation=tf.nn.relu)(input_)
-    hidden = tf.keras.layers.BatchNormalization()(hidden)
-    # hidden = tf.keras.layers.Conv2D(64, 3, padding="SAME", activation=tf.nn.relu)(hidden)
-    hidden = tf.keras.layers.Conv2D(64, 3, activation=tf.nn.relu)(hidden)
-    hidden = tf.keras.layers.MaxPool2D(strides=[1, 1])(hidden)
-    # hidden = tf.keras.layers.Conv2D(128, 3, padding="SAME", activation=tf.nn.relu)(hidden)
-    hidden = tf.keras.layers.Conv2D(128, 3, activation=tf.nn.relu)(hidden)
-    flat = tf.keras.layers.Flatten()(hidden)
-    hidden = tf.keras.layers.Dense(64, activation=tf.nn.relu)(flat)
-    output = tf.keras.layers.Dense(nd, activation=tf.nn.softmax)(hidden)
-    model = tf.keras.Model(input_, output)
-    model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
-    print(model.summary())
-
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
+                                                      patience=100, verbose=verbose, mode='auto',
+                                                      baseline=None, restore_best_weights=False)
+    check_pointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
+    callbacks = []
     labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
+    labels = OriginalityGradingNEW.change_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
-    k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
-    total_y_predict = []
-    total_y_test = []
 
-    for train_index, test_index in k_fold.split(vectors, labels):
-        x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], labels[
-            test_index]
-        y_train = np.int32(tf.keras.utils.to_categorical(y_train, num_classes=nd))
+    embedding_len = 2220
+    # random_state = 30  # 0.71
+    random_state = 40  # 0.72
+    validation_freq = 1
+    n_splits = 5
+    drop_out_rate = 0.3
+    l1 = 0.01
+    l2 = 0.01
+    # callbacks.append(early_stopping)
+    # callbacks.append(check_pointer)
 
-        reshaped_x_train = []
-        reshaped_x_test = []
-        for x_ in x_train:
-            reshaped_x_train.append(tf.expand_dims(tf.reshape(x_, [60, 37]), axis=-1))
-        for x_ in x_test:
-            reshaped_x_test.append(tf.expand_dims(tf.reshape(x_, [60, 37]), axis=-1))
-        x_train = np.array(reshaped_x_train)
-        x_test = np.array(reshaped_x_test)
+    # similarity_len = 10
+    # paragraph_len = 60
+    # sentence_len = 60
+    # code_len = 10
+    # vectors = OriginalityGradingNEW.reshape(vectors, similarity_len, paragraph_len, sentence_len, code_len)
 
-        model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size,
-                  validation_freq=validation_freq, validation_split=0.1)
-        # , callbacks = [checkpointer]
-        # model = tf.keras.models.load_model(filepath)
-        y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
-        total_y_predict.extend(y_predict)
-        total_y_test.extend(y_test)
-        print(classification_report(y_test, y_predict))
-        break
-    print("总结果")
-    print(classification_report(total_y_test, total_y_predict))
+    # epochs = [3000, 2000, 1000]
+    # learning_rates = [1e-1, 1e-2, 1e-3]
+    # batch_sizes = [3000, 300, 30]
+    # grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
+    #                   n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_gru)
+    # return 0
+    learning_rate = 1e-1
+    # batch_size = 6000,9000 # 0.75
+    batch_size = 3000
+    epochs = 200
+    # 总的准确率0.71
+    model = get_model_lstm(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
+    train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors,
+          verbose)
+
+
+def get_model_lstm(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
+    opt = tf.optimizers.Adam(learning_rate)
+    model = tf.keras.Sequential([
+        tf.keras.layers.InputLayer(input_shape=(embedding_len,)),
+        tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
+        tf.keras.layers.Embedding(10000, 32),
+        tf.keras.layers.LSTM(32, ),
+        tf.keras.layers.Dense(64, activation='relu'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dropout(drop_out_rate),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dense(32, activation='relu'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dense(nd, activation='softmax')
+    ])
+    model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
+    # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
+    #               metrics=[tf.keras.metrics.mae, tf.keras.metrics.categorical_crossentropy, ['accuracy']])
+    print(model.summary())
+    return model
+
+
+def gru(data_filepath, label_filepath):
+    verbose = 2
+    nd = 5
+    filepath = "../src/saved_model/originality_grading_model.h5"
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
+                                                      patience=100, verbose=verbose, mode='auto',
+                                                      baseline=None, restore_best_weights=False)
+    check_pointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
+    callbacks = []
+    labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
+    labels = OriginalityGradingNEW.change_labels(labels)
+    labels = np.array(labels, dtype=int)
+    vectors = InfoReadAndWrite.get_similarities(data_filepath)
+
+    embedding_len = 2220
+    # random_state = 30  # 0.71
+    random_state = 40  # 0.72
+    validation_freq = 1
+    n_splits = 5
+    drop_out_rate = 0.3
+    l1 = 0.01
+    l2 = 0.01
+    # callbacks.append(early_stopping)
+    # callbacks.append(check_pointer)
+
+    # similarity_len = 10
+    # paragraph_len = 60
+    # sentence_len = 60
+    # code_len = 10
+    # vectors = OriginalityGradingNEW.reshape(vectors, similarity_len, paragraph_len, sentence_len, code_len)
+
+    # epochs = [3000, 2000, 1000]
+    # learning_rates = [1e-1, 1e-2, 1e-3]
+    # batch_sizes = [3000, 300, 30]
+    # grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
+    #                   n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_gru)
+    # return 0
+    learning_rate = 1e-3
+    # batch_size = 6000,9000 # 0.75
+    batch_size = 3000
+    epochs = 200
+    # 总的准确率0.71
+    model = get_model_gru(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
+    train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors,
+          verbose)
+
+
+def get_model_gru(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
+    opt = tf.optimizers.Adam(learning_rate)
+    model = tf.keras.Sequential([
+        tf.keras.layers.InputLayer(input_shape=(embedding_len, 1,)),
+        tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
+        tf.keras.layers.Bidirectional(tf.keras.layers.GRU(32)),
+        tf.keras.layers.Dense(256, activation='relu'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dense(512, activation='relu'),
+        tf.keras.layers.Dropout(drop_out_rate),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dense(64, activation='relu'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dense(nd, activation='softmax')
+    ])
+    # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
+    model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
+                  metrics=[tf.keras.metrics.mae, tf.keras.metrics.categorical_crossentropy, ['accuracy']])
+    print(model.summary())
+    return model
 
 
 if __name__ == '__main__':
     data_filepath = "../src/text/similarities_bigger.csv"
     label_filepath = "../src/text/按原创性分类.txt"
-    # train_ml(data_filepath, label_filepath)
-    logic(data_filepath, label_filepath)
-    # train_CNN(data_filepath, label_filepath)
+    # traditional_ml(data_filepath, label_filepath) #已完成
+    dense(data_filepath, label_filepath)  # 已完成
+    # cnn(data_filepath, label_filepath)
+    # gru(data_filepath, label_filepath)
+    # rnn(data_filepath, label_filepath)
+    # lstm(data_filepath, label_filepath)
 
     # vectors = InfoReadAndWrite.get_similarities(data_filepath)
     # i = 649
