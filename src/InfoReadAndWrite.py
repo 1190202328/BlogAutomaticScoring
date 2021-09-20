@@ -166,9 +166,10 @@ class InfoReadAndWrite:
         return np.array(similarities).astype(np.float)
 
     @staticmethod
-    def get_similarities_and_write(url, num, verbose=False, pre_verbose=True):
+    def get_similarities_and_write(url, num, data_filepath, verbose=False, pre_verbose=True):
         """
         获取similarity并且将其格式化地写入文件，文件名称为similarities_num.csv
+        :param data_filepath: 文件名称
         :param url: url地址
         :param num: 第多少个url
         :return: 无
@@ -177,30 +178,33 @@ class InfoReadAndWrite:
         if not similarity:
             print("\n到此url停止>>>{}\n".format(url), end="")
             return 0
-        InfoReadAndWrite.write_similarity_to_file(similarity, '../src/text/similarities_bigger{}.csv'.format(num))
+        InfoReadAndWrite.write_similarity_to_file(similarity, data_filepath[:len(data_filepath)-4]+'{}.csv'.format(num))
 
     @staticmethod
-    def merge_to_main_csv(start, end):
+    def merge_to_main_csv(start, end, data_filepath):
         """
-        将similarities_{start}.csv,similarities_{start+1}.csv,...,similarities_{end-1}.csv 合并到 ../src/text/similarities.csv
+        例子：data_filepath = 'similarities.csv'
+        将data_filepath[:len(data_filepath)-4]{start}.csv,data_filepath[:len(data_filepath)-4]{start+1}.csv,
+        ...,data_filepath[:len(data_filepath)-4]{end-1}.csv 合并到 data_filepath
         :param start: 开始序号
         :param end: 结束序号
         :return: 无
         """
         similarities = list()
         for i in range(start, end):
-            with open('../src/text/similarities_bigger{}.csv'.format(i), 'r') as f:
+            with open(data_filepath[:len(data_filepath)-4]+'{}.csv'.format(i), 'r') as f:
                 reader = csv.reader(f)
                 for row in reader:
                     similarities.append(row)
-        with open('../src/text/similarities_bigger.csv', 'a') as f:
+        with open(data_filepath, 'a') as f:
             writer = csv.writer(f)
             writer.writerows(similarities)
 
     @staticmethod
-    def n_threads_run(urls, number_list, num_worker=20):
+    def n_threads_run(urls, number_list, data_filepath, num_worker=20):
         """
         保持总有num_worker个线程在运行
+        :param data_filepath: 文件名
         :param urls: url列表
         :param number_list: 序号列表
         :param num_worker: 线程数
@@ -212,7 +216,7 @@ class InfoReadAndWrite:
                     break
                 i = min(number_list)
                 number_list.remove(i)
-                thread = threading.Thread(target=InfoReadAndWrite.get_similarities_and_write, args=(urls[i], i))
+                thread = threading.Thread(target=InfoReadAndWrite.get_similarities_and_write, args=(urls[i], i, data_filepath))
                 thread.start()
             time.sleep(60)
 
@@ -259,14 +263,14 @@ class InfoReadAndWrite:
 
 if __name__ == '__main__':
     filepath = "../src/text/按原创性分类.txt"
-    data_filepath = "../src/text/similarities_bigger.csv"
+    data_filepath = "../src/text/similarities_bigger_new.csv"
     urls = InfoReadAndWrite.get_urls(filepath)
     print("shape=", end="")
     print(InfoReadAndWrite.get_similarities(data_filepath).shape)
-    number_list = InfoReadAndWrite.get_number_list("../src/text/similarities_bigger", 650, 650)
+    number_list = InfoReadAndWrite.get_number_list(data_filepath[:len(data_filepath)-4], 0, 650)
     print("未完成爬虫的序号>>>", end="")
     print(number_list)
-    # InfoReadAndWrite.n_threads_run(urls, number_list, num_worker=30)
+    InfoReadAndWrite.n_threads_run(urls, number_list, data_filepath, num_worker=30)
 
-    # InfoReadAndWrite.merge_to_main_csv(650, 650)
+    # InfoReadAndWrite.merge_to_main_csv(0, 0, data_filepath)
     # print(InfoReadAndWrite.get_similarities(data_filepath).shape)

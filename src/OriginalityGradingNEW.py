@@ -194,15 +194,15 @@ class OriginalityGradingNEW:
         for vector in vectors:
             new_vector = []
             if head:
-                new_vector += vector[:10]
+                new_vector.extend(vector[:10])
             if text:
-                new_vector += vector[10:20]
+                new_vector.extend(vector[10:20])
             if paragraphs:
-                new_vector += vector[20:820]
+                new_vector.extend(vector[20:820])
             if sentences:
-                new_vector += vector[820:1620]
+                new_vector.extend(vector[820:1620])
             if codes:
-                new_vector += vector[1620:]
+                new_vector.extend(vector[1620:])
             new_vectors.append(new_vector)
         return np.float32(new_vectors)
 
@@ -243,6 +243,21 @@ class OriginalityGradingNEW:
             sample_list = random.sample(sample_list, dimension)
             new_vector = vector[sample_list]
             new_vectors.append(new_vector)
+        return np.float32(new_vectors)
+
+    @staticmethod
+    def low_k(vectors, k: int, code_start: int, k_code: int):
+        """
+        选取相似度最小的k+k_code个相似度
+        :param k_code: 代码取多少k_code个
+        :param code_start: 代码段段开始下标
+        :param vectors: 原矩阵
+        :param k: 非码取多少k个
+        :return: 新矩阵
+        """
+        new_vectors = []
+        for vector in vectors:
+            new_vectors.append(sorted(vector[:code_start])[:k] + sorted(vector[code_start:])[:k_code])
         return np.float32(new_vectors)
 
 
@@ -489,7 +504,7 @@ def split_result_show(labels, model, test_index, vectors):
 
 
 def dense(data_filepath, label_filepath):
-    verbose = 2
+    verbose = 1
     nd = 5
     filepath = "../src/saved_model/originality_grading_model.h5"
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
@@ -508,8 +523,8 @@ def dense(data_filepath, label_filepath):
     validation_freq = 1
     n_splits = 5
     drop_out_rate = 0.3
-    l1 = 0.01
-    l2 = 0.01
+    l1 = 0
+    l2 = 0.1
     # callbacks.append(early_stopping)
     # callbacks.append(check_pointer)
 
@@ -517,12 +532,18 @@ def dense(data_filepath, label_filepath):
     paragraph_len = 50
     sentence_len = 50
     code_len = 50
-    embedding_len = 222
+    # vectors = OriginalityGradingNEW.reduce_dimension(vectors,
+    #                                                  head=True, text=True, paragraphs=True, sentences=True, codes=False)
+    # embedding_len = 1620
     # vectors = OriginalityGradingNEW.reshape(vectors, similarity_len, paragraph_len, sentence_len, code_len)
-    vectors = OriginalityGradingNEW.one_dimension(vectors, 'max')
     # vectors = OriginalityGradingNEW.random_select(vectors, 100)
-    print(vectors.shape)
-    print(vectors)
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, 'max')
+    # k = 20
+    # k_code = 5
+    # vectors = OriginalityGradingNEW.low_k(vectors, k, 162, k_code)
+    # print(vectors.shape)
+    # print(vectors)
+    # return 0
 
     # epochs = [3000, 2000, 1000]
     # learning_rates = [1e-1, 1e-2, 1e-3]
@@ -530,11 +551,11 @@ def dense(data_filepath, label_filepath):
     # grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
     #                   n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_logic)
     # return 0
-    learning_rate = 1e-3
-    # batch_size = 6000,9000 # 0.75
-    batch_size = 6000
-    epochs = 2000
-    # 总的准确率0.71
+    learning_rate = 1e-5
+    batch_size = 256
+    # epochs = 2000
+    epochs = 500
+    # 总的准确率0.82
     model = get_model_logic(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
     train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors,
           verbose)
