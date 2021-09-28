@@ -1,8 +1,12 @@
 import random
+import re
+
 import bs4
 import requests
 import time
 from bs4 import BeautifulSoup
+
+from src import Global
 
 
 class Crawl:
@@ -43,6 +47,10 @@ class Crawl:
                 article_urls = list()
                 html = r.text
                 bf = BeautifulSoup(html, "html.parser")
+                if re.match(Global.not_find, bf.get_text(), flags=re.S):
+                    if verbose:
+                        print("成功>>>百度搜不到这个关键字")
+                    return html
                 contents = bf.find_all("div", class_="c-container")
                 for content in contents:
                     for child in content.children:
@@ -55,7 +63,7 @@ class Crawl:
                 if len(article_urls) == 0:
                     # print("ip第{}次检测出不行>>>".format(6 - retry_count), proxy)
                     if verbose:
-                        print("失败")
+                        print("访问百度失败")
                     retry_count -= 1
                     time.sleep(random.randrange(3, 6, 1))
                     continue
@@ -66,7 +74,7 @@ class Crawl:
                 # print("ip第{}次检测出不行>>>".format(6 - retry_count), proxy)
                 time.sleep(random.randrange(3, 6, 1))
                 if verbose:
-                    print("失败")
+                    print("ip是坏的，失败")
                 retry_count -= 1
                 continue
         return ""
@@ -89,12 +97,12 @@ class Crawl:
             'Connection': 'keep-alive',
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
         }
-        retry_count = 20
+        retry_count = 30
         proxy = Crawl.get_proxy().get("proxy")
         html = ""
         while proxy and retry_count > 0:
             if verbose:
-                print("<第{}次尝试>".format(21-retry_count))
+                print("<第{}次尝试>".format(31-retry_count))
             html = Crawl.is_valid(proxy, url, verbose=verbose)
             if html == "":
                 if verbose:

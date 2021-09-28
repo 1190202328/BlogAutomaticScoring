@@ -1,0 +1,15 @@
+url_pattern = dict()
+pattern_csdn = "https://blog\\.csdn\\.net/.+/article/details/.+"
+pattern_cnblogs = "https://www\\.cnblogs\\.com/.+/p/\\d+\\.html"
+pattern_github = "https://.+\\.github\\.io/.+"
+pattern_jianshu = "https://www\\.jianshu\\.com/p/.+"
+pattern_csdn_main = "https://blog\\.csdn\\.net/.+"
+pattern_cnblogs_main = "https://www\\.cnblogs\\.com/.+"
+pattern_github_main = "https://.+\\.github\\.io"
+pattern_jianshu_main = "https://www\\.jianshu\\.com/u/.+"
+url_pattern['csdn'] = pattern_csdn
+url_pattern['cnblogs'] = pattern_cnblogs
+url_pattern['github'] = pattern_github
+url_pattern['jianshu'] = pattern_jianshu
+url_pattern['or'] = pattern_csdn + "|" + pattern_cnblogs + "|" + pattern_github + "|" + pattern_jianshu
+not_find = '.+抱歉没有找到与.+相关的网页。温馨提示：请检查您的输入是否正确如网页未收录或者新站未收录，请提交网址给我们如有任何意见或建议，请及时反馈给我们.+'

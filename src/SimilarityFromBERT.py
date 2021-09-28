@@ -144,7 +144,7 @@ class SimilarityFromBERT:
         paragraphs = SimilarityFromBERT.get_text_related(paragraphs, text, limit=0.80, verbose=verbose)
         to_search_sentences = []
         if pre_verbose:
-            notice = tqdm(total=len(paragraphs), bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.BLUE, Fore.RESET))
+            notice = tqdm(total=len(paragraphs), bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.BLUE, Fore.RESET), position=True)
             notice.set_description("[{}] ".format(num) + url + " >>>Pre")
         i = 0
         for paragraph in paragraphs:
@@ -184,12 +184,14 @@ class SimilarityFromBERT:
                     to_search_codes.append(line)
                     total_count += 1
         if not verbose:
-            notice = tqdm(total=total_count, bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.GREEN, Fore.RESET))
+            notice = tqdm(total=total_count, bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.GREEN, Fore.RESET), position=True)
             notice.set_description("[{}] ".format(num) + url + " >>>")
         # 标题相似度
         related_heads, _ = Pretreatment.get_related_head(head, head_number, url=url, verbose=verbose)
         if related_heads is None:
-            return None
+            related_heads, _ = Pretreatment.get_related_head(to_search_sentences[0][0], head_number, url=url, verbose=verbose)
+            if related_heads is None:
+                return None
         if save is not None:
             search_result['head'] = related_heads
         head_similarity = SimilarityFromBERT.get_similarity([head] + related_heads)[:1][0][1:]
@@ -203,7 +205,9 @@ class SimilarityFromBERT:
         # 全文相似度
         related_texts, _ = Pretreatment.get_related_texts(head, text_number, url=url, verbose=verbose)
         if related_texts is None:
-            return None
+            related_texts, _ = Pretreatment.get_related_texts(to_search_sentences[0][0], text_number, url=url, verbose=verbose)
+            if related_texts is None:
+                return None
         if save is not None:
             search_result['text'] = related_texts
         related_texts = [text] + related_texts

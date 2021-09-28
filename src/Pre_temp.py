@@ -72,7 +72,7 @@ def split_txt(txt_url, EDU=False, verbose=True):
             else:
                 text += child.get_text(separator="\n")
         # date
-        update_date = bf.find("span", class_="time").text[0:10]
+        update_date = bf.find("span", class_="update_time").text[0:10]
     if re.match(url_pattern['cnblogs'], url):
         is_illegal = True
         # head
@@ -114,7 +114,7 @@ def split_txt(txt_url, EDU=False, verbose=True):
         # text
         text = bf.find("div", itemprop="articleBody").getText()
         # date
-        update_date = bf.find("time").attrs['datetime'][0:10]
+        update_date = bf.find("update_time").attrs['datetime'][0:10]
         # codes
         contents = bf.find_all("pre")
         digits = list()

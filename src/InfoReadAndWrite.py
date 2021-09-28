@@ -9,6 +9,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 import xlsxwriter
+from baiduspider import BaiduSpider
 
 from src.Pretreatment import Pretreatment
 from src.SimilarityFromBERT import SimilarityFromBERT
@@ -166,7 +167,7 @@ class InfoReadAndWrite:
         return np.array(similarities).astype(np.float)
 
     @staticmethod
-    def get_similarities_and_write(url, num, data_filepath, verbose=False, pre_verbose=True):
+    def get_similarities_and_write(url, num, data_filepath, verbose=True, pre_verbose=True):
         """
         获取similarity并且将其格式化地写入文件，文件名称为similarities_num.csv
         :param data_filepath: 文件名称
@@ -267,10 +268,11 @@ if __name__ == '__main__':
     urls = InfoReadAndWrite.get_urls(filepath)
     print("shape=", end="")
     print(InfoReadAndWrite.get_similarities(data_filepath).shape)
-    number_list = InfoReadAndWrite.get_number_list(data_filepath[:len(data_filepath)-4], 0, 650)
+    number_list = InfoReadAndWrite.get_number_list(data_filepath[:len(data_filepath)-4], 0, 0)
+    print("[{}]>>>".format(len(number_list)), end="")
     print("未完成爬虫的序号>>>", end="")
     print(number_list)
-    InfoReadAndWrite.n_threads_run(urls, number_list, data_filepath, num_worker=30)
+    # InfoReadAndWrite.n_threads_run(urls, number_list, data_filepath, num_worker=30)
 
     # InfoReadAndWrite.merge_to_main_csv(0, 0, data_filepath)
     # print(InfoReadAndWrite.get_similarities(data_filepath).shape)

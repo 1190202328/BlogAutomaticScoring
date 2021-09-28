@@ -9,6 +9,7 @@ import requests
 import re
 from baiduspider import BaiduSpider
 
+from src import Global
 from src.Crawl import Crawl
 from src.EDU import demo
 from src.SeparateCode import SeparateCode
@@ -225,6 +226,8 @@ class Pretreatment:
                             sentences.extend(sentence.split("，"))
                         else:
                             sentences.append(sentence)
+            if head == '' or re.match('\\s+', head):
+                head = sentences[0]
             result['head'] = head
             result['paragraphs'] = clean_paragraphs
             result['sentences'] = sentences
@@ -234,6 +237,12 @@ class Pretreatment:
             return result
         else:
             return None
+
+    @staticmethod
+    def clean_to_search_keywords(keywords: str) -> str:
+        keywords = re.sub('(#+)|(%+)', '', keywords).strip().lower()
+        keywords = re.sub('\\s+', ' ', keywords)
+        return keywords
 
     @staticmethod
     def get_related_head(text_head, number, page_limit=3, url="", verbose=True):
@@ -246,6 +255,7 @@ class Pretreatment:
         :param text_head: 文章标题
         :return: number篇文章的标题,find
         """
+        text_head = Pretreatment.clean_to_search_keywords(text_head)
         total_urls = list()
         total_titles = list()
         count = 0
@@ -362,6 +372,7 @@ class Pretreatment:
         :param text_head: 搜索的标题
         :return: number篇文章,find
         """
+        text_head = Pretreatment.clean_to_search_keywords(text_head)
         total_urls = list()
         related_texts = list()
         find = False
@@ -536,6 +547,7 @@ class Pretreatment:
         :param original_sentence: 源句子
         :return: 相关段落的列表，相关句子的列表，find, invalid（如果为2则表示此次查找ip被封掉，失败）
         """
+        original_sentence = Pretreatment.clean_to_search_keywords(original_sentence)
         pn = 0
         article_count = 1
         total_urls = list()
@@ -552,7 +564,10 @@ class Pretreatment:
                 return related_paragraphs, related_sentences, find, invalid
             article_urls = list()
             html = Crawl.get_raw_html(baidu_url, verbose=verbose)
-            # time.sleep(random.randrange(30, 60, 1))
+            bf = BeautifulSoup(html, "html.parser")
+            if re.match(Global.not_find, bf.get_text(), flags=re.S):
+                return [], [], False, 0
+            # update_time.sleep(random.randrange(30, 60, 1))
             pre_baidu_url = baidu_url
             baidu_url = Pretreatment.get_next_baidu_url(html)
             if verbose:
@@ -560,7 +575,6 @@ class Pretreatment:
             if baidu_url == "":
                 baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=" + str(
                     pn * 50) + "&rn=50" + "&oq=" + original_sentence + "&ie=utf-8"
-            bf = BeautifulSoup(html, "html.parser")
             contents = bf.find_all("div", class_="c-container")
             for content in contents:
                 if len(related_paragraphs) >= paragraph_number and len(related_sentences) >= sentence_number:
@@ -634,7 +648,7 @@ class Pretreatment:
             if verbose:
                 print("url共有{}个".format(len(article_urls)))
             if len(article_urls) == 0:
-                print("\n此url第{}次暂时无法访问>>>{}\n".format(invalid+1, pre_baidu_url), end="")
+                print("\n此url第{}次暂时无法访问>>>{}\n".format(invalid + 1, pre_baidu_url), end="")
                 baidu_url = pre_baidu_url
                 if invalid == 1:
                     pn -= 1

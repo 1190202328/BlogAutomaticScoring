@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 from keras.callbacks import ModelCheckpoint
+from openpyxl import load_workbook
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.model_selection import KFold, GridSearchCV, train_test_split
@@ -27,7 +28,35 @@ class OriginalityGradingNEW:
     """
 
     @staticmethod
-    def get_labels(filepath, num):
+    def get_labels_xlsx(filepath: str, num: int) -> list:
+        """
+        从xlsx文件中读取标签
+        :param filepath: 文件路径
+        :param num: 标签数量
+        :return: 标签
+        """
+        workbook = load_workbook(filepath)
+        sheets = workbook.get_sheet_names()
+        booksheet = workbook.get_sheet_by_name(sheets[0])
+        rows = booksheet.rows
+        i = 1
+        labels = list()
+        for row in rows:
+            if i > num:
+                break
+            label = booksheet.cell(row=i, column=2).value
+            labels.append(int(label))
+            i = i + 1
+        return labels
+
+    @staticmethod
+    def get_labels(filepath: str, num: int) -> list:
+        """
+        从txt文件中读取标签
+        :param filepath: 文件路径
+        :param num: 标签数量
+        :return: 标签
+        """
         i = 1
         labels = list()
         with open(filepath, "r") as f:
@@ -282,9 +311,153 @@ def traditional_ml(data_filepath, label_filepath):
             test_index]
         total_y_test.extend(y_test)
 
-        knn = KNeighborsClassifier().fit(x_train, y_train)
+        dt = DecisionTreeClassifier().fit(x_train, y_train)
+        answer_dt = dt.predict(x_test)
+        total_y_predict_DT.extend(answer_dt)
+
+        gnb = GaussianNB().fit(x_train, y_train)
+        answer_gnb = gnb.predict(x_test)
+        total_y_predict_Bayes.extend(answer_gnb)
+
+        clf = LogisticRegression(penalty='l1', solver='liblinear').fit(x_train, y_train)
+        answer_clf = clf.predict(x_test)
+        total_y_predict_clf.extend(answer_clf)
+
+        # tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-1, 1e-2, 1e-3], 'C': [1, 10, 100, 1000]},
+        #                     {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+        #
+        # scores = ['precision', 'recall']
+        # for score in scores:
+        #     print("# Tuning hyper-parameters for %s" % score)
+        #     print('%s_weighted' % score)
+        #     grid = GridSearchCV(SVC(), tuned_parameters, cv=5,
+        #                         scoring='%s_weighted' % score)  # 1/5作为验证集
+        #     # 用前一半train数据再做5折交叉验证，因为之前train_test_split已经分割为2份了
+        #
+        #     grid_result = grid.fit(x_train, y_train)
+        #
+        #     print("Best parameters set found on development set:")
+        #     print(grid.best_params_)
+        #     print("Grid scores on development set:")
+        #
+        #     means = grid_result.cv_results_['mean_test_score']
+        #     params = grid_result.cv_results_['params']
+        #     for mean, param in zip(means, params):
+        #         print("%f  with:   %r" % (mean, param))
+        #
+        #     print("Detailed classification report:")
+        #     print("The model is trained on the full development set.")
+        #     print("The scores are computed on the full evaluation set.")
+        #     y_true, y_pred = y_test, grid.predict(x_test)
+        #     print(classification_report(y_true, y_pred))
+        #
+        # tuned_parameters = [{'n_estimators': list(range(10, 210, 10))}]
+        # scores = ['precision', 'recall']
+        # for score in scores:
+        #     print("# Tuning hyper-parameters for %s" % score)
+        #     print('%s_weighted' % score)
+        #     grid = GridSearchCV(RandomForestClassifier(), tuned_parameters, cv=5,
+        #                         scoring='%s_weighted' % score)  # 1/5作为验证集
+        #     # 用前一半train数据再做5折交叉验证，因为之前train_test_split已经分割为2份了
+        #
+        #     grid_result = grid.fit(x_train, y_train)
+        #
+        #     print("Best parameters set found on development set:")
+        #     print(grid.best_params_)
+        #     print("Grid scores on development set:")
+        #
+        #     means = grid_result.cv_results_['mean_test_score']
+        #     params = grid_result.cv_results_['params']
+        #     for mean, param in zip(means, params):
+        #         print("%f  with:   %r" % (mean, param))
+        #
+        #     print("Detailed classification report:")
+        #     print("The model is trained on the full development set.")
+        #     print("The scores are computed on the full evaluation set.")
+        #     y_true, y_pred = y_test, grid.predict(x_test)
+        #     print(classification_report(y_true, y_pred))
+        #
+        # tuned_parameters = [{'n_neighbors': list(range(1, 20))}]
+        # scores = ['precision', 'recall']
+        # for score in scores:
+        #     print("# Tuning hyper-parameters for %s" % score)
+        #     print('%s_weighted' % score)
+        #     grid = GridSearchCV(KNeighborsClassifier(), tuned_parameters, cv=5,
+        #                         scoring='%s_weighted' % score)  # 1/5作为验证集
+        #     # 用前一半train数据再做5折交叉验证，因为之前train_test_split已经分割为2份了
+        #
+        #     grid_result = grid.fit(x_train, y_train)
+        #
+        #     print("Best parameters set found on development set:")
+        #     print(grid.best_params_)
+        #     print("Grid scores on development set:")
+        #
+        #     means = grid_result.cv_results_['mean_test_score']
+        #     params = grid_result.cv_results_['params']
+        #     for mean, param in zip(means, params):
+        #         print("%f  with:   %r" % (mean, param))
+        #
+        #     print("Detailed classification report:")
+        #     print("The model is trained on the full development set.")
+        #     print("The scores are computed on the full evaluation set.")
+        #     y_true, y_pred = y_test, grid.predict(x_test)
+        #     print(classification_report(y_true, y_pred))
+        # break
+
+        svm = SVC(C=10, gamma=0.001, kernel='rbf', probability=True).fit(x_train, y_train)
+        answer_svm = svm.predict(x_test)
+        total_y_predict_SVM.extend(answer_svm)
+
+        rf = RandomForestClassifier(n_estimators=170).fit(x_train, y_train)
+        answer_rf = rf.predict(x_test)
+        total_y_predict_RF.extend(answer_rf)
+
+        knn = KNeighborsClassifier(n_neighbors=9).fit(x_train, y_train)
         answer_knn = knn.predict(x_test)
         total_y_predict_knn.extend(answer_knn)
+
+        # print('\n\nThe classification report for knn:')
+        # print(classification_report(y_test, answer_knn))
+        # print('\n\nThe classification report for DT:')
+        # print(classification_report(y_test, answer_dt))
+        # print('\n\nThe classification report for Bayes:')
+        # print(classification_report(y_test, answer_gnb))
+        # print('\n\nThe classification report for SVM:')
+        # print(classification_report(y_test, answer_svm))
+    print("总结果如下")
+    print('\n\nThe classification report for knn:')
+    print(classification_report(total_y_test, total_y_predict_knn))
+    print('\n\nThe classification report for DT:')
+    print(classification_report(total_y_test, total_y_predict_DT))
+    print('\n\nThe classification report for Bayes:')
+    print(classification_report(total_y_test, total_y_predict_Bayes))
+    print('\n\nThe classification report for SVM:')
+    print(classification_report(total_y_test, total_y_predict_SVM))
+    print('\n\nThe classification report for RF:')
+    print(classification_report(total_y_test, total_y_predict_RF))
+    print('\n\nThe classification report for CLF:')
+    print(classification_report(total_y_test, total_y_predict_clf))
+
+
+def traditional_ml_new(data_filepath, label_filepath):
+    n_splits = 5
+    random_state = 40
+
+    labels = OriginalityGradingNEW.get_labels_xlsx(label_filepath, 650)
+    labels = np.array(labels, dtype=int)
+    vectors = InfoReadAndWrite.get_similarities(data_filepath)
+    k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
+    total_y_predict_knn = []
+    total_y_predict_DT = []
+    total_y_predict_Bayes = []
+    total_y_predict_SVM = []
+    total_y_predict_RF = []
+    total_y_predict_clf = []
+    total_y_test = []
+    for train_index, test_index in k_fold.split(vectors, labels):
+        x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], labels[
+            test_index]
+        total_y_test.extend(y_test)
 
         dt = DecisionTreeClassifier().fit(x_train, y_train)
         answer_dt = dt.predict(x_test)
@@ -351,15 +524,45 @@ def traditional_ml(data_filepath, label_filepath):
         #     print("The scores are computed on the full evaluation set.")
         #     y_true, y_pred = y_test, grid.predict(x_test)
         #     print(classification_report(y_true, y_pred))
+        #
+        # tuned_parameters = [{'n_neighbors': list(range(1, 30))}]
+        # scores = ['precision', 'recall']
+        # for score in scores:
+        #     print("# Tuning hyper-parameters for %s" % score)
+        #     print('%s_weighted' % score)
+        #     grid = GridSearchCV(KNeighborsClassifier(), tuned_parameters, cv=5,
+        #                         scoring='%s_weighted' % score)  # 1/5作为验证集
+        #     # 用前一半train数据再做5折交叉验证，因为之前train_test_split已经分割为2份了
+        #
+        #     grid_result = grid.fit(x_train, y_train)
+        #
+        #     print("Best parameters set found on development set:")
+        #     print(grid.best_params_)
+        #     print("Grid scores on development set:")
+        #
+        #     means = grid_result.cv_results_['mean_test_score']
+        #     params = grid_result.cv_results_['params']
+        #     for mean, param in zip(means, params):
+        #         print("%f  with:   %r" % (mean, param))
+        #
+        #     print("Detailed classification report:")
+        #     print("The model is trained on the full development set.")
+        #     print("The scores are computed on the full evaluation set.")
+        #     y_true, y_pred = y_test, grid.predict(x_test)
+        #     print(classification_report(y_true, y_pred))
         # break
 
         svm = SVC(C=1, gamma=0.01, kernel='rbf', probability=True).fit(x_train, y_train)
         answer_svm = svm.predict(x_test)
         total_y_predict_SVM.extend(answer_svm)
 
-        rf = RandomForestClassifier(n_estimators=60).fit(x_train, y_train)
+        rf = RandomForestClassifier(n_estimators=30).fit(x_train, y_train)
         answer_rf = rf.predict(x_test)
         total_y_predict_RF.extend(answer_rf)
+
+        knn = KNeighborsClassifier(n_neighbors=21).fit(x_train, y_train)
+        answer_knn = knn.predict(x_test)
+        total_y_predict_knn.extend(answer_knn)
 
         # print('\n\nThe classification report for knn:')
         # print(classification_report(y_test, answer_knn))
@@ -417,8 +620,8 @@ def grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epoc
           best_epoch)
 
 
-def train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors,
-          verbose):
+def train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vectors, get_model, embedding_len,
+          drop_out_rate, learning_rate, l1, l2, verbose):
     k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
     total_y_predict = []
     total_y_test = []
@@ -426,6 +629,7 @@ def train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_sta
                                                          random_state=random_state)
     y_valid = np.int32(tf.keras.utils.to_categorical(y_valid, num_classes=nd))
     for train_index, test_index in k_fold.split(vectors, labels):
+        model = get_model(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
         x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], labels[
             test_index]
         y_train = np.int32(tf.keras.utils.to_categorical(y_train, num_classes=nd))
@@ -518,8 +722,8 @@ def dense(data_filepath, label_filepath):
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
 
     embedding_len = 2220
-    # random_state = 30  # 0.71
-    random_state = 40  # 0.72
+    # random_state = 1  # 测试
+    random_state = 40  # 一直使用的
     validation_freq = 1
     n_splits = 5
     drop_out_rate = 0.3
@@ -553,17 +757,17 @@ def dense(data_filepath, label_filepath):
     # return 0
     learning_rate = 1e-5
     batch_size = 256
-    # epochs = 2000
-    epochs = 500
+    # epochs = 500
+    epochs = 200
     # 总的准确率0.82
-    model = get_model_logic(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
-    train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors,
-          verbose)
+    train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vectors, get_model_logic, embedding_len,
+          drop_out_rate, learning_rate, l1, l2, verbose)
 
 
 def get_model_logic(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
     model = tf.keras.Sequential([
         tf.keras.layers.InputLayer(input_shape=(embedding_len,)),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
         tf.keras.layers.Dense(256, activation='relu'),
         tf.keras.layers.BatchNormalization(),
@@ -865,11 +1069,79 @@ def get_model_gru(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
     return model
 
 
+def dense_new(data_filepath, label_filepath):
+    verbose = 1
+    nd = 5
+    filepath = "../src/saved_model/originality_grading_model.h5"
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
+                                                      patience=100, verbose=verbose, mode='auto',
+                                                      baseline=None, restore_best_weights=False)
+    check_pointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
+    callbacks = []
+    labels = OriginalityGradingNEW.get_labels_xlsx(label_filepath, 650)
+    labels = np.array(labels, dtype=int)
+    vectors = InfoReadAndWrite.get_similarities(data_filepath)
+
+    embedding_len = 2220
+    # random_state = 1  # 测试
+    random_state = 40  # 一直使用的
+    validation_freq = 1
+    n_splits = 5
+    drop_out_rate = 0.3
+    l1 = 0
+    l2 = 0.1
+    # callbacks.append(early_stopping)
+    # callbacks.append(check_pointer)
+
+    similarity_len = 10
+    paragraph_len = 50
+    sentence_len = 50
+    code_len = 50
+    # vectors = OriginalityGradingNEW.reduce_dimension(vectors,
+    #                                                  head=True, text=True, paragraphs=True, sentences=True, codes=False)
+    # embedding_len = 1620
+    # vectors = OriginalityGradingNEW.reshape(vectors, similarity_len, paragraph_len, sentence_len, code_len)
+    # vectors = OriginalityGradingNEW.random_select(vectors, 100)
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, 'max')
+    # k = 20
+    # k_code = 5
+    # vectors = OriginalityGradingNEW.low_k(vectors, k, 162, k_code)
+    # print(vectors.shape)
+    # print(vectors)
+    # return 0
+
+    # epochs = [3000, 2000, 1000]
+    # learning_rates = [1e-1, 1e-2, 1e-3]
+    # batch_sizes = [3000, 300, 30]
+    # grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
+    #                   n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_logic)
+    # return 0
+    learning_rate = 1e-5
+    batch_size = 256
+    epochs = 500
+    epochs = 200
+    # 总的准确率0.82
+    train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vectors, get_model_logic, embedding_len,
+          drop_out_rate, learning_rate, l1, l2, verbose)
+
+
 if __name__ == '__main__':
     data_filepath = "../src/text/similarities_bigger.csv"
+    data_filepath_new = '../src/text/similarities_bigger_new.csv'
     label_filepath = "../src/text/按原创性分类.txt"
-    # traditional_ml(data_filepath, label_filepath) #已完成
-    dense(data_filepath, label_filepath)  # 已完成
+    label_filepath_new = "../src/text/按原创性分类_改.xlsx"
+    # 旧的数据
+    # traditional_ml(data_filepath, label_filepath)  # 已完成，旧的标签
+    # traditional_ml_new(data_filepath, label_filepath_new)  # 已完成，新的标签
+    # dense(data_filepath, label_filepath)  # 已完成，旧的标签
+    # dense_new(data_filepath, label_filepath_new)  # 已完成，新的标签
+
+    # 新的的数据
+    # traditional_ml(data_filepath_new, label_filepath)  # 已完成，旧的标签
+    # traditional_ml_new(data_filepath_new, label_filepath_new)  # 已完成，新的标签
+    # dense(data_filepath_new, label_filepath)  # 已完成，旧的标签
+    dense_new(data_filepath_new, label_filepath_new)  # 已完成，新的标签
+
     # cnn(data_filepath, label_filepath)
     # gru(data_filepath, label_filepath)
     # rnn(data_filepath, label_filepath)

@@ -36,7 +36,7 @@ class BlogAutomaticScoring:
             text += content.text
         text = re.sub("[ \t]", "", text)
         text = re.sub("\n+", "\n", text)
-        contents = bf.find_all("span", class_="time")
+        contents = bf.find_all("span", class_="update_time")
         for content in contents:
             upload_date = date.fromisoformat(content.text[0:10])
             return text, upload_date, head
