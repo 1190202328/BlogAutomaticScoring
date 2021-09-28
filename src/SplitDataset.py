@@ -4,6 +4,8 @@ import jieba
 
 from src.Pretreatment import Pretreatment
 
+from src import GetWebResource
+
 
 class SplitDataset:
     """
@@ -55,7 +57,7 @@ class SplitDataset:
             print('<<<{}>>>'.format(index))
             chinese_count = 0
             total_count = 0
-            result = Pretreatment.split_txt(urls[index], verbose=False)
+            result = GetWebResource.split_txt(urls[index], verbose=False)
             if result is None:
                 print(urls[index])
                 return None

@@ -9,11 +9,12 @@ def partition(samples, n):
     '''
         divide samples into n partitions
     '''
-    assert(len(samples) > n)  # there are more samples than partitions
-    assert(n > 0)  # there is at least one partition
+    assert (len(samples) > n)  # there are more samples than partitions
+    assert (n > 0)  # there is at least one partition
     size = len(samples) // n
     for i in range(0, len(samples), size):
-        yield samples[i:i+size]
+        yield samples[i:i + size]
+
 
 class EDUCollator(object):
     def __init__(self):
@@ -25,16 +26,16 @@ class EDUCollator(object):
             data = copy.deepcopy(sample)
 
             for i in range(0, len(data['data']), 512):
-                done = False # to make sure all tokens have been converted to ids
+                done = False  # to make sure all tokens have been converted to ids
                 # boundary checking
-                if i+512 > len(data['data']):
+                if i + 512 > len(data['data']):
                     j = len(data['data'])
                 else:
-                    j = i+512
+                    j = i + 512
                 while not done:
                     try:
                         data['data'][i:j] = self.tokenizer.convert_tokens_to_ids(
-                            data['data'][i:j]) 
+                            data['data'][i:j])
                         done = True
                     except KeyError as error:
                         err = error.args[0]
@@ -52,7 +53,6 @@ class EDUCollator(object):
 
         # copy over the actual sequences
         for idx, sample in enumerate(batch):
-
             padded_data[idx, 0:all_sent_len[idx]] = data['data']
             input_mask[idx, 0:all_sent_len[idx]] = [1] * len(data['data'])
 
@@ -60,12 +60,14 @@ class EDUCollator(object):
 
         return padded_data, input_mask, label
 
+
 class TransCollator(object):
     def __init__(self):
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
 
     def __call__(self, batch):
         return batch[0]['bin_r_list'], batch[0]['gold_edu']
+
 
 class AugCollator(object):
     def __init__(self, train_trans, train_rlat):
@@ -108,36 +110,36 @@ class AugCollator(object):
             # convert to index 
             for i in range(0, len(sample['sent1']), 512):
                 # boundary checking
-                if i+512 > len(sample['sent1']):
+                if i + 512 > len(sample['sent1']):
                     j = len(sample['sent1'])
                 else:
-                    j = i+512
+                    j = i + 512
                 sample['sent1'][i:j] = self.tokenizer.convert_tokens_to_ids(
-                            sample['sent1'][i:j]) 
+                    sample['sent1'][i:j])
             for i in range(0, len(sample['sent2']), 512):
                 # boundary checking
-                if i+512 > len(sample['sent2']):
+                if i + 512 > len(sample['sent2']):
                     j = len(sample['sent2'])
                 else:
-                    j = i+512
+                    j = i + 512
                 sample['sent2'][i:j] = self.tokenizer.convert_tokens_to_ids(
-                            sample['sent2'][i:j])
+                    sample['sent2'][i:j])
             for i in range(0, len(sample['aug_sent1']), 512):
                 # boundary checking
-                if i+512 > len(sample['aug_sent1']):
+                if i + 512 > len(sample['aug_sent1']):
                     j = len(sample['aug_sent1'])
                 else:
-                    j = i+512
+                    j = i + 512
                 sample['aug_sent1'][i:j] = self.tokenizer.convert_tokens_to_ids(
-                            sample['aug_sent1'][i:j])
+                    sample['aug_sent1'][i:j])
             for i in range(0, len(sample['aug_sent2']), 512):
                 # boundary checking
-                if i+512 > len(sample['aug_sent2']):
+                if i + 512 > len(sample['aug_sent2']):
                     j = len(sample['aug_sent2'])
                 else:
-                    j = i+512
+                    j = i + 512
                 sample['aug_sent2'][i:j] = self.tokenizer.convert_tokens_to_ids(
-                            sample['aug_sent2'][i:j])
+                    sample['aug_sent2'][i:j])
 
         # calculate the shape of batch (sent1,sent2,sent3)
         allsent1_len = [len(sample['sent1']) for sample in batch]
@@ -165,9 +167,9 @@ class AugCollator(object):
 
         label = numpy.ones((data_size, 1)) * 0
         if self.train_rlat:
-            center = numpy.ones((data_size, 1)) * 0   
+            center = numpy.ones((data_size, 1)) * 0
 
-        # copy over the actual sequences
+            # copy over the actual sequences
         for idx, sample in enumerate(batch):
             # sample_id[idx, 0] = sample['id']
             sent1 = sample['sent1']
@@ -183,7 +185,7 @@ class AugCollator(object):
             # input_mask1[idx, 0:allSent1_len[idx]] = [1] * len(sent1)
             # input_mask2[idx, 0:allSent2_len[idx]] = [1] * len(sent2)
             # if not self.train_rlat:
-                # input_mask3[idx, 0:allSent3_len[idx]] = [1] * len(sent3)
+            # input_mask3[idx, 0:allSent3_len[idx]] = [1] * len(sent3)
             # token_type_ids[idx, 0:all_len[idx]] = [
             #     0] * len(title1) + [1] * len(title2)
             label[idx, 0] = sample['label']
@@ -192,6 +194,7 @@ class AugCollator(object):
 
         return padded_data1, padded_data2, label, center, \
                padded_aug_data1, padded_aug_data2
+
 
 class RlatCollator(object):
     def __init__(self):
@@ -203,7 +206,7 @@ class RlatCollator(object):
 
             sample['sent1'] = self.tokenizer.tokenize(sample['sent1'])
             sample['sent2'] = self.tokenizer.tokenize(sample['sent2'])
- 
+
             while len(sample['sent1']) > 510:
                 sample['sent1'].pop()
             while len(sample['sent2']) > 510:
@@ -238,7 +241,7 @@ class RlatCollator(object):
         input_mask2 = numpy.ones((data_size, longestSent2_sent)) * 0
 
         label = numpy.ones((data_size, 1)) * 0
-        center = numpy.ones((data_size, 1)) * 0   
+        center = numpy.ones((data_size, 1)) * 0
         sub_label = numpy.ones((data_size, 1)) * 0
 
         # copy over the actual sequences
@@ -261,6 +264,7 @@ class RlatCollator(object):
 
         return padded_data1, padded_data2, label, center, sub_label
 
+
 class EDUDataset(Dataset):
     def __init__(self, data: list, label_map: dict):
         # required to map the labels to integer values
@@ -280,10 +284,12 @@ class EDUDataset(Dataset):
         }
         return sample
 
+
 class TransDataset(Dataset):
     '''
         dataset for training structure with dynamic oracle
     '''
+
     def __init__(self, data: list):
         # required to map the labels to integer values
         self.data = data
@@ -293,12 +299,12 @@ class TransDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
-        
         sample = {
             'bin_r_list': self.data[idx][0],
             'gold_edu': self.data[idx][1],
         }
         return sample
+
 
 class AugDataset(Dataset):
     def __init__(self, data: list):
@@ -315,10 +321,11 @@ class AugDataset(Dataset):
             'label': 0,
             'center': 0,
             'aug_sent1': self.data[idx][3],
-            'aug_sent2': self.data[idx][4], 
+            'aug_sent2': self.data[idx][4],
         }
 
         return sample
+
 
 class RlatDataset(Dataset):
     def __init__(self, data: list, label_map: dict, center_map: dict, sub_label_map: dict):

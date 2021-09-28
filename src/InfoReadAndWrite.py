@@ -9,9 +9,8 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 import xlsxwriter
-from baiduspider import BaiduSpider
 
-from src.Pretreatment import Pretreatment
+from src import GetWebResource
 from src.SimilarityFromBERT import SimilarityFromBERT
 
 
@@ -55,7 +54,7 @@ class InfoReadAndWrite:
         for url in urls:
             print("正在处理第{}个url(共{}个)>>>".format(i, len(urls)) + url)
             i += 1
-            results.append(Pretreatment.split_txt(url, EDU=False))
+            results.append(GetWebResource.split_txt(url, EDU=False))
         with open('../src/text/results.txt', 'w') as f:
             f.write(json.dumps(results, ensure_ascii=False, indent=2))
 

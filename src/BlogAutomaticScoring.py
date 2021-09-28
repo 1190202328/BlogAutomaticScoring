@@ -1,12 +1,10 @@
 import re
 from datetime import date
 from pprint import pprint
-
 import xlsxwriter
 from bs4 import BeautifulSoup
 import requests
 
-from src.Pretreatment import Pretreatment
 from baiduspider import BaiduSpider
 
 
@@ -360,7 +358,7 @@ class BlogAutomaticScoring:
     #         valid_urls = list()
     #         texts = list()
     #         for url in urls:
-    #             result = Pretreatment.split_txt(url)
+    #             result = GetWebResource.split_txt(url)
     #             if result is not None and result.get("text") is not None:
     #                 texts.append(result.get("text"))
     #                 valid_urls.append(url)

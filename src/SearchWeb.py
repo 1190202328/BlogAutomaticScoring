@@ -1,14 +1,26 @@
+import json
 import random
 import re
+from pprint import pprint
 from typing import Union
-
 import bs4
 from bs4 import BeautifulSoup
 from datetime import datetime
 import time
 
-from src import HTML, GetWebResource
+from src import HTML, GetWebResource, Clean
 from src import Global
+
+
+def clean_to_search_keywords(keywords: str) -> str:
+    """
+    清理需要搜索的句子
+    :param keywords: 原句子
+    :return: 新的干净句子
+    """
+    keywords = re.sub('(#+)|(%+)', '', keywords).strip().lower()
+    keywords = re.sub('\\s+', ' ', keywords)
+    return keywords
 
 
 def get_next_baidu_url(baidu_html: str) -> str:
@@ -25,8 +37,8 @@ def get_next_baidu_url(baidu_html: str) -> str:
 
 
 def get_related_head_and_text(text_head: str, update_time: str, head_number: int = 10,
-                              text_number: int = 10, page_limit: int = 3, url: str = "", verbose: bool = True)\
-                              -> Union[tuple[list, list], tuple[None, None]]:
+                              text_number: int = 10, page_limit: int = 3, url: str = "", verbose: bool = True) \
+        -> Union[tuple[list, list], tuple[None, None]]:
     """
     根据标题在百度搜索time之前的相关文章，取出前head_number篇文章的标题以及text_number篇文章的全文
     :param text_number: 需要相关全文的个数
@@ -122,9 +134,10 @@ def get_related_head_and_text(text_head: str, update_time: str, head_number: int
     return related_heads, related_texts
 
 
-def get_related_codes(code, number, limit=7, verbose=True):
+def get_related_codes(code: str, number: int, limit: int = 7, verbose: bool = True) -> []:
     """
     根据code获取相关的code
+    :param verbose: 是否繁杂输出
     :param limit: 每行代码的最短长度，小于该长度的代码行将会被过滤
     :param code: 一行源代码
     :param number: 需要获取相关code的数量，最多100行相关的code
@@ -135,7 +148,7 @@ def get_related_codes(code, number, limit=7, verbose=True):
     count = 0
     related_codes = []
     api = "https://searchcode.com/api/codesearch_I/?q=" + code + "&p=0&per_page=100"
-    text = Pretreatment.get_raw_html(api)
+    text = HTML.get_raw_html_origin(api)
     if text == "":
         return related_codes
     api_result = json.loads(text)
@@ -150,12 +163,14 @@ def get_related_codes(code, number, limit=7, verbose=True):
             ids.append(id)
         for i in range(1, len(ids) - 1):
             if int(ids[i]) - 1 == int(ids[i - 1]) and int(ids[i]) + 1 == int(ids[i + 1]):
-                clean_lines = Pretreatment.clean_code(lines[ids[i]], limit)
+                clean_lines = Clean.clean_code(lines[ids[i]], limit)
                 for clean_line in clean_lines:
                     try:
                         clean_line = eval(clean_line + "' '")
                         clean_line = clean_line.replace("\n", "")
-                    except:
+                    except Exception as e:
+                        if verbose:
+                            print(e.args)
                         pass
                     related_codes.append(clean_line.__str__())
                     count += 1
@@ -164,12 +179,13 @@ def get_related_codes(code, number, limit=7, verbose=True):
     return related_codes
 
 
-def get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, sentence_number=10,
-                                         page_limit=2,
-                                         url="",
-                                         verbose=True):
+def get_related_paragraphs_and_sentences(original_sentence: str, paragraph_number: int = 5, sentence_number: int = 10,
+                                         page_limit: int = 2,
+                                         url: str = "",
+                                         verbose: bool = True) -> ([], [], bool, int):
     """
     在百度上获取相关的句子
+    :param verbose: 是否繁杂输出
     :param sentence_number: 需要搜索的相关句子的数
     :param paragraph_number: 需要搜索的相关段落的数
     :param url: 可选，源文章第url地址，输入之后不会重复找到该文章，如果找到，则返回find=True
@@ -177,6 +193,7 @@ def get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, 
     :param original_sentence: 源句子
     :return: 相关段落的列表，相关句子的列表，find, invalid（如果为2则表示此次查找ip被封掉，失败）
     """
+    original_sentence = clean_to_search_keywords(original_sentence)
     pn = 0
     article_count = 1
     total_urls = list()
@@ -192,16 +209,17 @@ def get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, 
         if len(related_paragraphs) >= paragraph_number and len(related_sentences) >= sentence_number:
             return related_paragraphs, related_sentences, find, invalid
         article_urls = list()
-        html = Crawl.get_raw_html(baidu_url, verbose=verbose)
-        # update_time.sleep(random.randrange(30, 60, 1))
+        html = HTML.get_raw_html(baidu_url, verbose=verbose)
+        bf = BeautifulSoup(html, "html.parser")
+        if re.match(Global.not_find, bf.get_text(), flags=re.S):
+            return [], [], False, 0
         pre_baidu_url = baidu_url
-        baidu_url = Pretreatment.get_next_baidu_url(html)
+        baidu_url = get_next_baidu_url(html)
         if verbose:
             print("第{}页".format(pn))
         if baidu_url == "":
             baidu_url = 'http://baidu.com/s?wd=' + original_sentence + "&pn=" + str(
                 pn * 50) + "&rn=50" + "&oq=" + original_sentence + "&ie=utf-8"
-        bf = BeautifulSoup(html, "html.parser")
         contents = bf.find_all("div", class_="c-container")
         for content in contents:
             if len(related_paragraphs) >= paragraph_number and len(related_sentences) >= sentence_number:
@@ -214,7 +232,7 @@ def get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, 
                     continue
                 for c in child.children:
                     if c.name == "a" and c.parent.name == "h3":
-                        real_url = Pretreatment.get_real_url(c.attrs['href'], verbose=verbose)
+                        real_url = HTML.get_real_url(c.attrs['href'], verbose=verbose)
                         if real_url != "":
                             flag = True
                             article_urls.append(real_url)
@@ -225,7 +243,7 @@ def get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, 
                 if url.find(real_url) != -1:
                     find = True
                     continue
-                if not re.match(url_pattern['or'], real_url):
+                if not re.match(Global.url_pattern['or'], real_url):
                     continue
                 for child in content.descendants:
                     if child.name == "em" and child.string != "":
@@ -236,7 +254,7 @@ def get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, 
                     print(red_strings)
                 article_count += 1
                 article_paragraphs = list()
-                result = Pretreatment.split_txt(real_url, verbose=verbose)
+                result = GetWebResource.split_txt(real_url, verbose=verbose)
                 if result is None:
                     continue
                 paragraphs = result.get('paragraphs')
@@ -286,3 +304,47 @@ def get_related_paragraphs_and_sentences(original_sentence, paragraph_number=5, 
                 time.sleep(random.randrange(100, 200, 1))
             invalid += 1
     return related_paragraphs, related_sentences, find, invalid
+
+
+if __name__ == '__main__':
+    url = "https://blog.csdn.net/Louis210/article/details/117415546"
+    # url = "https://www.cnblogs.com/yuyueq/p/15119512.html"
+    # url = "https://starlooo.github.io/2021/07/02/CaiKeng/"
+    # url = "https://www.jianshu.com/p/92373a603d42"
+    #
+    # url = "https://blog.csdn.net/Louis210/article/details/119666026"
+    # url = "https://blog.csdn.net/Baigker/article/details/118353220"
+    # url = "https://blog.csdn.net/weixin_46219578/article/details/117462868"
+    # url = "https://blog.csdn.net/m0_51250400/article/details/118405807"
+    # url = "https://blog.csdn.net/buckbarnes/article/details/118547420"
+    # url = "https://bit-ranger.github.io/blog/java/effective-java/"
+    # url = "https://blog.csdn.net/z741481546/article/details/93514166"
+
+    # url = "https://blog.csdn.net/cobracanary/article/details/119612536"
+    print("---------url>>>" + url)
+    result = GetWebResource.split_txt(url)
+    head = result['head']
+    text = result['text']
+    paragraphs = result['paragraphs']
+    sentences = result['sentences']
+    codes = result['codes']
+    update_date = result['date']
+    print("---------head---------")
+    print(head)
+    print("---------text---------")
+    print(text)
+    # print(similarity['text'].encode('unicode_escape').decode())
+    print("---------paragraphs共{}个---------".format(len(paragraphs)))
+    pprint(paragraphs)
+    print("---------sentences共{}个---------".format(len(sentences)))
+    pprint(sentences)
+    print("---------codes共{}个---------".format(len(codes)))
+    i = 1
+    for code in codes:
+        print("-----------code{}-----------".format(i))
+        i += 1
+        print(code)
+    print("---------date---------")
+    print(update_date)
+
+    get_related_head_and_text(head, update_date)

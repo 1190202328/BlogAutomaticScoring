@@ -5,6 +5,8 @@ from pprint import pprint
 
 import requests
 
+from src import Clean
+
 """
 数据集的代码涵盖1.python 2.java 3.C 三个主流语言
 非代码:1.中文句子2.英文句子
@@ -68,7 +70,7 @@ def get_related_codes(code, number, low_limit=7, high_limit=30):
         for result in results:
             lines = list(result['lines'].values())
             # print(lines)
-            clean_line = clean_code_line(lines[1], low_limit, high_limit)
+            clean_line = Clean.clean_code_line(lines[1], low_limit, high_limit)
             if clean_line != "" and not re.match("\\s+", clean_line):
                 related_codes.append(clean_line)
                 count += 1
@@ -76,38 +78,6 @@ def get_related_codes(code, number, low_limit=7, high_limit=30):
                 if count >= number:
                     return related_codes
     return related_codes
-
-
-def clean_code_line(code_line, low_limit=7, high_limit=30):
-    """
-    获得干净的code(不含\t，\n，连续2个以上空格，注释)
-    目前注释只支持
-    多行注释：/**/和三个'和三个"
-    单行注释：//和#
-    :param high_limit: 每行代码的最长长度，大于该长度的代码行将会被过滤
-    :param low_limit: 每行代码的最短长度，小于该长度的代码行将会被过滤
-    :param code_line: 源代码行
-    :return: 干净的code
-    """
-    blank_pattern = "[\\t\\n]+"
-    code_line = re.sub("/(\\*).*?(\\*)/", "", code_line, flags=re.S)
-    code_line = re.sub("'''.*?'''", "", code_line, flags=re.S)
-    code_line = re.sub('""".*?"""', "", code_line, flags=re.S)
-    code_line = re.sub("\n+", "", code_line)
-    # print("-------清除之后-------")
-    # pprint(lines)
-    code_line = re.sub(blank_pattern, "", code_line)
-    code_line = re.sub(" +", " ", code_line)
-    java_start = code_line.find("//")
-    python_start = code_line.find("#")
-    if java_start != -1:
-        code_line = code_line[0:java_start]
-    if python_start != -1:
-        code_line = code_line[0:python_start]
-    code_line = re.sub(r'[\u4e00-\u9fa5].*[\u4e00-\u9fa5]', "", code_line, flags=re.S)
-    if len(code_line) < low_limit or len(code_line) > high_limit:
-        return ""
-    return code_line
 
 
 def write_code(path, file, codes):
@@ -127,11 +97,12 @@ def get_key_words(path, file):
     return key_words
 
 
-# write_code("","python关键字.txt",keyword.kwlist)
-path = "../src/text/"
-key_words = set(get_key_words(path, "不重复关键字.txt"))
-i = 1
-for key_word in key_words:
-    print("第{}个(共{}个)".format(i, len(key_words)), end="")
-    i += 1
-    write_code(path, "扩大的代码.txt", get_related_codes(key_word.replace("\n", ""), 200, high_limit=50))
+if __name__ == '__main__':
+    # write_code("","python关键字.txt",keyword.kwlist)
+    path = "../src/text/"
+    key_words = set(get_key_words(path, "不重复关键字.txt"))
+    i = 1
+    for key_word in key_words:
+        print("第{}个(共{}个)".format(i, len(key_words)), end="")
+        i += 1
+        write_code(path, "扩大的代码.txt", get_related_codes(key_word.replace("\n", ""), 200, high_limit=50))

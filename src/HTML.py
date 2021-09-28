@@ -1,15 +1,20 @@
 import random
+import re
 import bs4
 import requests
 import time
 from bs4 import BeautifulSoup
 
+from src import Global
 
-def is_valid(proxy, url, verbose=True):
+
+def is_valid(proxy: str, url: str, verbose: bool = True) -> str:
     """
     检验代理是否可用
-    :param proxy:
-    :return:
+    :param url: 检测目的百度url地址
+    :param verbose: 是否繁杂输出
+    :param proxy:代理ip
+    :return:html文档
     """
     if verbose:
         print("正在检测的ip地址>>>", proxy)
@@ -21,7 +26,6 @@ def is_valid(proxy, url, verbose=True):
         'Connection': 'keep-alive',
         'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
     }
-    # baidu_url = "http://baidu.com/s?wd=java&rn=50&oq=java&ie=utf-8"
     baidu_url = url
     retry_count = 3
 
@@ -37,6 +41,10 @@ def is_valid(proxy, url, verbose=True):
             article_urls = list()
             html = r.text
             bf = BeautifulSoup(html, "html.parser")
+            if re.match(Global.not_find, bf.get_text(), flags=re.S):
+                if verbose:
+                    print("成功>>>百度搜不到这个关键字")
+                return html
             contents = bf.find_all("div", class_="c-container")
             for content in contents:
                 for child in content.children:
@@ -49,7 +57,7 @@ def is_valid(proxy, url, verbose=True):
             if len(article_urls) == 0:
                 # print("ip第{}次检测出不行>>>".format(6 - retry_count), proxy)
                 if verbose:
-                    print("失败")
+                    print("访问百度失败")
                 retry_count -= 1
                 time.sleep(random.randrange(3, 6, 1))
                 continue
@@ -60,21 +68,30 @@ def is_valid(proxy, url, verbose=True):
             # print("ip第{}次检测出不行>>>".format(6 - retry_count), proxy)
             time.sleep(random.randrange(3, 6, 1))
             if verbose:
-                print("失败")
+                print("ip是坏的，失败")
             retry_count -= 1
             continue
     return ""
 
 
 def get_proxy():
+    """
+    从网页获得代理
+    :return: 代理ip
+    """
     return requests.get("http://127.0.0.1:5010/get/").json()
 
 
 def delete_proxy(proxy):
+    """
+    从网页删除代理
+    :param proxy: 代理ip
+    :return: 无
+    """
     requests.get("http://127.0.0.1:5010/delete?proxy={}".format(proxy))
 
 
-def get_raw_html(url, verbose=True):
+def get_raw_html(url: str, verbose: bool = True) -> str:
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Encoding': 'gzip, deflate, compress',
@@ -83,12 +100,12 @@ def get_raw_html(url, verbose=True):
         'Connection': 'keep-alive',
         'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
     }
-    retry_count = 200
+    retry_count = 30
     proxy = get_proxy().get("proxy")
     html = ""
     while proxy and retry_count > 0:
         if verbose:
-            print("<第{}次尝试>".format(21 - retry_count))
+            print("<第{}次尝试>".format(31 - retry_count))
         html = is_valid(proxy, url, verbose=verbose)
         if html == "":
             if verbose:
@@ -109,14 +126,17 @@ def get_raw_html(url, verbose=True):
             if verbose:
                 print("成功")
             return r.text
-        except Exception:
+        except Exception as e:
+            if verbose:
+                print(e.args)
             return ""
     return html
 
 
-def get_raw_html_origin(url, verbose=False):
+def get_raw_html_origin(url: str, verbose: bool = False) -> str:
     """
     根据url获取html文档
+    :param verbose: 是否繁杂输出
     :param url: url地址
     :return: html文档
     """
@@ -128,12 +148,6 @@ def get_raw_html_origin(url, verbose=False):
         'Connection': 'keep-alive',
         'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
     }
-    # # proxy = "127.0.0.1:11000" # QuickQ
-    # proxy = "127.0.0.1:7890"  # clashX
-    # proxies = {
-    #     'http': 'http://' + proxy,
-    #     'https': 'https://' + proxy
-    # }, proxies=proxies
     try:
         r = requests.get(url=url, headers=headers, timeout=5)
         r.raise_for_status()
@@ -144,9 +158,10 @@ def get_raw_html_origin(url, verbose=False):
         return ""
 
 
-def get_real_url(url, verbose=False):
+def get_real_url(url: str, verbose: bool = False)->str:
     """
     根据url获得真实的url地址
+    :param verbose: 是否繁杂输出
     :param url: 源url地址
     :return: 真实url地址
     """
@@ -166,7 +181,6 @@ def get_real_url(url, verbose=False):
         if verbose:
             print(e.args)
         return ""
-    
 
 
 if __name__ == '__main__':

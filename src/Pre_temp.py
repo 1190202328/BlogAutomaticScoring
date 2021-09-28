@@ -9,9 +9,8 @@ import requests
 import re
 from baiduspider import BaiduSpider
 
-from src.Crawl import Crawl
+from src import HTML, Clean
 from src.EDU import demo
-from src.Pretreatment import Pretreatment
 from src.SeparateCode import SeparateCode
 
 url_pattern = dict()
@@ -50,8 +49,8 @@ def split_txt(txt_url, EDU=False, verbose=True):
     clean_text_for_EDU_element = ""
 
     is_illegal = False
-    url = Pretreatment.get_real_url(txt_url, verbose=verbose)
-    html = Pretreatment.get_raw_html(url, verbose=verbose)
+    url = HTML.get_real_url(txt_url, verbose=verbose)
+    html = HTML.get_raw_html_origin(url, verbose=verbose)
     if html == "":
         return None
     bf = BeautifulSoup(html, "html.parser")
@@ -161,7 +160,7 @@ def split_txt(txt_url, EDU=False, verbose=True):
         text = re.sub("[\\t ]+", " ", text)
         text = re.sub("\n+", "\n", text)
         text = re.sub("(\n +)|( +\n)", "\n", text)
-        to_search_code_text = Pretreatment.clean_code_for_text(text)
+        to_search_code_text = Clean.clean_code_for_text(text)
         more_codes = SeparateCode.get_codes(to_search_code_text)
         if more_codes:
             for more_code in more_codes:

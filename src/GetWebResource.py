@@ -1,6 +1,5 @@
 import re
 from pprint import pprint
-
 from bs4 import BeautifulSoup
 
 from src import HTML, Global, Clean
@@ -8,10 +7,11 @@ from src.EDU import demo
 from src.SeparateCode import SeparateCode
 
 
-def split_txt(txt_url, EDU=False, verbose=True):
+def split_txt(txt_url: str, EDU: bool = False, verbose: bool = True) -> dict:
     """
     根据url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；
     5。date：日期；6。text：全文（不含代码段）；
+    :param verbose: 是否繁杂输出
     :param EDU: 是否采用EDU来划分句子
     :param txt_url: url地址
     :return: 词典，如果不满足目的url（1。csdn2。cnblogs3。github4。简书），则返回None
@@ -98,7 +98,7 @@ def split_txt(txt_url, EDU=False, verbose=True):
         # text
         text = bf.find("div", itemprop="articleBody").getText()
         # date
-        update_date = bf.find("update_time").attrs['datetime'][0:10]
+        update_date = bf.find("time").attrs['datetime'][0:10]
         # codes
         contents = bf.find_all("pre")
         digits = list()
@@ -210,9 +210,11 @@ def split_txt(txt_url, EDU=False, verbose=True):
     else:
         return None
 
-def get_urls(main_url, verbose=True):
+
+def get_urls(main_url: str, verbose: bool = True) -> []:
     """
     根据学生主页面获取所有博客的url地址
+    :param verbose: 是否繁杂输出
     :param main_url: 主页面地址，包括（1。csdn2。cnblogs3。github4。简书）
     :return: 所有博客的ulr地址
     """
@@ -242,7 +244,8 @@ def get_urls(main_url, verbose=True):
                     urls.add("https://www.jianshu.com" + content.get("href"))
     return list(urls)
 
-def get_main_url(url):
+
+def get_main_url(url: str) -> str:
     """
     根据url地址返回主页的url地址
     :param url: url地址（1。csdn2。cnblogs3。github4。简书）
@@ -267,4 +270,3 @@ def get_main_url(url):
                 main_url = "https://www.jianshu.com" + content.get("href")
                 break
     return main_url
-

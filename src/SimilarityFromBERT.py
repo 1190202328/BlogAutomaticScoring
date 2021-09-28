@@ -7,8 +7,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from bert_serving.client import BertClient
 from tqdm import tqdm
 
+from src import Clean, GetWebResource, SearchWeb
 from src.EDU import demo
-from src.Pretreatment import Pretreatment
 from src.SimilarityFromPMD import SimilarityFromPMD
 
 
@@ -41,7 +41,7 @@ class SimilarityFromBERT:
         my_stopwords = stopwords_string.split("\n")
 
         bc = BertClient(check_length=False)
-        clean_sentences = Pretreatment.clean_with_low_frequency(sentences, my_stopwords)
+        clean_sentences = Clean.clean_with_low_frequency(sentences, my_stopwords)
         sentences = []
         for clean_sentence in clean_sentences:
             if len(clean_sentence) != 0:
@@ -72,7 +72,7 @@ class SimilarityFromBERT:
 
         bc = BertClient(check_length=False)
         total_contents = [text] + contents
-        clean_contents = Pretreatment.clean_with_low_frequency(total_contents, my_stopwords)
+        clean_contents = Clean.clean_with_low_frequency(total_contents, my_stopwords)
         sentences = []
         origin_sentences = []
         for i in range(len(clean_contents)):
@@ -120,17 +120,18 @@ class SimilarityFromBERT:
         sentence_len = 80
         code_len = 60
 
-        total_count = 2
+        total_count = 1
         similarity = dict()
         num = "ukn"
         if not result:
-            result = Pretreatment.split_txt(url, verbose=verbose)
+            result = GetWebResource.split_txt(url, verbose=verbose)
         if not result:
             return None
         head = result['head']
         text = result['text']
         paragraphs = result['paragraphs']
         codes = result['codes']
+        update_time = result['date']
         if save is not None:
             num = save
             search_result = dict()
@@ -177,7 +178,7 @@ class SimilarityFromBERT:
             for code in codes:
                 if len(to_search_codes) >= code_len:
                     break
-                lines = Pretreatment.clean_code(code)
+                lines = Clean.clean_code(code)
                 for line in lines:
                     if len(to_search_codes) >= code_len:
                         break
@@ -187,33 +188,26 @@ class SimilarityFromBERT:
             notice = tqdm(total=total_count, bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.GREEN, Fore.RESET), position=True)
             notice.set_description("[{}] ".format(num) + url + " >>>")
         # 标题相似度
-        related_heads, _ = Pretreatment.get_related_head(head, head_number, url=url, verbose=verbose)
+        related_heads, related_texts = SearchWeb.get_related_head_and_text(head, update_time, head_number, text_number, url=url, verbose=verbose)
         if related_heads is None:
-            related_heads, _ = Pretreatment.get_related_head(to_search_sentences[0][0], head_number, url=url, verbose=verbose)
+            related_heads, related_texts = SearchWeb.get_related_head_and_text(head, update_time, head_number, text_number, url=url, verbose=verbose)
             if related_heads is None:
                 return None
         if save is not None:
             search_result['head'] = related_heads
+            search_result['text'] = related_texts
         head_similarity = SimilarityFromBERT.get_similarity([head] + related_heads)[:1][0][1:]
+        text_similarity = SimilarityFromBERT.get_similarity([text] + related_texts)[:1][0][1:]
         similarity['head'] = padding(head_similarity, head_number)
+        similarity['text'] = padding(text_similarity, text_number)
         if verbose:
+            print('---head---')
             print(related_heads)
             print(len(similarity['head']))
             print(similarity['head'])
-        else:
-            notice.update(1)
-        # 全文相似度
-        related_texts, _ = Pretreatment.get_related_texts(head, text_number, url=url, verbose=verbose)
-        if related_texts is None:
-            related_texts, _ = Pretreatment.get_related_texts(to_search_sentences[0][0], text_number, url=url, verbose=verbose)
-            if related_texts is None:
-                return None
-        if save is not None:
-            search_result['text'] = related_texts
-        related_texts = [text] + related_texts
-        text_similarity = SimilarityFromBERT.get_similarity(related_texts)[:1][0][1:]
-        similarity['text'] = padding(text_similarity, text_number)
-        if verbose:
+            print('---text---')
+            print(related_texts)
+            print(len(similarity['text']))
             print(similarity['text'])
         else:
             notice.update(1)
@@ -228,7 +222,7 @@ class SimilarityFromBERT:
             for sentence in to_search_sentences[i]:
                 if verbose:
                     print("开始搜索句子[{}]".format(sentence))
-                related_paragraphs, related_sentences, _, invalid = Pretreatment.get_related_paragraphs_and_sentences \
+                related_paragraphs, related_sentences, _, invalid = SearchWeb.get_related_paragraphs_and_sentences \
                     (sentence, paragraph_number=paragraph_number, sentence_number=sentence_number, url=url,
                      verbose=verbose)
                 if save is not None:
@@ -261,7 +255,7 @@ class SimilarityFromBERT:
         # 代码相似度
         codes_similarity = []
         for line in to_search_codes:
-            related_codes = Pretreatment.get_related_codes(line, code_number, verbose=verbose)
+            related_codes = SearchWeb.get_related_codes(line, code_number, verbose=verbose)
             if save is not None:
                 search_result['codes'][line] = related_codes
             if verbose:

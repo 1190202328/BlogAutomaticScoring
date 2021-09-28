@@ -54,7 +54,7 @@ if __name__ == "__main__":
     # # text = text.replace("\n", "")
     # # print(text)
     #
-    # similarity = Pretreatment.split_txt(url)
+    # similarity = GetWebResource.split_txt(url)
     # text = "".join(similarity["paragraphs"])
     # print(text)
     # pprint(get_EDUs(text))

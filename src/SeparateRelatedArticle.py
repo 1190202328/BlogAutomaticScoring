@@ -8,7 +8,7 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import KFold
 import tensorflow as tf
 
-from src.Pretreatment import Pretreatment
+from src import GetWebResource, Clean
 
 
 class SeparateRelatedArticle:
@@ -43,7 +43,7 @@ class SeparateRelatedArticle:
         for url in urls:
             print("正在处理第{}个url(共{}个)>>>".format(i, len(urls)) + url)
             i += 1
-            results.append(Pretreatment.split_txt(url, EDU=False, verbose=False))
+            results.append(GetWebResource.split_txt(url, EDU=False, verbose=False))
         with open(filepath, 'w') as f:
             f.write(json.dumps(results, ensure_ascii=False, indent=2))
 
@@ -123,11 +123,11 @@ class SeparateRelatedArticle:
         for url in urls:
             print("[{}]>>>{}".format(count, url))
             count += 1
-            result = Pretreatment.split_txt(url, False, verbose=False)
+            result = GetWebResource.split_txt(url, False, verbose=False)
             if result and result.get('text'):
                 valid_urls.append(url)
                 texts.append(result.get('text'))
-        texts = Pretreatment.clean_with_low_frequency(texts)
+        texts = Clean.clean_with_low_frequency(texts)
         sequences = SeparateRelatedArticle.get_sequences(texts, embedding_len, vocab_list=vocab_list)
         model = tf.keras.models.load_model("../src/saved_model/ralated_text_separate_model.h5")
         y_pred = model.predict(sequences)
@@ -140,7 +140,7 @@ class SeparateRelatedArticle:
 def machine_learning():
     texts, labels = SeparateRelatedArticle.get_texts_and_labels()
     labels = np.array(labels)
-    texts = np.array(Pretreatment.clean_with_low_frequency(texts), dtype=object)
+    texts = np.array(Clean.clean_with_low_frequency(texts), dtype=object)
     k_fold = KFold(n_splits=10, random_state=40, shuffle=True)
     for train_index, test_index in k_fold.split(texts, labels):
         x_train, x_test, y_train, y_test = texts[train_index], texts[test_index], labels[train_index], labels[
