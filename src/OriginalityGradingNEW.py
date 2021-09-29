@@ -289,6 +289,62 @@ class OriginalityGradingNEW:
             new_vectors.append(sorted(vector[:code_start])[:k] + sorted(vector[code_start:])[:k_code])
         return np.float32(new_vectors)
 
+    @staticmethod
+    def loose_report(y_true: [], y_predict: []):
+        """
+        将0,1,2,3,4共5个分类的准确评判标准改为如下：
+        实际为0->预测为0,1
+        实际为1->预测为0,1,2
+        实际为2->预测为1,2,3
+        实际为3->预测为2,3,4
+        实际为4->预测为3,4
+        并且打印结果
+        :param y_true: 真实值
+        :param y_predict: 预测值
+        :return: 结果报告
+        """
+        for i in range(len(y_predict)):
+            if y_true[i] == 0 and (y_predict[i] == 0 or y_predict[i] == 1):
+                y_predict[i] = 0
+            if y_true[i] == 1 and (y_predict[i] == 0 or y_predict[i] == 1 or y_predict[i] == 2):
+                y_predict[i] = 1
+            elif y_true[i] == 2 and (y_predict[i] == 1 or y_predict[i] == 2 or y_predict[i] == 3):
+                y_predict[i] = 2
+            elif y_true[i] == 3 and (y_predict[i] == 2 or y_predict[i] == 3 or y_predict[i] == 4):
+                y_predict[i] = 3
+            elif y_predict[i] == 4 and (y_predict[i] == 3 or y_predict[i] == 4):
+                y_predict[i] = 4
+        return classification_report(y_true, y_predict)
+
+    @staticmethod
+    def merge_labels(vectors: [[]], labels: []) -> ([[]], []):
+        """
+        将标签合并，规则如下：
+        0->0
+        1,2->1
+        2,3->2
+        4->3
+        :param vectors: 原矩阵
+        :param labels: 原标签
+        :return: 新矩阵，新标签
+        """
+        new_labels = []
+        new_vectors = []
+        for i in range(len(labels)):
+            if labels[i] == 0:
+                new_labels.append(0)
+                new_vectors.append(vectors[i])
+            if labels[i] == 1 or labels[i] == 2:
+                new_labels.append(1)
+                new_vectors.append(vectors[i])
+            if labels[i] == 2 or labels[i] == 3:
+                new_labels.append(2)
+                new_vectors.append(vectors[i])
+            if labels[i] == 4:
+                new_labels.append(3)
+                new_vectors.append(vectors[i])
+        return new_vectors, new_labels
+
 
 def traditional_ml(data_filepath, label_filepath):
     n_splits = 5
@@ -408,11 +464,11 @@ def traditional_ml(data_filepath, label_filepath):
         answer_svm = svm.predict(x_test)
         total_y_predict_SVM.extend(answer_svm)
 
-        rf = RandomForestClassifier(n_estimators=170).fit(x_train, y_train)
+        rf = RandomForestClassifier(n_estimators=70).fit(x_train, y_train)
         answer_rf = rf.predict(x_test)
         total_y_predict_RF.extend(answer_rf)
 
-        knn = KNeighborsClassifier(n_neighbors=9).fit(x_train, y_train)
+        knn = KNeighborsClassifier(n_neighbors=6).fit(x_train, y_train)
         answer_knn = knn.predict(x_test)
         total_y_predict_knn.extend(answer_knn)
 
@@ -426,17 +482,23 @@ def traditional_ml(data_filepath, label_filepath):
         # print(classification_report(y_test, answer_svm))
     print("总结果如下")
     print('\n\nThe classification report for knn:')
-    print(classification_report(total_y_test, total_y_predict_knn))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_knn))
+    # print(classification_report(total_y_test, total_y_predict_knn))
     print('\n\nThe classification report for DT:')
-    print(classification_report(total_y_test, total_y_predict_DT))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_DT))
+    # print(classification_report(total_y_test, total_y_predict_DT))
     print('\n\nThe classification report for Bayes:')
-    print(classification_report(total_y_test, total_y_predict_Bayes))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_Bayes))
+    # print(classification_report(total_y_test, total_y_predict_Bayes))
     print('\n\nThe classification report for SVM:')
-    print(classification_report(total_y_test, total_y_predict_SVM))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_SVM))
+    # print(classification_report(total_y_test, total_y_predict_SVM))
     print('\n\nThe classification report for RF:')
-    print(classification_report(total_y_test, total_y_predict_RF))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_RF))
+    # print(classification_report(total_y_test, total_y_predict_RF))
     print('\n\nThe classification report for CLF:')
-    print(classification_report(total_y_test, total_y_predict_clf))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_clf))
+    # print(classification_report(total_y_test, total_y_predict_clf))
 
 
 def traditional_ml_new(data_filepath, label_filepath):
@@ -473,7 +535,6 @@ def traditional_ml_new(data_filepath, label_filepath):
 
         # tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-1, 1e-2, 1e-3], 'C': [1, 10, 100, 1000]},
         #                     {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
-        #
         # scores = ['precision', 'recall']
         # for score in scores:
         #     print("# Tuning hyper-parameters for %s" % score)
@@ -552,15 +613,15 @@ def traditional_ml_new(data_filepath, label_filepath):
         #     print(classification_report(y_true, y_pred))
         # break
 
-        svm = SVC(C=1, gamma=0.01, kernel='rbf', probability=True).fit(x_train, y_train)
+        svm = SVC(C=1, gamma=0.001, kernel='rbf', probability=True).fit(x_train, y_train)
         answer_svm = svm.predict(x_test)
         total_y_predict_SVM.extend(answer_svm)
 
-        rf = RandomForestClassifier(n_estimators=30).fit(x_train, y_train)
+        rf = RandomForestClassifier(n_estimators=170).fit(x_train, y_train)
         answer_rf = rf.predict(x_test)
         total_y_predict_RF.extend(answer_rf)
 
-        knn = KNeighborsClassifier(n_neighbors=21).fit(x_train, y_train)
+        knn = KNeighborsClassifier(n_neighbors=25).fit(x_train, y_train)
         answer_knn = knn.predict(x_test)
         total_y_predict_knn.extend(answer_knn)
 
@@ -574,17 +635,23 @@ def traditional_ml_new(data_filepath, label_filepath):
         # print(classification_report(y_test, answer_svm))
     print("总结果如下")
     print('\n\nThe classification report for knn:')
-    print(classification_report(total_y_test, total_y_predict_knn))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_knn))
+    # print(classification_report(total_y_test, total_y_predict_knn))
     print('\n\nThe classification report for DT:')
-    print(classification_report(total_y_test, total_y_predict_DT))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_DT))
+    # print(classification_report(total_y_test, total_y_predict_DT))
     print('\n\nThe classification report for Bayes:')
-    print(classification_report(total_y_test, total_y_predict_Bayes))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_Bayes))
+    # print(classification_report(total_y_test, total_y_predict_Bayes))
     print('\n\nThe classification report for SVM:')
-    print(classification_report(total_y_test, total_y_predict_SVM))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_SVM))
+    # print(classification_report(total_y_test, total_y_predict_SVM))
     print('\n\nThe classification report for RF:')
-    print(classification_report(total_y_test, total_y_predict_RF))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_RF))
+    # print(classification_report(total_y_test, total_y_predict_RF))
     print('\n\nThe classification report for CLF:')
-    print(classification_report(total_y_test, total_y_predict_clf))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_clf))
+    # print(classification_report(total_y_test, total_y_predict_clf))
 
 
 def grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
@@ -645,8 +712,8 @@ def train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vec
         # print(model.predict(x_train))
         model.evaluate(x_train, y_train)
         y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
-        report = classification_report(y_test, y_predict)
-        print(report)
+        # print(classification_report(y_test, y_predict))
+        print(OriginalityGradingNEW.loose_report(y_test, y_predict))
         # OriginalityGradingNEW.get_results(y_test, y_predict, test_index, label_filepath,
         #                                   filepath='../src/text/差距大的文章3.txt')
         total_y_predict.extend(y_predict)
@@ -654,7 +721,8 @@ def train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vec
         # split_result_show(labels, model, test_index, vectors)
         # return 0
     print("总结果")
-    print(classification_report(total_y_test, total_y_predict))
+    # print(classification_report(total_y_test, total_y_predict))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict))
     print(OriginalityGradingNEW.get_results(total_y_test, total_y_predict))
 
 
@@ -718,8 +786,13 @@ def dense(data_filepath, label_filepath):
     callbacks = []
     labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
     labels = OriginalityGradingNEW.change_labels(labels)
-    labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
+
+    # vectors, labels = OriginalityGradingNEW.merge_labels(vectors, labels)
+    # nd = 4
+
+    labels = np.array(labels, dtype=int)
+    vectors = np.array(vectors, dtype=float)
 
     embedding_len = 2220
     # random_state = 1  # 测试

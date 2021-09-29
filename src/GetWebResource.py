@@ -1,5 +1,7 @@
 import re
 from pprint import pprint
+from typing import Union, Any, Optional
+
 from bs4 import BeautifulSoup
 
 from src import HTML, Global, Clean
@@ -7,14 +9,15 @@ from src.EDU import demo
 from src.SeparateCode import SeparateCode
 
 
-def split_txt(txt_url: str, EDU: bool = False, verbose: bool = True) -> dict:
+def split_txt(txt_url: str, EDU: bool = False, verbose: bool = True) -> Optional[
+    dict[str, Union[Union[str, list[str], list[Union[str, Any]]], Any]]]:
     """
     根据url地址返回一个词典，词典中包含以下属性：1。head：标题；2。paragraphs：段落；3。sentences：句子；4。codes：代码；
     5。date：日期；6。text：全文（不含代码段）；
     :param verbose: 是否繁杂输出
     :param EDU: 是否采用EDU来划分句子
     :param txt_url: url地址
-    :return: 词典，如果不满足目的url（1。csdn2。cnblogs3。github4。简书），则返回None
+    :return: 词典，如果不满足目的url（1。csdn2。cnblogs3。github），则返回None
     """
     result = dict()
     sentences = list()
@@ -122,23 +125,6 @@ def split_txt(txt_url: str, EDU: bool = False, verbose: bool = True) -> dict:
             start = text.find(delete_code)
             if start != -1:
                 text = text[0:start] + text[start + len(delete_code):]
-    if re.match(Global.url_pattern['jianshu'], url):
-        is_illegal = True
-        # head
-        content = bf.find("h1", class_="_1RuRku")
-        if content is None:
-            if verbose:
-                print("这个url标题有问题：" + txt_url)
-            return None
-        head = content.text.replace("\n", "")
-        # text
-        text = bf.find("article", class_="_2rhmJa").getText()
-        # date
-        update_date = ""
-        # codes
-        contents = bf.find_all("pre")
-        for content in contents:
-            codes.append(content.getText())
 
     if is_illegal:
         for code in codes:
@@ -237,11 +223,6 @@ def get_urls(main_url: str, verbose: bool = True) -> []:
             if content.get("href") is not None and re.match("/\\d{4}/\\d{2}/\\d{2}/.+/", content.get("href")) \
                     and not re.match("/\\d{4}/\\d{2}/\\d{2}/.+/#more", content.get("href")):
                 urls.add(main_url + content.get("href"))
-    if re.match(Global.pattern_jianshu_main, main_url):
-        for content in contents:
-            if content.get("href") is not None and re.match("/p/\\w+", content.get("href")):
-                if not re.match(".*#comments.*", content.get("href")):
-                    urls.add("https://www.jianshu.com" + content.get("href"))
     return list(urls)
 
 
@@ -261,12 +242,28 @@ def get_main_url(url: str) -> str:
     if re.match(Global.pattern_github_main, url):
         temps = url.split("/")
         main_url = "https://" + temps[2]
-    if re.match(Global.pattern_jianshu, url):
-        html = HTML.get_raw_html_origin(url)
-        bf = BeautifulSoup(html, "html.parser")
-        contents = bf.find_all("a", href=True)
-        for content in contents:
-            if re.match("/u/.+", content.get("href")):
-                main_url = "https://www.jianshu.com" + content.get("href")
-                break
     return main_url
+
+
+if __name__ == '__main__':
+    total_urls_get = []
+    with open('../src/text/所有文章的url.txt', mode='r') as f:
+        for line in f.readlines():
+            total_urls_get.append(line[:-1])
+    print(len(total_urls_get))
+
+    start = 1315
+    total_urls_get = total_urls_get[start:]
+    i = start
+    for url in total_urls_get:
+        result = split_txt(url)
+        if result is None:
+            print('\033[1;31;40m这个url有问题>>> '+url+'\033[0m')
+        else:
+            update_date = result.get('date')
+            if not re.match('\\d{4}-\\d{2}-\\d{2}', update_date):
+                print('这个日期格式有错误>>>', i, ' ', update_date)
+                break
+            print('<{}> '.format(i), update_date)
+        i += 1
+

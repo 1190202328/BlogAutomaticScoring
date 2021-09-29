@@ -8,7 +8,7 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import KFold
 import tensorflow as tf
 
-from src import GetWebResource, Clean
+from src import GetWebResource, Clean, HTML
 
 
 class SeparateRelatedArticle:
@@ -235,15 +235,38 @@ def refresh_index():
 if __name__ == '__main__':
     # machine_learning()
 
-    # total_urls = []
-    # urls = get_total_urls()
-    # for url in urls:
-    #     main_url = Pretreatment.get_main_url(url)
-    #     if main_url is not None and main_url != "":
-    #         # print(main_url)
-    #         local_urls = Pretreatment.get_urls(main_url, verbose=False)
-    #         total_urls += local_urls
-    # print(len(total_urls))
+    total_urls_get = []
+    with open('../src/text/所有学生的所有url.txt', mode='r') as f:
+        for line in f.readlines():
+            total_urls_get.append(line[:-1])
+    print(len(total_urls_get))
+
+    total_urls = []
+    urls = get_total_urls()
+    urls += total_urls_get
+    print(len(urls))
+    i = 1
+    for url in urls:
+        main_url = GetWebResource.get_main_url(url)
+        if main_url is not None and main_url != "":
+            print('<{}> '.format(i), main_url)
+            i += 1
+            local_urls = GetWebResource.get_urls(main_url, verbose=False)
+            total_urls += local_urls
+
+    print(len(total_urls))
+    with open('../src/text/所有文章的url.txt', mode='w') as f:
+        for url in total_urls:
+            f.write(url)
+            f.write('\n')
+
+    total_urls_get = []
+    with open('../src/text/所有文章的url.txt', mode='r') as f:
+        for line in f.readlines():
+            total_urls_get.append(line[:-1])
+    print(len(total_urls_get))
+
+
     # course_related_urls = SeparateRelatedArticle.get_course_related_urls(total_urls)
     # with open('../src/text/按原创性分类.txt', "w") as f:
     #     i = 0
@@ -251,4 +274,4 @@ if __name__ == '__main__':
     #         f.write('{}\t{}\n'.format(i, url))
     #         i += 1
 
-    refresh_index()
+    # refresh_index()

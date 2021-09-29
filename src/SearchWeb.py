@@ -50,6 +50,9 @@ def get_related_head_and_text(text_head: str, update_time: str, head_number: int
     :param text_head: 文章标题
     :return: head_number篇文章的标题,text_number篇文章的全文
     """
+    text_head = clean_to_search_keywords(text_head)
+    if text_head == '':
+        return None, None
     pn = 0
     update_time = datetime.strptime(update_time, "%Y-%m-%d")
     total_urls = list()
@@ -319,8 +322,9 @@ if __name__ == '__main__':
     # url = "https://blog.csdn.net/buckbarnes/article/details/118547420"
     # url = "https://bit-ranger.github.io/blog/java/effective-java/"
     # url = "https://blog.csdn.net/z741481546/article/details/93514166"
-
     # url = "https://blog.csdn.net/cobracanary/article/details/119612536"
+
+
     print("---------url>>>" + url)
     result = GetWebResource.split_txt(url)
     head = result['head']
@@ -346,5 +350,6 @@ if __name__ == '__main__':
         print(code)
     print("---------date---------")
     print(update_date)
+    print("")
 
-    get_related_head_and_text(head, update_date)
+    get_related_head_and_text(head, update_date, url=url)

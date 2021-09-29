@@ -1,9 +1,6 @@
 import re
 
 import jieba
-
-from src.Pretreatment import Pretreatment
-
 from src import GetWebResource
 
 

@@ -11,14 +11,14 @@ class InfoReader:
     """
 
     @staticmethod
-    def get_student_info(path, filename):
+    def get_student_info(filepath):
         """
             :arg
                 filename:文件名称，如"学生个人博客信息.xlsx"
             :returns
                 学生的列表
         """
-        workbook = load_workbook(path + filename)
+        workbook = load_workbook(filepath)
         sheets = workbook.get_sheet_names()
         booksheet = workbook.get_sheet_by_name(sheets[0])
         rows = booksheet.rows
@@ -40,9 +40,12 @@ class InfoReader:
 
 
 if __name__ == '__main__':
-    students = InfoReader.get_student_info("学生个人博客信息.xlsx")
-    for student in students:
-        if student.url is None:
-            continue
-        else:
-            print(student.url)
+    with open('../src/text/所有学生的所有url.txt', mode='a') as f:
+        students = InfoReader.get_student_info("../src/text/学生个人博客信息.xlsx")
+        for student in students:
+            if student.url is None:
+                continue
+            else:
+                print(student.url)
+                f.write(student.url)
+                f.write('\n')
