@@ -190,7 +190,7 @@ class SimilarityFromBERT:
         # 标题相似度
         related_heads, related_texts = SearchWeb.get_related_head_and_text(head, update_time, head_number, text_number, url=url, verbose=verbose)
         if related_heads is None:
-            related_heads, related_texts = SearchWeb.get_related_head_and_text(head, update_time, head_number, text_number, url=url, verbose=verbose)
+            related_heads, related_texts = SearchWeb.get_related_head_and_text(to_search_sentences[0][0], update_time, head_number, text_number, url=url, verbose=verbose)
             if related_heads is None:
                 return None
         if save is not None:
@@ -214,27 +214,21 @@ class SimilarityFromBERT:
         # 段落和句子相似度
         paragraphs_similarity = []
         sentences_similarity = []
-        invalid_count = 0
-        invalid_count_max = 1
         for i in range(len(to_search_sentences)):
             if verbose:
                 print("段落>>>" + paragraphs[i])
             for sentence in to_search_sentences[i]:
                 if verbose:
                     print("开始搜索句子[{}]".format(sentence))
-                related_paragraphs, related_sentences, _, invalid = SearchWeb.get_related_paragraphs_and_sentences \
-                    (sentence, paragraph_number=paragraph_number, sentence_number=sentence_number, url=url,
+                related_paragraphs, related_sentences = SearchWeb.get_related_paragraphs_and_sentences \
+                    (sentence, update_time, paragraph_number=paragraph_number, sentence_number=sentence_number, url=url,
                      verbose=verbose)
+                if related_paragraphs is None:
+                    notice.close()
+                    return None
                 if save is not None:
                     search_result['paragraphs'][paragraphs[i]] = related_paragraphs
                     search_result['sentences'][sentence] = related_sentences
-                if invalid >= 2:
-                    invalid_count += 1
-                else:
-                    invalid_count = 0
-                if invalid_count >= invalid_count_max:
-                    notice.close()
-                    return None
                 paragraph_similarity = SimilarityFromBERT.get_similarity([paragraphs[i]] + related_paragraphs)[:1][0][
                                        1:]
                 paragraph_similarity = padding(paragraph_similarity, paragraph_number)

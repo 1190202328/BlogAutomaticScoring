@@ -243,27 +243,3 @@ def get_main_url(url: str) -> str:
         temps = url.split("/")
         main_url = "https://" + temps[2]
     return main_url
-
-
-if __name__ == '__main__':
-    total_urls_get = []
-    with open('../src/text/所有文章的url.txt', mode='r') as f:
-        for line in f.readlines():
-            total_urls_get.append(line[:-1])
-    print(len(total_urls_get))
-
-    start = 1315
-    total_urls_get = total_urls_get[start:]
-    i = start
-    for url in total_urls_get:
-        result = split_txt(url)
-        if result is None:
-            print('\033[1;31;40m这个url有问题>>> '+url+'\033[0m')
-        else:
-            update_date = result.get('date')
-            if not re.match('\\d{4}-\\d{2}-\\d{2}', update_date):
-                print('这个日期格式有错误>>>', i, ' ', update_date)
-                break
-            print('<{}> '.format(i), update_date)
-        i += 1
-

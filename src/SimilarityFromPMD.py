@@ -1,4 +1,7 @@
 import os
+import threading
+
+lock = threading.Lock()
 
 
 class SimilarityFromPMD:
@@ -31,9 +34,9 @@ class SimilarityFromPMD:
             return False
 
     @staticmethod
-    def is_similar(code1, code2):
+    def is_similar_inner(code1, code2):
         """
-        判断code1和code2是否相似
+        判断code1和code2是否相似(不加锁)
         :param code1: 代码行1
         :param code2: 代码行2
         :return: True：相似；False：不相似
@@ -41,6 +44,19 @@ class SimilarityFromPMD:
         SimilarityFromPMD.write_codes_to_file(code1, code2)
         SimilarityFromPMD.run_pmd()
         return SimilarityFromPMD.get_result()
+
+    @staticmethod
+    def is_similar(code1, code2):
+        """
+        判断code1和code2是否相似(加锁)
+        :param code1: 代码行1
+        :param code2: 代码行2
+        :return: True：相似；False：不相似
+        """
+        if lock.acquire(True):
+            result = SimilarityFromPMD.is_similar_inner(code1, code2)
+            lock.release()
+            return result
 
 
 if __name__ == '__main__':
