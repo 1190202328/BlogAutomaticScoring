@@ -1,11 +1,13 @@
 import json
 import os
+import random
 import re
 from pprint import pprint
 from colorama import Fore
 from sklearn.metrics.pairwise import cosine_similarity
 from bert_serving.client import BertClient
 from tqdm import tqdm
+import numpy as np
 
 from src import Clean, GetWebResource, SearchWeb
 from src.EDU import demo
@@ -102,7 +104,7 @@ class SimilarityFromBERT:
                             code_number=10,
                             sentence_lenth_limit=5, EDU=False, result=None, verbose=True, pre_verbose=False, save=None):
         """
-        通过url链接获取5个维度的相似度：1。标题 2。全文 3。段落 4。句子 5。代码（都进行了停用词处理）（搜索结果中不包含自己）
+        通过url链接获取5个维度的相似度：1。标题 2。全文 3。段落 4。句子 5。代码（都进行了停用词处理）（搜索结果中不包含自己）（随机采样）
         :param pre_verbose: 选择是否输出预处理阶段杂多的信息:True:复杂输出;False：简单输出
         :param save: 是否保存中间找到的数据；如果不为None：以该存档save.txt为文件名保存为json格式
         :param verbose: 选择是否输出杂多的信息:True:复杂输出;False：简单输出
@@ -145,12 +147,11 @@ class SimilarityFromBERT:
         paragraphs = SimilarityFromBERT.get_text_related(paragraphs, text, limit=0.80, verbose=verbose)
         to_search_sentences = []
         if pre_verbose:
-            notice = tqdm(total=len(paragraphs), bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.BLUE, Fore.RESET), position=True)
+            notice = tqdm(total=len(paragraphs), bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.BLUE, Fore.RESET),
+                          position=True)
             notice.set_description("[{}] ".format(num) + url + " >>>Pre")
-        i = 0
+        index = 0
         for paragraph in paragraphs:
-            if total_count - 2 >= sentence_len:
-                break
             if EDU:
                 sentences = demo.get_EDUs(paragraph)
             else:
@@ -162,35 +163,56 @@ class SimilarityFromBERT:
             sentences = SimilarityFromBERT.get_text_related(sentences, text, limit=0.85, verbose=verbose)
             clean_sentences = []
             for sentence in sentences:
-                if sentence != "" and len(sentence) > sentence_lenth_limit and total_count - 2 < sentence_len:
+                if sentence != "" and len(sentence) > sentence_lenth_limit:
                     if save is not None:
                         search_result['sentences'][sentence] = []
                     clean_sentences.append(sentence)
                     total_count += 1
+                    index += 1
             to_search_sentences.append(clean_sentences)
             if pre_verbose:
                 notice.update(1)
-            i += 1
         if pre_verbose:
             notice.close()
+        if index > sentence_len:
+            total_count = 1
+            sample_list = [i for i in range(index)]
+            sample_list = random.sample(sample_list, sentence_len)
+            to_search_sentences_sample = []
+            count = 0
+            for i in range(len(to_search_sentences)):
+                temp_sentences = []
+                for sentence in to_search_sentences[i]:
+                    if count in sample_list:
+                        temp_sentences.append(sentence)
+                    count += 1
+                    total_count += 1
+                to_search_sentences_sample.append(temp_sentences)
+            to_search_sentences = to_search_sentences_sample
         to_search_codes = []
+        total_count_pre = total_count
         if codes:
             for code in codes:
-                if len(to_search_codes) >= code_len:
-                    break
                 lines = Clean.clean_code(code)
                 for line in lines:
-                    if len(to_search_codes) >= code_len:
-                        break
                     to_search_codes.append(line)
                     total_count += 1
+        if len(to_search_codes) > code_len:
+            total_count = total_count_pre+code_len
+            sample_list = [i for i in range(len(to_search_codes))]
+            sample_list = random.sample(sample_list, code_len)
+            to_search_codes = list(np.array(to_search_codes)[sample_list])
         if not verbose:
-            notice = tqdm(total=total_count, bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.GREEN, Fore.RESET), position=True)
+            notice = tqdm(total=total_count, bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.GREEN, Fore.RESET),
+                          position=True)
             notice.set_description("[{}] ".format(num) + url + " >>>")
         # 标题相似度
-        related_heads, related_texts = SearchWeb.get_related_head_and_text(head, update_time, head_number, text_number, url=url, verbose=verbose)
+        related_heads, related_texts = SearchWeb.get_related_head_and_text(head, update_time, head_number, text_number,
+                                                                           url=url, verbose=verbose)
         if related_heads is None:
-            related_heads, related_texts = SearchWeb.get_related_head_and_text(to_search_sentences[0][0], update_time, head_number, text_number, url=url, verbose=verbose)
+            related_heads, related_texts = SearchWeb.get_related_head_and_text(to_search_sentences[0][0], update_time,
+                                                                               head_number, text_number, url=url,
+                                                                               verbose=verbose)
             if related_heads is None:
                 return None
         if save is not None:
@@ -365,7 +387,10 @@ if __name__ == '__main__':
     # url = "https://blog.csdn.net/zhuzyibooooo/article/details/118527726?spm=1001.2014.3001.5501"
     # url = "https://blog.csdn.net/Louis210/article/details/119666026?spm=1001.2014.3001.5501"
     # url = "https://blog.csdn.net/weixin_46219578/article/details/117462868"
-    url = "https://blog.csdn.net/Louis210/article/details/119649950"
+    # url = "https://blog.csdn.net/Louis210/article/details/119649950"
+
+    # url = 'https://blog.csdn.net/Louis210/article/details/118071148'
+    url = 'https://blog.csdn.net/GongchuangSu/article/details/51514389'
     head_number = 3
     text_number = 3
     paragraph_number = 3
@@ -376,8 +401,7 @@ if __name__ == '__main__':
                                                     code_number,
                                                     EDU=False,
                                                     verbose=True,
-                                                    pre_verbose=False,
-                                                    save=0
+                                                    pre_verbose=False
                                                     )
     print("-----------标题相似度---------")
     pprint(result['head'])
@@ -390,21 +414,21 @@ if __name__ == '__main__':
     print("-----------code相似度---------")
     pprint(result['code'])
 
-    with open('../src/text/存档0.txt', 'r') as f:
-        result = json.loads(f.read())
-        print("<<<head>>>")
-        print(result['head'])
-        print("<<<text>>>")
-        print(result['text'])
-        print("<<<paragraphs>>>")
-        for paragraph in result['paragraphs']:
-            print(paragraph)
-            print(result['paragraphs'][paragraph])
-        print("<<<sentences>>>")
-        for sentence in result['sentences']:
-            print(sentence)
-            print(result['sentences'][sentence])
-        print("<<<codes>>>")
-        for code in result['codes']:
-            print(code)
-            print(result['codes'][code])
+    # with open('../src/text/存档0.txt', 'r') as f:
+    #     result = json.loads(f.read())
+    #     print("<<<head>>>")
+    #     print(result['head'])
+    #     print("<<<text>>>")
+    #     print(result['text'])
+    #     print("<<<paragraphs>>>")
+    #     for paragraph in result['paragraphs']:
+    #         print(paragraph)
+    #         print(result['paragraphs'][paragraph])
+    #     print("<<<sentences>>>")
+    #     for sentence in result['sentences']:
+    #         print(sentence)
+    #         print(result['sentences'][sentence])
+    #     print("<<<codes>>>")
+    #     for code in result['codes']:
+    #         print(code)
+    #         print(result['codes'][code])
