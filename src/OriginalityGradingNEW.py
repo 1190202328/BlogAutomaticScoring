@@ -18,6 +18,7 @@ from sklearn.metrics import classification_report
 from sklearn.svm import SVC
 import matplotlib.pyplot as plt
 
+from src import machine_learning_function
 from src.InfoReadAndWrite import InfoReadAndWrite
 from src.SplitDataset import SplitDataset
 
@@ -179,33 +180,6 @@ class OriginalityGradingNEW:
                     f.write(r)
                     f.write('\n')
         return abs_result
-
-    @staticmethod
-    def show_history(history, is_accuracy=False):
-        """
-        展示训练过程
-        :param is_accuracy: 是否使用了准确率
-        :param history: 训练历史
-        :return: 无
-        """
-
-        if is_accuracy:
-            # 绘制训练 & 验证的准确率值
-            plt.plot(history.history['accuracy'])
-            plt.plot(history.history['val_accuracy'])
-            plt.title('Model accuracy')
-            plt.ylabel('Accuracy')
-            plt.xlabel('Epoch')
-            plt.legend(['Train', 'Test'], loc='upper left')
-            plt.show()
-        # 绘制训练 & 验证的损失值
-        plt.plot(history.history['loss'])
-        plt.plot(history.history['val_loss'])
-        plt.title('Model loss')
-        plt.ylabel('Loss')
-        plt.xlabel('Epoch')
-        plt.legend(['Train', 'Test'], loc='upper left')
-        plt.show()
 
     @staticmethod
     def reduce_dimension(vectors, head: bool, text: bool, paragraphs: bool, sentences: bool, codes: bool):
@@ -707,7 +681,7 @@ def train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vec
         history = model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size,
                             validation_data=(x_valid, y_valid), callbacks=callbacks, shuffle=True)
 
-        OriginalityGradingNEW.show_history(history, is_accuracy=True)
+        machine_learning_function.show_history(history, is_accuracy=True)
         # model = tf.keras.models.load_model(filepath)
         # print(model.predict(x_train))
         model.evaluate(x_train, y_train)

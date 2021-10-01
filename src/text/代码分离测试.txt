@@ -1,0 +1,149 @@
+软件构造课程随笔–一些踩坑总结一. 写在前面
+在整个后半学期的软件构造课程中，经过大量的Java编程训练后，我们的代码能力着实是有了很大的提高，在不断练习和总结的过程中，
+自然而然地，我们会遇到各种各样的问题。因为知识所限和经验所限，踩了很多很多的坑，以下便是我对这学期在Java编程的过程当中踩的坑的一个小小总结：
+二. 各种集合类对象以及数组之间的互相转换
+不言而喻，JDK中的集合类是我们使用的最多的JDK提供的容器了，很多时候都会遇到这样的一系列问题：怎样在把一个某种集合类（数组）的对象转换为另一种集合类（数组）的对象？
+这个问题可以划分为一系列的子问题，我们来依次看一看其中常见的几个转换（其余同理，读者可自行总结）：
+①List转数组：
+推荐的方式是采用List接口的toArray()方法，该方法有两个重载，其一是不含参的，其二是含参的，其spec如下所示，这里需要使用含参的重载，
+之前我就是不知道需要使用含参的重载，直接使用无参的toArray()加上强制类型转换，结果直接运行时抛出了类型无法转换的运行时异常，显然Object[]数组不能强制转换为我们想要的对象数组。
+//重载1：无参，返回Object[]
+Object[] toArray()
+Returns an array containing all of the elements in this list in proper sequence (from first to last element).
+The returned array will be "safe" in that no references to it are maintained by this list. 
+(In other words, this method must allocate a new array even if this list is backed by an array). 
+The caller is thus free to modify the returned array.
+This method acts as bridge between array-based and collection-based APIs.
+
+//重载2：有泛型参数T，返回T[] 
+<T> T[] toArray(T[] a)
+Returns an array containing all of the elements in this list in proper sequence (from first to last element); 
+the runtime type of the returned array is that of the specified array. If the list fits in the specified array, it is returned therein.
+Otherwise, a new array is allocated with the runtime type of the specified array and the size of this list.
+If the list fits in the specified array with room to spare (i.e., the array has more elements than the list), 
+the element in the array immediately following the end of the list is set to null. 
+(This is useful in determining the length of the list only if the caller knows that the list does not contain any null elements.)
+
+Like the toArray() method, this method acts as bridge between array-based and collection-based APIs. Further, this method allows precise control over the runtime type of the output array, and may, under certain circumstances, be used to save allocation costs.
+
+Suppose x is a list known to contain only strings. The following code can be used to dump the list into a newly allocated array of String:
+     String[] y = x.toArray(new String[0]);
+ 
+Note that toArray(new Object[0]) is identical in function to toArray().
+正确的示例转换代码如下：
+@Test
+public void List2ArrayTest() {
+    List<String> list = new ArrayList<>();
+    list.add("a");
+    list.add("b");
+    list.add("c");
+    //将List转换为Array的方法：
+    String[] array = list.toArray(new String[0]);
+    System.out.println(Arrays.toString(array));//[a,b,c]
+}
+②数组转List：
+这里有两种方法，其一是使用Arrays工具类的asList()静态方法，不过这样转换后得到的List是不可变的，不能进行add()或remove()操作；另一种方法是使用
+Collections工具类的addAll()静态方法，这样转换后得到的List是可变的。两种方法的示例代码如下：
+@Test
+public void Array2ListTest() {
+    /*
+     * 此种方法生成的List是不可变的，不可进行add()和remove()操作
+     * 其长度已经定死，与被转换的数组的长度一致
+     */
+    String[] array = new String[]{"a", "b", "c"};
+    List<String> list1 = Arrays.asList(array);
+    System.out.println(list1.toString());//[a,b,c]
+
+    /*
+     * 此种方法生成的List是可变的，可进行add()和remove()操作
+     */
+    List<String> list2 = new ArrayList<>();
+    Collections.addAll(list2, array);
+    System.out.println(list2.toString());//[a,b,c]
+    list2.add("d");
+    list2.remove("a");
+    System.out.println(list2.toString());//[b,c,d]
+}
+
+③Set和List的互相转换：
+直接使用JDK集合类中提供的重载的构造方法即可，此略。
+④Set和数组的互相转换：
+数组到Set的转换需要通过List做桥梁；而Set到数组的转化可以使用toArray()方法，与①中List转数组类似。
+三. 自动装箱、拆箱在List中remove()方法中的陷阱
+请看以下一段代码，测试结果已经以注释的形式写在对应代码行后了：
+@Test
+public void removeTest() {
+    List<Integer> list = new ArrayList<>();
+    list.add(3); //3被自动装箱为Integer类型
+    list.add(2); //2被自动装箱为Integer类型
+    list.add(1); //1被自动装箱为Integer类型
+    System.out.println(list.toString()); //[3,2,1]
+    System.out.println(list.remove(1));//2,此处不会发生自动装箱，调用的是以int为参数的remove()方法，删除的是对应下标。
+    System.out.println(list.toString()); //[3,1]
+    System.out.println(list.remove(new Integer(1)));//true,此处不会发生自动拆箱，调用的是以Interger为参数的remove()方法，删除的是对应元素。
+    System.out.println(list.toString()); //[3]
+}
+
+需要注意的是List的remove()方法有两个，一个以int下标为参数，尝试删除该下标的元素，返回删除的元素；一个以对应对象为参数，返回boolean表示是否删除成功。
+此时，若List中存储的是Integer类型的对象的话，在调用add()方法的时候，如果传入的参数是基本数据类型int，那么会进行自动装箱。
+但是，在调用remove()方法的时候，却不会。因此，需要明确到底想要删除的是下标还是Integer对象，这里有一个小坑以前踩过，大家引以为戒。
+四. String的trim()函数不会去除全角空格
+做Lab3的时候，大家都应该踩过这个坑，即：Srting类中提供用来去除一个字符串的收尾空格的trim()方法只会去除半角空格，而不会去除全角空格，我们来测试一下：
+@Test
+public void trimTest() {
+    String originString = (char) 12288 + "abcd" + " "; //(char)12288表示全角空格，行尾的是半角空格
+    System.out.println(originString + "***"); //　abcd ***
+    String trimString = originString.trim();
+    System.out.println(trimString + "***"); //　abcd***
+}
+如测试结果所示，全角空格并未被trim()函数截去，这一点提醒我们在涉及文件读入处理的时候需要注意编码环境。
+五. forEach循环或是使用迭代器的时候不能修改依赖的容器
+更准确的说，forEach循环中不能修改依赖的容器；用迭代器遍历的时候只能使用Iterator接口及其实现类提供的remove()方法来对依赖的容器进行删除操作。
+这部分内容我已经在之前的一篇详细分析迭代器的博客中提到了，这里是传送门。
+六. 使用arrayCopy()方法提高数组拷贝的性能
+虽然软件构造更加关注正确性、健壮性、可复用性、可维护性等技术指标，但是在不破坏上述指标的前提下，优化代码的性能也是Java程序员必须的技能。
+一种常见的操作是拷贝一个数组，如果我们尝试自己实现其功能的话，一个样例如下：
+@Test
+public void manualArrayCopy10000TimesTest(){
+    int size = 100000;
+    int times = 10000;
+    int[] array = new int[size];
+    int[] arraydest = new int[size];
+
+    for(int i=0;i<array.length;i++){
+        array[i] = i;
+    }
+    long start = System.currentTimeMillis();
+    for (int k=0;k<times;k++){
+        for(int i=0;i<size;i++){
+            arraydest[i] = array[i];
+        }
+    }
+    long useTime = System.currentTimeMillis()-start;
+    System.out.println("useTime:"+useTime); //用时1452ms
+}
+
+事实上，如果你尝试进行手动拷贝数组的话，聪明的IDEA会检测出这种行为，并提示"Manual array copy"，如果你允许的话，
+IDEA会自动帮你用以下形式的arrayCopy()函数替代。
+@Test
+public void autoArrayCopy10000TimesTest(){
+    int size = 100000;
+    int times = 10000;
+    int[] array = new int[size];
+    int[] arraydest = new int[size];
+
+    for(int i=0;i<array.length;i++){
+        array[i] = i;
+    }
+    long start = System.currentTimeMillis();
+    for (int k=0;k<times;k++){
+        System.arraycopy(array, 0, arraydest, 0, size);
+    }
+    long useTime = System.currentTimeMillis()-start;
+    System.out.println("useTime:"+useTime); //用时415ms
+}
+IDEA会自动帮你用以下形式的arrayCopy()函数替代，这是JDK为我们提供的一个更高效的数组拷贝方法，也是极其建议我们使用的。
+七. 总结
+提高自己的编程能力本身就是一个大量试错的过程，随着代码量的提高，我们所会犯下的低级错误也会越来越少，但无论如何，过往犯下的错误
+正是我们的一笔宝贵的财富，我们需要好好总结这些踩过的坑，从里面总结出有用的经验和教训。所以，从这个角度来说这篇博客还会更新，永无止境
+不过时间有限，更多的内容也只能留待软件构造课程之后的Java学习之路了，希望本片随笔能够对大家有所帮助，本篇随笔到此结束，感谢阅读！

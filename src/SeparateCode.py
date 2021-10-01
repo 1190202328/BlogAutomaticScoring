@@ -1,8 +1,16 @@
 import re
+from datetime import datetime
+from pprint import pprint
+
 import numpy as np
 import tensorflow as tf
+from bs4 import BeautifulSoup
 from sklearn.metrics import classification_report
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, train_test_split
+
+from tensorflow import keras
+
+from src import machine_learning_function, Clean, HTML
 
 
 class SeparateCode:
@@ -204,7 +212,12 @@ def machine_learning():
     sentences, labels = SeparateCode.get_sentences_and_labels()
     labels = np.array(labels)
     sentences = np.array(sentences, dtype=object)
-    k_fold = KFold(n_splits=10, random_state=0, shuffle=True)
+    random_state = 40
+    sentences, x_valid, labels, y_valid = train_test_split(sentences, labels, test_size=0.2, shuffle=True,
+                                                           random_state=random_state)
+    k_fold = KFold(n_splits=5, random_state=random_state, shuffle=True)
+    total_y_predict = []
+    total_y_test = []
     # i = 0
     for train_index, test_index in k_fold.split(sentences, labels):
         # i += 1
@@ -221,11 +234,13 @@ def machine_learning():
         vocab_list.append("<paddle>")
         vocab_list.append("<unk>")
         vocab_list += list(sorted(vocab))
+
         # f = open("../src/text/vocab_list_1.txt", 'w')
         # for vocab in vocab_list:
         #     f.write(vocab)
         #     f.write("\n")
         # f.close()
+
         # embedding_len = 100
         # output_dim = 64
         # learning_rate = 0.1
@@ -233,36 +248,76 @@ def machine_learning():
         # epochs = 1
         embedding_len = 50
         output_dim = 32
-        learning_rate = 1e-2
-        batch_size = 320
-        epochs = 10
-        verbose = 2
+        learning_rate = 1e-5
+        batch_size = 32
+        epochs = 20
+        verbose = 1
+        l1 = 0
+        l2 = 1e-2
+        drop_out_rate = 1e-3
         opt = tf.optimizers.Adam(learning_rate)
         vocab_len = len(vocab_list)
         print("词典大小:{}".format(vocab_len))
 
-        input_token = tf.keras.Input(shape=(embedding_len,))
-        embedding = tf.keras.layers.Embedding(input_dim=vocab_len, output_dim=output_dim)(input_token)
-        embedding = tf.keras.layers.BatchNormalization()(embedding)
-        embedding = tf.keras.layers.Bidirectional(tf.keras.layers.GRU(output_dim))(embedding)
-        embedding = tf.keras.layers.Dense(16, activation=tf.nn.relu)(embedding)
-        embedding = tf.keras.layers.BatchNormalization()(embedding)
-        output = tf.keras.layers.Dense(2, activation=tf.nn.softmax)(embedding)
-        model = tf.keras.Model(input_token, output)
+        model = tf.keras.Sequential([
+            tf.keras.layers.InputLayer(input_shape=(embedding_len,)),
+            tf.keras.layers.Embedding(input_dim=vocab_len, output_dim=output_dim),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
+            tf.keras.layers.Dropout(drop_out_rate),
+            tf.keras.layers.Bidirectional(tf.keras.layers.GRU(output_dim)),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.Dense(16, activation=tf.nn.relu),
+            tf.keras.layers.Dense(2, activation=tf.nn.softmax)
+        ])
         model.compile(optimizer=opt, loss=tf.keras.losses.sparse_categorical_crossentropy, metrics=['accuracy'])
         print(model.summary())
 
+        # log_dir = '../src/logs/' + datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        # tensorboard_callback = keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+        call_backs = []
+        # call_backs.append(tensorboard_callback)
+
         x_train = SeparateCode.get_sequences(x_train, embedding_len, vocab_list)
         x_test = SeparateCode.get_sequences(x_test, embedding_len, vocab_list)
-        model.fit(x_train, y_train, epochs=epochs, validation_split=0.1, validation_freq=2, verbose=verbose,
-                  batch_size=batch_size)
+        x_valid_sequences = SeparateCode.get_sequences(x_valid, embedding_len, vocab_list)
+        history = model.fit(x_train, y_train, epochs=epochs, validation_data=(x_valid_sequences, y_valid),
+                            verbose=verbose,
+                            batch_size=batch_size, callbacks=call_backs)
+        machine_learning_function.show_history(history, is_accuracy=True)
+
         # path = "../src/saved_model/"
         # filename = "code_separate_model_1.h5"
         # model.save(path + filename)
         # model = tf.keras.models.load_model(path + filename)
+
         y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
         print(classification_report(y_test, y_predict))
+        total_y_predict.extend(y_predict)
+        total_y_test.extend(y_test)
+        break
+    print("总结果")
+    print(classification_report(total_y_test, total_y_predict))
 
 
 if __name__ == '__main__':
-    machine_learning()
+    # machine_learning()
+
+    # f = open("../src/text/江江.txt")
+    # text = f.read()
+    # f.close()
+    # print(text)
+
+    f = open("../src/text/代码分离测试.txt")
+    text = f.read()
+    f.close()
+    print(text)
+
+    text = re.sub("(\\xa0)|(\\u200b)|(\\u2003)|(\\u3000)", "", text)
+    text = re.sub("[\\t ]+", " ", text)
+    text = re.sub("\n+", "\n", text)
+    text = re.sub("(\n +)|( +\n)", "\n", text)
+    to_search_code_text = Clean.clean_code_for_text(text)
+    print('--------------------------------')
+    print(to_search_code_text)
+    pprint(SeparateCode.get_codes(to_search_code_text))
