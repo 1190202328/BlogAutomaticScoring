@@ -6,7 +6,7 @@ from pprint import pprint
 import cv2
 import numpy as np
 import tensorflow as tf
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau
 from openpyxl import load_workbook
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression, LinearRegression
@@ -277,47 +277,39 @@ class OriginalityGradingNEW:
         :param y_predict: 预测值
         :return: 结果报告
         """
+        y_predict_new = list(y_predict)
         for i in range(len(y_predict)):
             if y_true[i] == 0 and (y_predict[i] == 0 or y_predict[i] == 1):
-                y_predict[i] = 0
+                y_predict_new[i] = 0
             if y_true[i] == 1 and (y_predict[i] == 0 or y_predict[i] == 1 or y_predict[i] == 2):
-                y_predict[i] = 1
+                y_predict_new[i] = 1
             elif y_true[i] == 2 and (y_predict[i] == 1 or y_predict[i] == 2 or y_predict[i] == 3):
-                y_predict[i] = 2
+                y_predict_new[i] = 2
             elif y_true[i] == 3 and (y_predict[i] == 2 or y_predict[i] == 3 or y_predict[i] == 4):
-                y_predict[i] = 3
+                y_predict_new[i] = 3
             elif y_predict[i] == 4 and (y_predict[i] == 3 or y_predict[i] == 4):
-                y_predict[i] = 4
-        return classification_report(y_true, y_predict)
+                y_predict_new[i] = 4
+        return classification_report(y_true, y_predict_new)
 
     @staticmethod
-    def merge_labels(vectors: [[]], labels: []) -> ([[]], []):
+    def merge_labels(labels: []) -> ([[]], []):
         """
         将标签合并，规则如下：
         0->0
-        1,2->1
-        2,3->2
-        4->3
-        :param vectors: 原矩阵
+        1,2,3->1
+        4->2
         :param labels: 原标签
-        :return: 新矩阵，新标签
+        :return: 新标签
         """
         new_labels = []
-        new_vectors = []
         for i in range(len(labels)):
             if labels[i] == 0:
                 new_labels.append(0)
-                new_vectors.append(vectors[i])
-            if labels[i] == 1 or labels[i] == 2:
+            if labels[i] == 1 or labels[i] == 2 or labels[i] == 3:
                 new_labels.append(1)
-                new_vectors.append(vectors[i])
-            if labels[i] == 2 or labels[i] == 3:
-                new_labels.append(2)
-                new_vectors.append(vectors[i])
             if labels[i] == 4:
-                new_labels.append(3)
-                new_vectors.append(vectors[i])
-        return new_vectors, new_labels
+                new_labels.append(2)
+        return new_labels
 
 
 def traditional_ml(data_filepath, label_filepath):
@@ -325,7 +317,8 @@ def traditional_ml(data_filepath, label_filepath):
     random_state = 40
 
     labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
-    OriginalityGradingNEW.change_labels(labels)
+    labels = OriginalityGradingNEW.change_labels(labels)
+    labels = OriginalityGradingNEW.merge_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
     k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
@@ -434,15 +427,15 @@ def traditional_ml(data_filepath, label_filepath):
         #     print(classification_report(y_true, y_pred))
         # break
 
-        svm = SVC(C=10, gamma=0.001, kernel='rbf', probability=True).fit(x_train, y_train)
+        svm = SVC(C=10, gamma=0.01, kernel='rbf', probability=True).fit(x_train, y_train)
         answer_svm = svm.predict(x_test)
         total_y_predict_SVM.extend(answer_svm)
 
-        rf = RandomForestClassifier(n_estimators=70).fit(x_train, y_train)
+        rf = RandomForestClassifier(n_estimators=80).fit(x_train, y_train)
         answer_rf = rf.predict(x_test)
         total_y_predict_RF.extend(answer_rf)
 
-        knn = KNeighborsClassifier(n_neighbors=6).fit(x_train, y_train)
+        knn = KNeighborsClassifier(n_neighbors=19).fit(x_train, y_train)
         answer_knn = knn.predict(x_test)
         total_y_predict_knn.extend(answer_knn)
 
@@ -456,23 +449,23 @@ def traditional_ml(data_filepath, label_filepath):
         # print(classification_report(y_test, answer_svm))
     print("总结果如下")
     print('\n\nThe classification report for knn:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_knn))
-    # print(classification_report(total_y_test, total_y_predict_knn))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_knn))
+    print(classification_report(total_y_test, total_y_predict_knn))
     print('\n\nThe classification report for DT:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_DT))
-    # print(classification_report(total_y_test, total_y_predict_DT))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_DT))
+    print(classification_report(total_y_test, total_y_predict_DT))
     print('\n\nThe classification report for Bayes:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_Bayes))
-    # print(classification_report(total_y_test, total_y_predict_Bayes))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_Bayes))
+    print(classification_report(total_y_test, total_y_predict_Bayes))
     print('\n\nThe classification report for SVM:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_SVM))
-    # print(classification_report(total_y_test, total_y_predict_SVM))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_SVM))
+    print(classification_report(total_y_test, total_y_predict_SVM))
     print('\n\nThe classification report for RF:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_RF))
-    # print(classification_report(total_y_test, total_y_predict_RF))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_RF))
+    print(classification_report(total_y_test, total_y_predict_RF))
     print('\n\nThe classification report for CLF:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_clf))
-    # print(classification_report(total_y_test, total_y_predict_clf))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_clf))
+    print(classification_report(total_y_test, total_y_predict_clf))
 
 
 def traditional_ml_new(data_filepath, label_filepath):
@@ -480,6 +473,7 @@ def traditional_ml_new(data_filepath, label_filepath):
     random_state = 40
 
     labels = OriginalityGradingNEW.get_labels_xlsx(label_filepath, 650)
+    labels = OriginalityGradingNEW.merge_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
     k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
@@ -587,15 +581,15 @@ def traditional_ml_new(data_filepath, label_filepath):
         #     print(classification_report(y_true, y_pred))
         # break
 
-        svm = SVC(C=1, gamma=0.001, kernel='rbf', probability=True).fit(x_train, y_train)
+        svm = SVC(C=1, gamma=0.01, kernel='rbf', probability=True).fit(x_train, y_train)
         answer_svm = svm.predict(x_test)
         total_y_predict_SVM.extend(answer_svm)
 
-        rf = RandomForestClassifier(n_estimators=170).fit(x_train, y_train)
+        rf = RandomForestClassifier(n_estimators=190).fit(x_train, y_train)
         answer_rf = rf.predict(x_test)
         total_y_predict_RF.extend(answer_rf)
 
-        knn = KNeighborsClassifier(n_neighbors=25).fit(x_train, y_train)
+        knn = KNeighborsClassifier(n_neighbors=23).fit(x_train, y_train)
         answer_knn = knn.predict(x_test)
         total_y_predict_knn.extend(answer_knn)
 
@@ -609,23 +603,23 @@ def traditional_ml_new(data_filepath, label_filepath):
         # print(classification_report(y_test, answer_svm))
     print("总结果如下")
     print('\n\nThe classification report for knn:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_knn))
-    # print(classification_report(total_y_test, total_y_predict_knn))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_knn))
+    print(classification_report(total_y_test, total_y_predict_knn))
     print('\n\nThe classification report for DT:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_DT))
-    # print(classification_report(total_y_test, total_y_predict_DT))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_DT))
+    print(classification_report(total_y_test, total_y_predict_DT))
     print('\n\nThe classification report for Bayes:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_Bayes))
-    # print(classification_report(total_y_test, total_y_predict_Bayes))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_Bayes))
+    print(classification_report(total_y_test, total_y_predict_Bayes))
     print('\n\nThe classification report for SVM:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_SVM))
-    # print(classification_report(total_y_test, total_y_predict_SVM))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_SVM))
+    print(classification_report(total_y_test, total_y_predict_SVM))
     print('\n\nThe classification report for RF:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_RF))
-    # print(classification_report(total_y_test, total_y_predict_RF))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_RF))
+    print(classification_report(total_y_test, total_y_predict_RF))
     print('\n\nThe classification report for CLF:')
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_clf))
-    # print(classification_report(total_y_test, total_y_predict_clf))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict_clf))
+    print(classification_report(total_y_test, total_y_predict_clf))
 
 
 def grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
@@ -684,10 +678,11 @@ def train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vec
         machine_learning_function.show_history(history, is_accuracy=True)
         # model = tf.keras.models.load_model(filepath)
         # print(model.predict(x_train))
-        model.evaluate(x_train, y_train)
+        print(model.evaluate(x_train, y_train))
         y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
-        # print(classification_report(y_test, y_predict))
-        print(OriginalityGradingNEW.loose_report(y_test, y_predict))
+        print(classification_report(y_test, y_predict))
+        # print(OriginalityGradingNEW.loose_report(y_test, y_predict))
+        machine_learning_function.plot_confusion_matrix(y_test, y_predict, [0, 1, 2, 3, 4])
         # OriginalityGradingNEW.get_results(y_test, y_predict, test_index, label_filepath,
         #                                   filepath='../src/text/差距大的文章3.txt')
         total_y_predict.extend(y_predict)
@@ -695,8 +690,9 @@ def train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vec
         # split_result_show(labels, model, test_index, vectors)
         # return 0
     print("总结果")
-    # print(classification_report(total_y_test, total_y_predict))
-    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict))
+    print(classification_report(total_y_test, total_y_predict))
+    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict))
+    machine_learning_function.plot_confusion_matrix(total_y_test, total_y_predict, [0, 1, 2, 3, 4])
     print(OriginalityGradingNEW.get_results(total_y_test, total_y_predict))
 
 
@@ -751,15 +747,18 @@ def split_result_show(labels, model, test_index, vectors):
 
 def dense(data_filepath, label_filepath):
     verbose = 1
-    nd = 5
+    nd = 3
     filepath = "../src/saved_model/originality_grading_model.h5"
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
                                                       patience=100, verbose=verbose, mode='auto',
                                                       baseline=None, restore_best_weights=False)
     check_pointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
+    learning_rate_reduction = ReduceLROnPlateau(monitor='loss', patience=5, verbose=verbose,
+                                                factor=0.5, min_lr=1e-5)
     callbacks = []
     labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
     labels = OriginalityGradingNEW.change_labels(labels)
+    labels = OriginalityGradingNEW.merge_labels(labels)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
 
     # vectors, labels = OriginalityGradingNEW.merge_labels(vectors, labels)
@@ -773,11 +772,12 @@ def dense(data_filepath, label_filepath):
     random_state = 40  # 一直使用的
     validation_freq = 1
     n_splits = 5
-    drop_out_rate = 0.3
+    drop_out_rate = 0.05
     l1 = 0
     l2 = 0.1
     # callbacks.append(early_stopping)
     # callbacks.append(check_pointer)
+    callbacks.append(learning_rate_reduction)
 
     similarity_len = 10
     paragraph_len = 50
@@ -802,10 +802,10 @@ def dense(data_filepath, label_filepath):
     # grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
     #                   n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_logic)
     # return 0
-    learning_rate = 1e-5
+    learning_rate = 1e-1
     batch_size = 256
     # epochs = 500
-    epochs = 200
+    epochs = 500
     # 总的准确率0.82
     train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vectors, get_model_logic, embedding_len,
           drop_out_rate, learning_rate, l1, l2, verbose)
@@ -817,34 +817,39 @@ def get_model_logic(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
         tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
         tf.keras.layers.Dense(256, activation='relu'),
-        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dropout(drop_out_rate),
         tf.keras.layers.Dense(512, activation='relu'),
         tf.keras.layers.Dropout(drop_out_rate),
-        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.Dense(64, activation='relu'),
-        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dropout(drop_out_rate),
         tf.keras.layers.Dense(nd, activation='softmax')
     ])
     print(model.summary())
-    opt = tf.optimizers.Adam(learning_rate)
-    # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
+
+    optimizer = tf.optimizers.Adadelta(learning_rate=learning_rate)
+    model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"])
+    # opt = tf.optimizers.Adam(learning_rate)
+    # # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
+    # # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
+    # #               metrics=[tf.keras.metrics.mae, tf.keras.metrics.categorical_crossentropy, ['accuracy']])
     # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
-    #               metrics=[tf.keras.metrics.mae, tf.keras.metrics.categorical_crossentropy, ['accuracy']])
-    model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
-                  metrics=[tf.keras.metrics.categorical_crossentropy, ['accuracy']])
+    #               metrics=[tf.keras.metrics.categorical_crossentropy, ['accuracy']])
     return model
 
 
 def cnn(data_filepath, label_filepath):
-    verbose = 2
+    verbose = 1
     nd = 5
     filepath = "../src/saved_model/originality_grading_model.h5"
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
                                                       patience=100, verbose=verbose, mode='auto',
                                                       baseline=None, restore_best_weights=False)
     check_pointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
+    learning_rate_reduction = ReduceLROnPlateau(monitor='loss', patience=10, verbose=verbose,
+                                                factor=0.5, min_lr=1e-5)
     callbacks = []
     labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
+    labels = OriginalityGradingNEW.change_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
     reshaped_vectors = []
@@ -853,15 +858,15 @@ def cnn(data_filepath, label_filepath):
     vectors = np.array(reshaped_vectors)
 
     embedding_len = 2220
-    # random_state = 30  # 0.71
     random_state = 40  # 0.72
     validation_freq = 1
     n_splits = 5
-    drop_out_rate = 0.3
+    drop_out_rate = 0.2
     l1 = 0.01
     l2 = 0.01
     # callbacks.append(early_stopping)
     # callbacks.append(check_pointer)
+    callbacks.append(learning_rate_reduction)
 
     # similarity_len = 10
     # paragraph_len = 60
@@ -875,35 +880,35 @@ def cnn(data_filepath, label_filepath):
     # grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
     #                   n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_cnn)
     # return 0
-    learning_rate = 1e-2
+    learning_rate = 1e-1
     # batch_size = 6000,9000 # 0.75
-    batch_size = 3000
-    epochs = 200
+    batch_size = 32
+    epochs = 2000
     # 总的准确率0.71
-    model = get_model_cnn(embedding_len, drop_out_rate, learning_rate, l1, l2, nd)
-    train(batch_size, callbacks, epochs, labels, model, n_splits, nd, random_state, validation_freq, vectors,
-          verbose)
+    train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vectors, get_model_cnn, embedding_len,
+          drop_out_rate, learning_rate, l1, l2, verbose)
 
 
 def get_model_cnn(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
     opt = tf.optimizers.Adam(learning_rate)
     model = tf.keras.Sequential([
         tf.keras.layers.InputLayer(input_shape=[60, 37, 1]),
-        tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
-        tf.keras.layers.Conv2D(32, 3, padding="SAME", activation=tf.nn.relu),
-        # tf.keras.layers.MaxPool2D(strides=[1, 1]),
-        tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.Conv2D(64, 3, padding="SAME", activation=tf.nn.relu),
-        tf.keras.layers.MaxPool2D(strides=[1, 1]),
-        # tf.keras.layers.Conv2D(128, 3, padding="SAME", activation=tf.nn.relu),
+        tf.keras.layers.Conv2D(16, (3, 3), strides=(1, 1), padding="SAME", activation=tf.nn.relu),
+        tf.keras.layers.MaxPool2D((1, 1), strides=(1, 1), padding='valid'),
+        tf.keras.layers.Conv2D(32, (3, 3), strides=(1, 1), padding="SAME", activation=tf.nn.relu),
+        tf.keras.layers.MaxPool2D((1, 1), strides=(1, 1), padding='valid'),
+        tf.keras.layers.Conv2D(64, (3, 3), strides=(1, 1), padding="SAME", activation=tf.nn.relu),
+        tf.keras.layers.MaxPool2D((2, 2), strides=(1, 1), padding='valid'),
+        tf.keras.layers.Conv2D(128, (3, 3), strides=(1, 1), padding="SAME", activation=tf.nn.relu),
+        tf.keras.layers.MaxPool2D((2, 2), strides=(1, 1), padding='valid'),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(64, activation=tf.nn.relu),
-        # tf.keras.layers.Dropout(drop_out_rate),
+        tf.keras.layers.Dense(512, activation=tf.nn.relu),
+        tf.keras.layers.Dropout(drop_out_rate),
+        tf.keras.layers.Dense(128, activation=tf.nn.relu),
+        tf.keras.layers.Dropout(drop_out_rate),
         tf.keras.layers.Dense(nd, activation=tf.nn.softmax)
     ])
     model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
-    # model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy,
-    #               metrics=[tf.keras.metrics.mae, tf.keras.metrics.categorical_crossentropy, ['accuracy']])
     print(model.summary())
     return model
 
@@ -1118,27 +1123,30 @@ def get_model_gru(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
 
 def dense_new(data_filepath, label_filepath):
     verbose = 1
-    nd = 5
+    nd = 3
     filepath = "../src/saved_model/originality_grading_model.h5"
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
                                                       patience=100, verbose=verbose, mode='auto',
                                                       baseline=None, restore_best_weights=False)
     check_pointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
+    learning_rate_reduction = ReduceLROnPlateau(monitor='loss', patience=5, verbose=verbose,
+                                                factor=0.5, min_lr=1e-5)
     callbacks = []
     labels = OriginalityGradingNEW.get_labels_xlsx(label_filepath, 650)
+    labels = OriginalityGradingNEW.merge_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
 
     embedding_len = 2220
     # random_state = 1  # 测试
     random_state = 40  # 一直使用的
-    validation_freq = 1
     n_splits = 5
-    drop_out_rate = 0.3
+    drop_out_rate = 0.05
     l1 = 0
     l2 = 0.1
     # callbacks.append(early_stopping)
     # callbacks.append(check_pointer)
+    callbacks.append(learning_rate_reduction)
 
     similarity_len = 10
     paragraph_len = 50
@@ -1163,10 +1171,9 @@ def dense_new(data_filepath, label_filepath):
     # grid_search_train(batch_sizes, callbacks, drop_out_rate, embedding_len, epochs, l1, l2, labels, learning_rates,
     #                   n_splits, nd, random_state, validation_freq, vectors, verbose, get_model_logic)
     # return 0
-    learning_rate = 1e-5
+    learning_rate = 1e-1
     batch_size = 256
     epochs = 500
-    epochs = 200
     # 总的准确率0.82
     train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vectors, get_model_logic, embedding_len,
           drop_out_rate, learning_rate, l1, l2, verbose)

@@ -1,15 +1,10 @@
-import datetime
 import io
-
-import sklearn
-from datetime import datetime
 import itertools
-from six.moves import range
+
 import tensorflow as tf
-from tensorflow import keras
+from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import numpy as np
-import sklearn.metrics
 
 
 def show_history(history, is_accuracy=False):
@@ -39,15 +34,17 @@ def show_history(history, is_accuracy=False):
     plt.show()
 
 
-def plot_confusion_matrix(cm, class_names):
+def plot_confusion_matrix(y_true: [], y_pred: [], class_names: []):
     """
-      Returns a matplotlib figure containing the plotted confusion matrix.
-
-      Args:
-        cm (array, shape = [n, n]): a confusion matrix of integer classes
-        class_names (array, shape = [n]): String names of the integer classes
+    创建一个混淆矩阵，直观地表示错误分类的图像
+    :param y_true: 真实值
+    :param y_pred: 预测值
+    :param class_names: 类别名称列表
+    :return: 无
     """
-    figure = plt.figure(figsize=(8, 8))
+    cm = confusion_matrix(y_true, y_pred, labels=class_names)
+    print(cm)
+    plt.figure(figsize=(8, 8))
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title("Confusion matrix")
     plt.colorbar()
@@ -67,12 +64,14 @@ def plot_confusion_matrix(cm, class_names):
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    return figure
+    plt.show()
 
 
 def plot_to_image(figure):
-    """Converts the matplotlib plot specified by 'figure' to a PNG image and
-  returns it. The supplied figure is closed and inaccessible after this call."""
+    """
+    Converts the matplotlib plot specified by 'figure' to a PNG image and
+    returns it. The supplied figure is closed and inaccessible after this call.
+    """
     # Save the plot to a PNG in memory.
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
