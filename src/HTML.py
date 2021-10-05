@@ -8,9 +8,9 @@ from bs4 import BeautifulSoup
 from src import Global
 
 
-def is_valid(proxy: str, url: str, verbose: bool = True) -> str:
+def is_valid_baidu(proxy: str, url: str, verbose: bool = True) -> str:
     """
-    检验代理是否可用
+    检验baidu代理是否可用
     :param url: 检测目的百度url地址
     :param verbose: 是否繁杂输出
     :param proxy:代理ip
@@ -74,6 +74,57 @@ def is_valid(proxy: str, url: str, verbose: bool = True) -> str:
     return ""
 
 
+def is_valid_github(proxy: str, url: str, verbose: bool = True) -> str:
+    """
+    检验github代理是否可用
+    :param url: 检测目的github的url地址
+    :param verbose: 是否繁杂输出
+    :param proxy:代理ip
+    :return:html文档
+    """
+    if verbose:
+        print("正在检测的ip地址>>>", proxy)
+    headers = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, compress',
+        'Accept-Language': 'en-us;q=0.5,en;q=0.3',
+        'Cache-Control': 'max-age=0',
+        'Connection': 'keep-alive',
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
+    }
+    retry_count = 3
+
+    while retry_count > 0:
+        try:
+            if verbose:
+                print("检测代理是否可用的第{}次尝试".format(4 - retry_count))
+            r = requests.get(url,
+                             headers=headers,
+                             proxies={"http": "http://{}".format(proxy), "https": "https://{}".format(proxy)},
+                             timeout=5)
+            r.raise_for_status()
+            html = r.text
+            bf = BeautifulSoup(html, "html.parser")
+            result = bf.find('relative-time')
+            if not result or result.attrs['datetime'] is None:
+                if verbose:
+                    print("访问github失败")
+                retry_count -= 1
+                time.sleep(random.randrange(3, 6, 1))
+                continue
+            if verbose:
+                print("成功!")
+            return html
+        except Exception as e:
+            time.sleep(random.randrange(3, 6, 1))
+            if verbose:
+                print(e.args)
+                print("ip是坏的，失败")
+            retry_count -= 1
+            continue
+    return ""
+
+
 def get_proxy():
     """
     从网页获得代理
@@ -91,7 +142,14 @@ def delete_proxy(proxy):
     requests.get("http://127.0.0.1:5010/delete?proxy={}".format(proxy))
 
 
-def get_raw_html(url: str, verbose: bool = True) -> str:
+def get_raw_html(url: str, is_valid=is_valid_baidu, verbose: bool = True) -> str:
+    """
+    获取html页面
+    :param url: url地址
+    :param is_valid: 检测是否成功的函数，默认为百度url
+    :param verbose: 是否繁杂输出
+    :return: html页面
+    """
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Encoding': 'gzip, deflate, compress',
@@ -158,7 +216,7 @@ def get_raw_html_origin(url: str, verbose: bool = False) -> str:
         return ""
 
 
-def get_real_url(url: str, verbose: bool = False)->str:
+def get_real_url(url: str, verbose: bool = False) -> str:
     """
     根据url获得真实的url地址
     :param verbose: 是否繁杂输出

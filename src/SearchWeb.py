@@ -138,50 +138,63 @@ def get_related_head_and_text(text_head: str, update_time: str, head_number: int
     return related_heads, related_texts
 
 
-def get_related_codes(code: str, number: int = 10, limit: int = 7, verbose: bool = True) -> []:
+def get_related_codes(code: str, update_time: str, number: int = 10, limit: int = 7, page_limit=10,
+                      verbose: bool = True) -> []:
     """
     根据code在github获取相关的code
+    :param update_time: 发布时间
     :param verbose: 是否繁杂输出
     :param limit: 每行代码的最短长度，小于该长度的代码行将会被过滤
     :param code: 一行源代码
     :param number: 需要获取相关code的数量
+    :param page_limit: 页码限制
     :return: 相关code的列表(code中不含中文注释)
     """
+    update_time = datetime.strptime(update_time, "%Y-%m-%d")
     if verbose:
         print("开始搜索：" + code)
     count = 0
+    p = 0
     related_codes = []
-    api = "https://searchcode.com/api/codesearch_I/?q=" + code + "&p=0&per_page=100" + "&src=1"
-    text = HTML.get_raw_html_origin(api)
-    print(text)
-    return 0
-    if text == "":
-        return related_codes
-    api_result = json.loads(text)
-    rs = api_result.get('results')
-    if rs is None:
-        return related_codes
-    for result in rs:
-        lines = result['lines']
-        # print(lines)
-        ids = list()
-        for id in lines:
-            ids.append(id)
-        for i in range(1, len(ids) - 1):
-            if int(ids[i]) - 1 == int(ids[i - 1]) and int(ids[i]) + 1 == int(ids[i + 1]):
-                clean_lines = Clean.clean_code(lines[ids[i]], limit)
-                for clean_line in clean_lines:
-                    try:
-                        clean_line = eval(clean_line + "' '")
-                        clean_line = clean_line.replace("\n", "")
-                    except Exception as e:
-                        if verbose:
-                            print(e.args)
-                        pass
-                    related_codes.append(clean_line.__str__())
-                    count += 1
-                    if count >= number:
-                        return related_codes
+    while count < number and p < page_limit:
+        api = "https://searchcode.com/api/codesearch_I/?q=" + code + "&p=" + p.__str__() + "&per_page=100&src=2"
+        p += 1
+        text = HTML.get_raw_html_origin(api)
+        if text == "":
+            print('此代码到此搜索不到了[因为ip被封]>>>', text)
+            return related_codes
+        api_result = json.loads(text)
+        rs = api_result.get('results')
+        if rs is None:
+            print('此代码到此搜索不到了[因为关键词搜不到]>>>', text)
+            return related_codes
+        for result in rs:
+            lines = result['lines']
+            repo = result['repo']
+            this_update_time = get_github_time(repo, verbose=True)
+            if this_update_time is None or datetime.strptime(this_update_time, "%Y-%m-%d") > update_time:
+                print('\033[0;35;40-m<<< ' + repo + ' >>>\033[0m')
+                continue
+            if verbose:
+                print('\033[0;32;40-m<<< ' + repo + ' >>>\033[0m')
+            ids = list()
+            for id in lines:
+                ids.append(id)
+            for i in range(1, len(ids) - 1):
+                if int(ids[i]) - 1 == int(ids[i - 1]) and int(ids[i]) + 1 == int(ids[i + 1]):
+                    clean_lines = Clean.clean_code(lines[ids[i]], limit)
+                    for clean_line in clean_lines:
+                        try:
+                            clean_line = eval(clean_line + "' '")
+                            clean_line = clean_line.replace("\n", "")
+                        except Exception as e:
+                            if verbose:
+                                print(e.args)
+                            pass
+                        related_codes.append(clean_line.__str__())
+                        count += 1
+                        if count >= number:
+                            return related_codes
     return related_codes
 
 
@@ -320,21 +333,28 @@ def get_related_paragraphs_and_sentences(original_sentence: str, update_time: st
     return related_paragraphs, related_sentences
 
 
-def get_github_time(url: str):
+def get_github_time(url: str, verbose: bool = True):
     """
     获得github仓库的推送时间
+    :param verbose: 是否繁杂输出
     :param url: github仓库地址
     :return: 时间字符串:yyyy-mm-dd
     """
     if not re.match('https://github.com/.+', url):
+        print('不是github的url！')
         return None
-    html = HTML.get_raw_html_origin(url, False)
-    if html == "":
-        return None
-    bf = BeautifulSoup(html, "html.parser")
-    return bf.find('relative-time').attrs['datetime'][:10]
+    blocks = url.split('/')
+    if re.match('.+\\.git', blocks[4]):
+        blocks[4] = blocks[4][:len(blocks[4])-4]
+    github_api = 'https://api.github.com/repos/{}/{}'.format(blocks[3], blocks[4])
+    html = HTML.get_raw_html_origin(github_api, verbose)
+    api_result = json.loads(html)
+    update_time = api_result['updated_at'][:10]
+    if verbose:
+        print(url, ' >>> ', update_time)
+    return update_time
 
 
 if __name__ == '__main__':
-    url = 'https://github.com/effine/eclipse.jdt.core'
+    url = 'https://github.com/effine/eclipse.jdt.core.git'
     print(get_github_time(url))

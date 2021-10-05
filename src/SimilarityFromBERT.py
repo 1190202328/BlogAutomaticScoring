@@ -271,7 +271,7 @@ class SimilarityFromBERT:
         # 代码相似度
         codes_similarity = []
         for line in to_search_codes:
-            related_codes = SearchWeb.get_related_codes(line, code_number, verbose=verbose)
+            related_codes = SearchWeb.get_related_codes(line, update_time, number=code_number, verbose=verbose)
             if save is not None:
                 search_result['codes'][line] = related_codes
             if verbose:

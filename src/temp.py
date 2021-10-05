@@ -7,7 +7,6 @@ from multiprocessing import Process
 from pprint import pprint
 import jieba
 import requests
-from baiduspider import BaiduSpider
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
@@ -62,5 +61,5 @@ if __name__ == '__main__':
         #
         to_search = "public static void main"
         print(to_search)
-        pprint(SearchWeb.get_related_codes(to_search, verbose=False))
+        pprint(SearchWeb.get_related_codes(to_search, update_date, verbose=False, number=100))
         break
