@@ -61,7 +61,7 @@ class OriginalityGrading:
 
 def train_2d_LSTM(data_filepath, label_filepath):
     nd = 2
-    filepath = "../src/saved_model/originality_grading_model.h5"
+    filepath = "../saved_model/originality_grading_model.h5"
     embedding_len = 1320
     learning_rate = 1e-2
     batch_size = 256
@@ -111,7 +111,7 @@ def train_2d_LSTM(data_filepath, label_filepath):
 
 def train_2d_logic(data_filepath, label_filepath):
     nd = 2
-    filepath = "../src/saved_model/originality_grading_model.h5"
+    filepath = "../saved_model/originality_grading_model.h5"
     embedding_len = 1320
     learning_rate = 1e-3
     batch_size = 32
@@ -164,7 +164,7 @@ def train_2d_logic(data_filepath, label_filepath):
 
 def train_3d_logic(data_filepath, label_filepath):
     nd = 3
-    filepath = "../src/saved_model/originality_grading_model.h5"
+    filepath = "../saved_model/originality_grading_model.h5"
     embedding_len = 1320
     learning_rate = 1e-1
     batch_size = 320
@@ -216,7 +216,7 @@ def train_3d_logic(data_filepath, label_filepath):
 
 def train_6d_logic(data_filepath, label_filepath):
     nd = 6
-    filepath = "../src/saved_model/originality_grading_model.h5"
+    filepath = "../saved_model/originality_grading_model.h5"
     embedding_len = 1320
     learning_rate = 1e-3
     batch_size = 32
@@ -389,7 +389,7 @@ def train_ml(data_filepath, label_filepath, nd):
 
 def train_2d_CNN(data_filepath, label_filepath):
     nd = 2
-    filepath = "../src/saved_model/originality_grading_model.h5"
+    filepath = "../saved_model/originality_grading_model.h5"
     embedding_len = 1320
     learning_rate = 1e-3
     batch_size = 128
@@ -447,12 +447,12 @@ def train_2d_CNN(data_filepath, label_filepath):
 
 
 if __name__ == '__main__':
-    data_filepath = "../src/text/similarities.csv"
-    label_filepath = "../src/text/urls.txt"
+    data_filepath = "../../text/similarities.csv"
+    label_filepath = "../../text/urls.txt"
     nd = 2
     train_2d_LSTM(data_filepath, label_filepath) #已完成
     train_2d_logic(data_filepath, label_filepath) #已完成
     train_3d_logic(data_filepath, label_filepath)  # 已完成
     train_6d_logic(data_filepath, label_filepath)  # 已完成
     train_ml(data_filepath, label_filepath, nd) #已完成
-    train_2d_CNN("../src/text/similarities.csv", "../src/text/urls.txt") #已完成
+    train_2d_CNN("../../text/similarities.csv", "../src/text/urls.txt") #已完成

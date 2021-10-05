@@ -4,9 +4,10 @@ from typing import Union, Any, Optional
 
 from bs4 import BeautifulSoup
 
-from src import HTML, Global, Clean
+from src import Global
+from src.tools import Clean, HTML
 from src.EDU import demo
-from src.SeparateCode import SeparateCode
+from src.tools.SeparateCode import SeparateCode
 
 
 def split_txt(txt_url: str, EDU: bool = False, verbose: bool = True) -> Optional[

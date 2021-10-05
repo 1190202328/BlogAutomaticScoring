@@ -1,7 +1,7 @@
 import re
 
 import jieba
-from src import GetWebResource
+from src.tools import GetWebResource
 
 
 class SplitDataset:
@@ -110,7 +110,7 @@ class SplitDataset:
         single_topic = []
         urls = self._get_urls()
         more_topics_urls = []
-        with open('../src/text/多个主题.txt', mode='r') as f:
+        with open('../../text/多个主题.txt', mode='r') as f:
             for line in f.readlines():
                 line = re.sub('[\\t\\n]+', '', line)
                 more_topics_urls.append(line)
@@ -124,7 +124,7 @@ class SplitDataset:
 
 if __name__ == '__main__':
     total_list = list(range(651))
-    sd = SplitDataset('../src/text/按原创性分类.txt')
+    sd = SplitDataset('../../text/按原创性分类.txt')
     language_rate = 0.9
     length = 300
     code_rate = 0.3

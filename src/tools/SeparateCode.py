@@ -1,16 +1,13 @@
 import re
-from datetime import datetime
 from pprint import pprint
 
 import numpy as np
 import tensorflow as tf
-from bs4 import BeautifulSoup
 from sklearn.metrics import classification_report
 from sklearn.model_selection import KFold, train_test_split
 
-from tensorflow import keras
-
-from src import machine_learning_function, Clean, HTML
+from src.tools import Clean
+from src.machine_learning import data_analysis
 
 
 class SeparateCode:
@@ -59,7 +56,7 @@ class SeparateCode:
         """
         if not vocab_list:
             vocab_list = list()
-            f = open("../src/text/vocab_list.txt", 'r')
+            f = open("../../text/vocab_list.txt", 'r')
             # f = open("../src/text/vocab_list_1.txt", 'r')
             for line in f.readlines():
                 vocab_list.append(line[:-1])
@@ -145,7 +142,7 @@ class SeparateCode:
         #     i += 1
         code_indexes = [1] * len(code_like_sentences_list)
         sequences = SeparateCode.get_sequences(code_like_sentences_list, embedding_len)
-        path = "../src/saved_model/"
+        path = "../saved_model/"
         filename = "code_separate_model.h5"
         # filename = "code_separate_model_1.h5"
         model = tf.keras.models.load_model(path + filename)
@@ -179,7 +176,7 @@ class SeparateCode:
     def get_sentences_and_labels():
         sentences = list()
         labels = list()
-        f = open("../src/text/扩大的代码.txt", "r")
+        f = open("../../text/扩大的代码.txt", "r")
         for line in f.readlines():
             if line != "":
                 line = re.sub("[\\t ]+", " ", line)
@@ -190,7 +187,7 @@ class SeparateCode:
                 labels.append(0)
         f.close()
         print(len(sentences))
-        f = open("../src/text/ptb.train.txt", "r")
+        f = open("../../text/ptb.train.txt", "r")
         i = 0
         for line in f.readlines():
             if line != "":
@@ -284,7 +281,7 @@ def machine_learning():
         history = model.fit(x_train, y_train, epochs=epochs, validation_data=(x_valid_sequences, y_valid),
                             verbose=verbose,
                             batch_size=batch_size, callbacks=call_backs)
-        machine_learning_function.show_history(history, is_accuracy=True)
+        data_analysis.show_history(history, is_accuracy=True)
 
         # path = "../src/saved_model/"
         # filename = "code_separate_model_1.h5"
@@ -308,7 +305,7 @@ if __name__ == '__main__':
     # f.close()
     # print(text)
 
-    f = open("../src/text/代码分离测试.txt")
+    f = open("../../text/代码分离测试.txt")
     text = f.read()
     f.close()
     print(text)

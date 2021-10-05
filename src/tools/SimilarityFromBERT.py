@@ -9,9 +9,9 @@ from bert_serving.client import BertClient
 from tqdm import tqdm
 import numpy as np
 
-from src import Clean, GetWebResource, SearchWeb
+from src.tools import Clean, GetWebResource, SearchWeb
 from src.EDU import demo
-from src.SimilarityFromPMD import SimilarityFromPMD
+from src.tools.SimilarityFromPMD import SimilarityFromPMD
 
 
 def padding(result, padding_len, padding_content=0):
@@ -37,7 +37,7 @@ class SimilarityFromBERT:
         """
         if len(sentences) <= 1:
             return [[0.0, 0.0], [0.0, 0.0]]
-        stopwords_file = open("../src/text/stopwords.txt")
+        stopwords_file = open("../../text/stopwords.txt")
         stopwords_string = stopwords_file.read()
         stopwords_file.close()
         my_stopwords = stopwords_string.split("\n")
@@ -67,7 +67,7 @@ class SimilarityFromBERT:
         if not contents:
             return related_contents
 
-        stopwords_file = open("../src/text/stopwords.txt")
+        stopwords_file = open("../../text/stopwords.txt")
         stopwords_string = stopwords_file.read()
         stopwords_file.close()
         my_stopwords = stopwords_string.split("\n")

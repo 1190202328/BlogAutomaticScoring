@@ -17,7 +17,7 @@ class SimilarityFromPMD:
 
     @staticmethod
     def write_codes_to_file(code1, code2):
-        f = open("../src/pmd/text/查询代码.java", mode="w")
+        f = open("../pmd/text/查询代码.java", mode="w")
         f.write(code1.__str__())
         f.write("\n")
         f.write(code2.__str__())
@@ -26,7 +26,7 @@ class SimilarityFromPMD:
 
     @staticmethod
     def get_result():
-        f = open("../src/pmd/text/返回结果.txt", mode="r")
+        f = open("../pmd/text/返回结果.txt", mode="r")
         text = f.read()
         if text:
             return True

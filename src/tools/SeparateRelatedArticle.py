@@ -1,6 +1,5 @@
 import json
 import re
-from pprint import pprint
 
 import numpy as np
 from openpyxl import load_workbook
@@ -8,7 +7,7 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import KFold
 import tensorflow as tf
 
-from src import GetWebResource, Clean, HTML
+from src.tools import Clean, GetWebResource
 
 
 class SeparateRelatedArticle:
@@ -67,7 +66,7 @@ class SeparateRelatedArticle:
         """
         if not vocab_list:
             vocab_list = list()
-            f = open("../src/text/vocab_list_text.txt", 'r')
+            f = open("../../text/vocab_list_text.txt", 'r')
             for line in f.readlines():
                 vocab_list.append(line[:-1])
             f.close()
@@ -92,7 +91,7 @@ class SeparateRelatedArticle:
     def get_texts_and_labels():
         texts = list()
         labels = list()
-        source = open("../src/text/texts.txt", mode="r")
+        source = open("../../text/texts.txt", mode="r")
         pattern = re.compile("\\d+")
         for line in source.readlines():
             if re.match("第(\\d+)篇文章\\[\\d*\\]", line):
@@ -111,7 +110,7 @@ class SeparateRelatedArticle:
     @staticmethod
     def get_course_related_urls(urls):
         vocab_list = list()
-        f = open("../src/text/vocab_list_text.txt", 'r')
+        f = open("../../text/vocab_list_text.txt", 'r')
         for line in f.readlines():
             vocab_list.append(line[:-1])
         f.close()
@@ -129,7 +128,7 @@ class SeparateRelatedArticle:
                 texts.append(result.get('text'))
         texts = Clean.clean_with_low_frequency(texts)
         sequences = SeparateRelatedArticle.get_sequences(texts, embedding_len, vocab_list=vocab_list)
-        model = tf.keras.models.load_model("../src/saved_model/ralated_text_separate_model.h5")
+        model = tf.keras.models.load_model("../saved_model/ralated_text_separate_model.h5")
         y_pred = model.predict(sequences)
         for i in range(len(y_pred)):
             if y_pred[i][0] > y_pred[i][1]:
@@ -197,7 +196,7 @@ def machine_learning():
 
 
 def get_total_urls():
-    workbook = load_workbook("../src/text/blog.xlsx")
+    workbook = load_workbook("../../text/blog.xlsx")
     sheets = workbook.get_sheet_names()
     urls = list()
     for sheet in sheets:
@@ -220,7 +219,7 @@ def get_total_urls():
 
 def refresh_index():
     lines = list()
-    with open('../src/text/按原创性分类.txt', mode='r') as f:
+    with open('../../text/按原创性分类.txt', mode='r') as f:
         i = 0
         for line in f.readlines():
             lines.append(str(i) + line[line.find('\t'):])
@@ -236,7 +235,7 @@ if __name__ == '__main__':
     # machine_learning()
 
     total_urls_get = []
-    with open('../src/text/所有学生的所有url.txt', mode='r') as f:
+    with open('../../text/所有学生的所有url.txt', mode='r') as f:
         for line in f.readlines():
             total_urls_get.append(line[:-1])
     print(len(total_urls_get))
@@ -255,13 +254,13 @@ if __name__ == '__main__':
             total_urls += local_urls
 
     print(len(total_urls))
-    with open('../src/text/所有文章的url.txt', mode='w') as f:
+    with open('../../text/所有文章的url.txt', mode='w') as f:
         for url in total_urls:
             f.write(url)
             f.write('\n')
 
     total_urls_get = []
-    with open('../src/text/所有文章的url.txt', mode='r') as f:
+    with open('../../text/所有文章的url.txt', mode='r') as f:
         for line in f.readlines():
             total_urls_get.append(line[:-1])
     print(len(total_urls_get))

@@ -40,8 +40,8 @@ class InfoReader:
 
 
 if __name__ == '__main__':
-    with open('../src/text/所有学生的所有url.txt', mode='a') as f:
-        students = InfoReader.get_student_info("../src/text/学生个人博客信息.xlsx")
+    with open('../../text/所有学生的所有url.txt', mode='a') as f:
+        students = InfoReader.get_student_info("../../text/学生个人博客信息.xlsx")
         for student in students:
             if student.url is None:
                 continue

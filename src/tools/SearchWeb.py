@@ -1,14 +1,13 @@
 import json
 import random
 import re
-from pprint import pprint
 from typing import Union
 import bs4
 from bs4 import BeautifulSoup
 from datetime import datetime
 import time
 
-from src import HTML, GetWebResource, Clean
+from src.tools import Clean, GetWebResource, HTML
 from src import Global
 
 

@@ -1,10 +1,6 @@
 from datetime import date
 
-from src.BlogAutomaticScoring import BlogAutomaticScoring
-from src.InfoReader import InfoReader
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split
-
+from src.tools.InfoReader import InfoReader
 
 # def get_total_related_urls():
 #     students = InfoReader.get_student_info("学生个人博客信息.xlsx")
@@ -40,7 +36,7 @@ path = "./src/text/"
 stat_date = date.fromisoformat("2021-04-26")
 end_date = date.fromisoformat("2021-07-08")
 
-stopwords_file = open("../src/text/stopwords.txt")
+stopwords_file = open("../text/stopwords.txt")
 stopwords_string = stopwords_file.read()
 stopwords_file.close()
 my_stopwords = stopwords_string.split("\n")

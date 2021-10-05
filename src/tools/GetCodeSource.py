@@ -1,11 +1,9 @@
 import json
-import keyword
 import re
-from pprint import pprint
 
 import requests
 
-from src import Clean
+from src.tools import Clean
 
 """
 数据集的代码涵盖1.python 2.java 3.C 三个主流语言
@@ -99,7 +97,7 @@ def get_key_words(path, file):
 
 if __name__ == '__main__':
     # write_code("","python关键字.txt",keyword.kwlist)
-    path = "../src/text/"
+    path = "../../text/"
     key_words = set(get_key_words(path, "不重复关键字.txt"))
     i = 1
     for key_word in key_words:

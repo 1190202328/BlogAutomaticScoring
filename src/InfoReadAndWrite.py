@@ -1,17 +1,15 @@
 import os
-import random
 import re
 import threading
 import time
-from pprint import pprint
 import csv
 import json
 import numpy as np
 import matplotlib.pyplot as plt
 import xlsxwriter
 
-from src import GetWebResource
-from src.SimilarityFromBERT import SimilarityFromBERT
+from src.tools import GetWebResource
+from src.tools.SimilarityFromBERT import SimilarityFromBERT
 
 
 def padding(result, padding_len, padding_content):
@@ -55,7 +53,7 @@ class InfoReadAndWrite:
             print("正在处理第{}个url(共{}个)>>>".format(i, len(urls)) + url)
             i += 1
             results.append(GetWebResource.split_txt(url, EDU=False))
-        with open('../src/text/results.txt', 'w') as f:
+        with open('../text/results.txt', 'w') as f:
             f.write(json.dumps(results, ensure_ascii=False, indent=2))
 
     @staticmethod
@@ -64,7 +62,7 @@ class InfoReadAndWrite:
         获得根据urls得到的results
         :return: results
         """
-        with open('../src/text/results.txt', 'r') as f:
+        with open('../text/results.txt', 'r') as f:
             return json.loads(f.read())
 
     @staticmethod
@@ -262,8 +260,8 @@ class InfoReadAndWrite:
 
 
 if __name__ == '__main__':
-    filepath = "../src/text/按原创性分类.txt"
-    data_filepath = "../src/text/similarities_bigger_new.csv"
+    filepath = "../text/按原创性分类.txt"
+    data_filepath = "../text/similarities_bigger_new.csv"
     urls = InfoReadAndWrite.get_urls(filepath)
     print("shape=", end="")
     print(InfoReadAndWrite.get_similarities(data_filepath).shape)

@@ -1,23 +1,11 @@
-import random
-import re
-import threading
-import time
-from datetime import date, datetime
-from multiprocessing import Process
+from datetime import datetime
 from pprint import pprint
-import jieba
-import requests
-from bs4 import BeautifulSoup
-from tqdm import tqdm
 
-from src import SearchWeb, Global, HTML, GetWebResource
-from src.InfoReadAndWrite import InfoReadAndWrite
-from src.SimilarityFromBERT import SimilarityFromBERT
-from src.SimilarityFromPMD import SimilarityFromPMD
+from src.tools import GetWebResource, SearchWeb
 
 if __name__ == '__main__':
     total_urls_get = []
-    with open('../src/text/所有文章的url.txt', mode='r') as f:
+    with open('../text/所有文章的url.txt', mode='r') as f:
         for line in f.readlines():
             total_urls_get.append(line[:-1])
     # print(len(total_urls_get))

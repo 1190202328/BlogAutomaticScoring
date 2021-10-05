@@ -103,7 +103,7 @@ def clean_with_low_frequency(documents: [], stopwords_set: set = "") -> [[]]:
     if stopwords_set:
         my_stopwords = stopwords_set
     else:
-        stopwords_file = open("../src/text/stopwords.txt")
+        stopwords_file = open("../../text/stopwords.txt")
         stopwords_string = stopwords_file.read()
         stopwords_file.close()
         my_stopwords = stopwords_string.split("\n")
