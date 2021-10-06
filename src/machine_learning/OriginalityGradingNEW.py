@@ -944,9 +944,13 @@ def dense_new(data_filepath, label_filepath):
                                                 factor=0.5, min_lr=1e-5)
     callbacks = []
     labels = OriginalityGradingNEW.get_labels_xlsx(label_filepath, 650)
-    # labels = OriginalityGradingNEW.merge_labels(labels)
+    labels = OriginalityGradingNEW.merge_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
+
+    data_analysis.to_2d_show(vectors, labels)
+    data_analysis.to_3d_show(vectors, labels)
+    return 0
 
     embedding_len = 2220
     # random_state = 1  # 测试

@@ -5,8 +5,6 @@ import xlsxwriter
 from bs4 import BeautifulSoup
 import requests
 
-from baiduspider import BaiduSpider
-
 
 class BlogAutomaticScoring:
     """
@@ -57,42 +55,6 @@ class BlogAutomaticScoring:
                 txt = re.sub("(\\s+)|(\\.{3,})|(—+)", " ", txt)
                 texts.append(txt)
         return texts
-
-    @staticmethod
-    def get_related_txt(txt_head, number):
-        """
-        根据标题在百度搜索相关文章，取出前number篇文章的url地址
-        :param number: 需要相关文章的篇数
-        :param txt_head: 文章标题
-        :return: number篇文章的url的列表
-        """
-        total_urls = list()
-        total_titles = list()
-        count = 0
-        pn = 1
-        while True:
-            results = BaiduSpider().search_web(txt_head, pn=pn, exclude=['all']).get('results')
-            print("pn = {}".format(pn))
-            pn += 1
-            for result in results:
-                print(result)
-                if count >= number:
-                    break
-                if result.get('title') is None:
-                    continue
-                # if re.match(".*CSDN博客.*", similarity.get('title')):
-                title = result.get('title').split("_")
-                if len(title) == 1:
-                    title = result.get('title').split("-")
-                if (result.get('url') in total_urls) or (title in total_titles):
-                    continue
-                total_titles.append(title[0])
-                total_urls.append(result.get('url'))
-                print("count = {}".format(count))
-                count += 1
-            if count >= number:
-                break
-        return total_urls, total_titles
 
     @staticmethod
     def get_urls(main_url):

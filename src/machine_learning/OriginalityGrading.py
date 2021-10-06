@@ -1,8 +1,10 @@
+import os
 import re
 
 import cv2
 import numpy as np
 import tensorflow as tf
+from keras.callbacks import ReduceLROnPlateau
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.model_selection import KFold, GridSearchCV
@@ -13,6 +15,7 @@ from sklearn.metrics import classification_report
 from sklearn.svm import SVC
 
 from src.InfoReadAndWrite import InfoReadAndWrite
+from src.machine_learning import data_analysis, model_generator
 
 
 class OriginalityGrading:
@@ -167,28 +170,18 @@ def train_3d_logic(data_filepath, label_filepath):
     filepath = "../saved_model/originality_grading_model.h5"
     embedding_len = 1320
     learning_rate = 1e-1
-    batch_size = 320
-    verbose = 2
-    validation_freq = 10
-    n_splits = 10
+    batch_size = 16
+    verbose = 1
+    n_splits = 5
     random_state = 30
-    epochs = 500
-
-    opt = tf.optimizers.Adam(learning_rate)
-    # checkpointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
-    input_ = tf.keras.Input(shape=(embedding_len,))
-    hidden = tf.keras.layers.Dense(128, activation='relu')(input_)
-    hidden = tf.keras.layers.BatchNormalization()(hidden)
-    hidden = tf.keras.layers.Dense(256, activation='relu')(hidden)
-    hidden = tf.keras.layers.BatchNormalization()(hidden)
-    output = tf.keras.layers.Dense(nd, activation='softmax')(hidden)
-    model = tf.keras.Model(input_, output)
-    model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
-    print(model.summary())
+    epochs = 100
+    learning_rate_reduction = ReduceLROnPlateau(monitor='loss', patience=5, verbose=verbose,
+                                                factor=0.5, min_lr=1e-5)
 
     labels = OriginalityGrading.get_labels(label_filepath, 351, nd)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
+    data_analysis.to_2d_show(vectors, labels)
 
     k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
     total_y_predict = []
@@ -199,8 +192,11 @@ def train_3d_logic(data_filepath, label_filepath):
             test_index]
         y_train = np.int32(tf.keras.utils.to_categorical(y_train, num_classes=nd))
 
-        model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size, validation_split=0.1,
-                  validation_freq=validation_freq)
+        model = model_generator.get_model_dense(embedding_len, 0.05, learning_rate, 0.01, 0.01, nd)
+        print(model.summary())
+        history = model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size,
+                            validation_split=0.1, callbacks=[learning_rate_reduction])
+        data_analysis.show_history(history, is_accuracy=True)
         # , callbacks = [checkpointer]
         # model = tf.keras.models.load_model(filepath)
         # print(model.predict(x_train))
@@ -208,8 +204,10 @@ def train_3d_logic(data_filepath, label_filepath):
         print('Accuracy on test_dataset', test_accuracy)
         y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
         print(classification_report(y_test, y_predict))
+        data_analysis.plot_confusion_matrix(y_test, y_predict, [0, 1, 2])
         total_y_predict.extend(y_predict)
         total_y_test.extend(y_test)
+        break
     print("总结果")
     print(classification_report(total_y_test, total_y_predict))
 
@@ -218,29 +216,21 @@ def train_6d_logic(data_filepath, label_filepath):
     nd = 6
     filepath = "../saved_model/originality_grading_model.h5"
     embedding_len = 1320
-    learning_rate = 1e-3
+    learning_rate = 1e-1
     batch_size = 32
-    verbose = 2
-    validation_freq = 10
-    n_splits = 10
+    verbose = 1
+    n_splits = 5
     random_state = 30
-    epochs = 2000
-
-    opt = tf.optimizers.Adam(learning_rate)
-    # checkpointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
-    input_ = tf.keras.Input(shape=(embedding_len,))
-    hidden = tf.keras.layers.Dense(256, activation='relu')(input_)
-    hidden = tf.keras.layers.BatchNormalization()(hidden)
-    hidden = tf.keras.layers.Dense(512, activation='relu')(hidden)
-    hidden = tf.keras.layers.BatchNormalization()(hidden)
-    output = tf.keras.layers.Dense(nd, activation='softmax')(hidden)
-    model = tf.keras.Model(input_, output)
-    model.compile(optimizer=opt, loss=tf.keras.losses.categorical_crossentropy, metrics=['accuracy'])
-    print(model.summary())
+    epochs = 100
+    learning_rate_reduction = ReduceLROnPlateau(monitor='loss', patience=3, verbose=verbose,
+                                                factor=0.5, min_lr=1e-5)
 
     labels = OriginalityGrading.get_labels(label_filepath, 351, nd)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
+    data_analysis.to_2d_show(vectors, labels, early_exaggeration=5)
+    data_analysis.to_3d_show(vectors, labels, early_exaggeration=5)
+    return 0
 
     k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
     total_y_predict = []
@@ -251,15 +241,19 @@ def train_6d_logic(data_filepath, label_filepath):
             test_index]
         y_train = np.int32(tf.keras.utils.to_categorical(y_train, num_classes=nd))
 
-        model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size, validation_split=0.1,
-                  validation_freq=validation_freq)
+        model = model_generator.get_model_dense(embedding_len, 0.05, learning_rate, 0.01, 0.01, nd)
+        print(model.summary())
+        history = model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size,
+                            validation_split=0.1, callbacks=[learning_rate_reduction])
         # , callbacks = [checkpointer]
         # model = tf.keras.models.load_model(filepath)
         # print(model.predict(x_train))
         test_loss, test_accuracy = model.evaluate(x_train, y_train)
         print('Accuracy on test_dataset', test_accuracy)
         y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
-        print(classification_report(y_test, y_predict))
+        # data_analysis.show_history(history, is_accuracy=True)
+        # print(classification_report(y_test, y_predict))
+        # data_analysis.plot_confusion_matrix(y_test, y_predict, [0, 1, 2, 3, 4, 5])
         total_y_predict.extend(y_predict)
         total_y_test.extend(y_test)
     print("总结果")
@@ -434,7 +428,8 @@ def train_2d_CNN(data_filepath, label_filepath):
         x_train = np.array(reshaped_x_train)
         x_test = np.array(reshaped_x_test)
 
-        model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size, validation_freq=validation_freq, validation_split=0.1)
+        model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size,
+                  validation_freq=validation_freq, validation_split=0.1)
         # , callbacks = [checkpointer]
         # model = tf.keras.models.load_model(filepath)
         y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
@@ -449,10 +444,11 @@ def train_2d_CNN(data_filepath, label_filepath):
 if __name__ == '__main__':
     data_filepath = "../../text/similarities.csv"
     label_filepath = "../../text/urls.txt"
+
     nd = 2
-    train_2d_LSTM(data_filepath, label_filepath) #已完成
-    train_2d_logic(data_filepath, label_filepath) #已完成
-    train_3d_logic(data_filepath, label_filepath)  # 已完成
+    # train_2d_LSTM(data_filepath, label_filepath) #已完成
+    # train_2d_logic(data_filepath, label_filepath) #已完成
+    # train_3d_logic(data_filepath, label_filepath)  # 已完成
     train_6d_logic(data_filepath, label_filepath)  # 已完成
-    train_ml(data_filepath, label_filepath, nd) #已完成
-    train_2d_CNN("../../text/similarities.csv", "../src/text/urls.txt") #已完成
+    # train_ml(data_filepath, label_filepath, nd) #已完成
+    # train_2d_CNN("../../text/similarities.csv", "../src/text/urls.txt") #已完成

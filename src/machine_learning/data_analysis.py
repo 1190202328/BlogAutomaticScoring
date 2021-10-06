@@ -88,16 +88,18 @@ def plot_to_image(figure):
     return image
 
 
-def to_2d_show(vectors, labels):
+def to_2d_show(vectors, labels, early_exaggeration=12):
     """
     将高维度的样本矩阵转换为2维观察
     :param vectors: 二维矩阵，一行表示一个样本，一列表示一个特征;
     :param labels: 标签列表
+    :param early_exaggeration: 样本点显示的距离
     :return: 无
     """
     random_state = 40
     verbose = 1
-    tsne = manifold.TSNE(n_components=2, init='pca', random_state=random_state, verbose=verbose, method='exact')
+    tsne = manifold.TSNE(n_components=2, init='pca', random_state=random_state, verbose=verbose, method='exact',
+                         early_exaggeration=early_exaggeration)
     vectors_tsne = tsne.fit_transform(vectors)
     print("[complete!] Org data dimension is {}. Embedded data dimension is {}".format(vectors.shape[-1],
                                                                                        vectors_tsne.shape[-1]))
@@ -114,17 +116,18 @@ def to_2d_show(vectors, labels):
     plt.show()
 
 
-def to_3d_show(vectors, labels):
+def to_3d_show(vectors, labels, early_exaggeration=1):
     """
     将高维度的样本矩阵转换为3维观察
     :param vectors: 二维矩阵，一行表示一个样本，一列表示一个特征;
     :param labels: 标签列表
+    :param early_exaggeration: 样本点显示的距离
     :return: 无
     """
     random_state = 40
     verbose = 1
     tsne = manifold.TSNE(n_components=3, init='pca', random_state=random_state, verbose=verbose, method='exact',
-                         early_exaggeration=1)
+                         early_exaggeration=early_exaggeration)
     vectors_tsne = tsne.fit_transform(vectors)
     print("[complete!] Org data dimension is {}. Embedded data dimension is {}".format(vectors.shape[-1],
                                                                                        vectors_tsne.shape[-1]))
