@@ -2,7 +2,9 @@ import io
 import itertools
 
 import tensorflow as tf
+from mpl_toolkits.mplot3d import Axes3D
 from sklearn.metrics import confusion_matrix
+from sklearn import manifold, datasets
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -84,3 +86,64 @@ def plot_to_image(figure):
     # Add the batch dimension
     image = tf.expand_dims(image, 0)
     return image
+
+
+def to_2d_show(vectors, labels):
+    """
+    将高维度的样本矩阵转换为2维观察
+    :param vectors: 二维矩阵，一行表示一个样本，一列表示一个特征;
+    :param labels: 标签列表
+    :return: 无
+    """
+    random_state = 40
+    verbose = 1
+    tsne = manifold.TSNE(n_components=2, init='pca', random_state=random_state, verbose=verbose, method='exact')
+    vectors_tsne = tsne.fit_transform(vectors)
+    print("[complete!] Org data dimension is {}. Embedded data dimension is {}".format(vectors.shape[-1],
+                                                                                       vectors_tsne.shape[-1]))
+    # 绘图
+    # 归一化
+    x_min, x_max = vectors_tsne.min(0), vectors_tsne.max(0)
+    X_norm = (vectors_tsne - x_min) / (x_max - x_min)
+    plt.figure(figsize=(8, 8))
+    for i in range(X_norm.shape[0]):
+        plt.text(X_norm[i, 0], X_norm[i, 1], str(labels[i]), color=plt.cm.Set1(labels[i]),
+                 fontdict={'weight': 'bold', 'size': 9})
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
+
+
+def to_3d_show(vectors, labels):
+    """
+    将高维度的样本矩阵转换为3维观察
+    :param vectors: 二维矩阵，一行表示一个样本，一列表示一个特征;
+    :param labels: 标签列表
+    :return: 无
+    """
+    random_state = 40
+    verbose = 1
+    tsne = manifold.TSNE(n_components=3, init='pca', random_state=random_state, verbose=verbose, method='exact',
+                         early_exaggeration=1)
+    vectors_tsne = tsne.fit_transform(vectors)
+    print("[complete!] Org data dimension is {}. Embedded data dimension is {}".format(vectors.shape[-1],
+                                                                                       vectors_tsne.shape[-1]))
+    # 绘图
+    # 归一化
+    x_min, x_max = vectors_tsne.min(0), vectors_tsne.max(0)
+    X_norm = (vectors_tsne - x_min) / (x_max - x_min)
+    fig = plt.figure(figsize=(8, 8))
+    ax = fig.add_subplot(111, projection='3d')
+    for i in range(X_norm.shape[0]):
+        ax.text(X_norm[i, 0], X_norm[i, 1], X_norm[i, 2], str(labels[i]), color=plt.cm.Set1(labels[i]),
+                fontdict={'weight': 'bold', 'size': 9})
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
+
+
+if __name__ == '__main__':
+    iris = datasets.load_iris()
+
+    to_2d_show(iris.data, iris.target)
+    to_3d_show(iris.data, iris.target)

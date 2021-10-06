@@ -23,7 +23,7 @@ from src.tools.SplitDataset import SplitDataset
 
 class OriginalityGradingNEW:
     """
-    博客原创性分级类(1000篇文章)
+    博客原创性分级类(650篇文章)
     """
 
     @staticmethod
@@ -76,7 +76,7 @@ class OriginalityGradingNEW:
         :return: 更改后的labels
         """
         new_labels = list(labels)
-        with open('../../text/差距大的文章.txt', 'r') as f:
+        with open('../text/差距大的文章.txt', 'r') as f:
             for line in f.readlines():
                 line = re.sub('\\t+', '\\t', line)
                 line = line.split('\t')
@@ -154,7 +154,8 @@ class OriginalityGradingNEW:
         """
         dictionary = dict()
         abs_result = []
-        if test_index and label_filepath and filepath:
+        flag = test_index is not None and label_filepath and filepath
+        if flag:
             with open(label_filepath, "r") as f:
                 for line in f.readlines():
                     line = re.sub("[\\t ]+", "\t", line)
@@ -166,10 +167,10 @@ class OriginalityGradingNEW:
             sub = abs(int(y_pred[i]) - int(y_true[i]))
             if sub != 0:
                 abs_result.append(sub)
-                if test_index and label_filepath and filepath:
+                if flag:
                     result.append('{}\t{}\t\t{}\t{}'.format(test_index[i], dictionary[test_index[i]], int(y_true[i]),
                                                             int(y_pred[i])))
-        if test_index and label_filepath and filepath:
+        if flag:
             if os.path.exists(filepath):
                 print("\n" + filepath + ">>>已存在\n", end="")
                 return 1
@@ -682,27 +683,21 @@ def train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vec
         x_train, x_test, y_train, y_test = vectors[train_index], vectors[test_index], labels[train_index], labels[
             test_index]
         y_train = np.int32(tf.keras.utils.to_categorical(y_train, num_classes=nd))
-
-        # history = model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size,
-        #                     validation_split=0.2,
-        #                     validation_freq=validation_freq, callbacks=callbacks, shuffle=True)
         history = model.fit(x_train, y_train, epochs=epochs, verbose=verbose, batch_size=batch_size,
                             validation_data=(x_valid, y_valid), callbacks=callbacks, shuffle=True)
-
         data_analysis.show_history(history, is_accuracy=True)
         # model = tf.keras.models.load_model(filepath)
-        # print(model.predict(x_train))
         print(model.evaluate(x_train, y_train))
         y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
         print(classification_report(y_test, y_predict))
         # print(OriginalityGradingNEW.loose_report(y_test, y_predict))
         data_analysis.plot_confusion_matrix(y_test, y_predict, [0, 1, 2, 3, 4])
-        # OriginalityGradingNEW.get_results(y_test, y_predict, test_index, label_filepath,
-        #                                   filepath='../src/text/差距大的文章3.txt')
+        # OriginalityGradingNEW.get_results(y_test, y_predict, test_index=test_index, label_filepath=label_filepath,
+        #                                   filepath='../text/差距大的文章_2021-10-05.txt')
         total_y_predict.extend(y_predict)
         total_y_test.extend(y_test)
-        # split_result_show(labels, model, test_index, vectors)
-        # return 0
+        # OriginalityGradingNEW.split_result_show(labels, model, test_index, vectors)
+        return 0
     print("总结果")
     print(classification_report(total_y_test, total_y_predict))
     # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict))
@@ -939,7 +934,7 @@ def gru(data_filepath, label_filepath):
 
 def dense_new(data_filepath, label_filepath):
     verbose = 1
-    nd = 3
+    nd = 5
     filepath = "../saved_model/originality_grading_model.h5"
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
                                                       patience=100, verbose=verbose, mode='auto',
@@ -949,7 +944,7 @@ def dense_new(data_filepath, label_filepath):
                                                 factor=0.5, min_lr=1e-5)
     callbacks = []
     labels = OriginalityGradingNEW.get_labels_xlsx(label_filepath, 650)
-    labels = OriginalityGradingNEW.merge_labels(labels)
+    # labels = OriginalityGradingNEW.merge_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
 
@@ -999,20 +994,20 @@ if __name__ == '__main__':
     # traditional_ml(data_filepath, label_filepath)  # 已完成，旧的标签
     # traditional_ml_new(data_filepath, label_filepath_new)  # 已完成，新的标签
     # dense(data_filepath, label_filepath)  # 已完成，旧的标签
-    # dense_new(data_filepath, label_filepath_new)  # 已完成，新的标签
+    dense_new(data_filepath, label_filepath_new)  # 已完成，新的标签
 
     # 新的的数据
     # traditional_ml(data_filepath_new, label_filepath)  # 已完成，旧的标签
     # traditional_ml_new(data_filepath_new, label_filepath_new)  # 已完成，新的标签
     # dense(data_filepath_new, label_filepath)  # 已完成，旧的标签
-    dense_new(data_filepath_new, label_filepath_new)  # 已完成，新的标签
+    # dense_new(data_filepath_new, label_filepath_new)  # 已完成，新的标签
 
     # cnn(data_filepath, label_filepath)
     # gru(data_filepath, label_filepath)
     # rnn(data_filepath, label_filepath)
     # lstm(data_filepath, label_filepath)
 
-    # vectors = InfoReadAndWrite.get_similarities(data_filepath)
-    # i = 649
+    # vectors = InfoReadAndWrite.get_similarities(data_filepath_new)
+    # i = 493
     # OriginalityGradingNEW.data_show(vectors[i])
     # OriginalityGradingNEW.img_show(vectors[i])
