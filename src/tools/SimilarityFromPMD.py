@@ -11,7 +11,7 @@ class SimilarityFromPMD:
 
     @staticmethod
     def run_pmd():
-        result = os.system("cd ../src/pmd/bin;./run.sh cpd --minimum-tokens 5 --files "
+        result = os.system("cd ../pmd/bin;./run.sh cpd --minimum-tokens 5 --files "
                            "../text/查询代码.java > ../text/返回结果.txt")
         # print(result >> 8)
 
@@ -67,6 +67,7 @@ if __name__ == '__main__':
     # print(SimilarityFromPMD.is_similar(code1, code3))
     # print(SimilarityFromPMD.is_similar(code2, code3))
 
-    code4 = '"public static void main(String[] args) {\n" +'
-    code5 = 'public static void main(String[] args) {'
-    print(SimilarityFromPMD.is_similar(code4, code5))
+    # code4 = '"public static void main(String[] args) {\n" +'
+    # code5 = 'public static void main(String[] args) {'
+    # print(SimilarityFromPMD.is_similar(code4, code5))
+    SimilarityFromPMD.run_pmd()

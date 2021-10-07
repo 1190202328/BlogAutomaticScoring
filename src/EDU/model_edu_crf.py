@@ -8,8 +8,6 @@ from tqdm import tqdm
 
 from src.EDU.dataset import EDUCollator
 
-os.makedirs("saved_model/", exist_ok=True)
-
 try:
     torch.multiprocessing.set_start_method("spawn")
 except RuntimeError:
@@ -298,19 +296,3 @@ class ModelEDU():
         acc = float(nCorrects) / float(total)
         acc *= 100
         print("The accuracy of " + phase + " data is: ", acc, "%")
-
-    def test(self):
-
-        self.model.load_state_dict(torch.load("saved_model/pretrained_edu.pkl"))  # load pretrained model
-        self.model.eval()
-
-        with torch.no_grad():
-            self.testAccuracy("train", self.model, train)
-        with torch.no_grad():
-            self.testAccuracy("dev", self.model, valid)
-        with torch.no_grad():
-            self.testAccuracy("test", self.model, test)
-
-
-if __name__ == "__main__":
-    main()

@@ -36,7 +36,7 @@ path = "./src/text/"
 stat_date = date.fromisoformat("2021-04-26")
 end_date = date.fromisoformat("2021-07-08")
 
-stopwords_file = open("../text/stopwords.txt")
+stopwords_file = open("../../text/stopwords.txt")
 stopwords_string = stopwords_file.read()
 stopwords_file.close()
 my_stopwords = stopwords_string.split("\n")

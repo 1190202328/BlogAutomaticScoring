@@ -1,4 +1,3 @@
-import os
 import re
 
 import cv2
@@ -6,15 +5,15 @@ import numpy as np
 import tensorflow as tf
 from keras.callbacks import ReduceLROnPlateau
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression, LinearRegression
-from sklearn.model_selection import KFold, GridSearchCV
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import KFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report
 from sklearn.svm import SVC
 
-from src.InfoReadAndWrite import InfoReadAndWrite
+from src.others.InfoReadAndWrite import InfoReadAndWrite
 from src.machine_learning import data_analysis, model_generator
 
 

@@ -17,7 +17,7 @@ from sklearn.metrics import classification_report
 from sklearn.svm import SVC
 
 from src.machine_learning import data_analysis, model_generator
-from src.InfoReadAndWrite import InfoReadAndWrite
+from src.others.InfoReadAndWrite import InfoReadAndWrite
 from src.tools.SplitDataset import SplitDataset
 
 

@@ -5,7 +5,7 @@ from src.tools import GetWebResource, SearchWeb
 
 if __name__ == '__main__':
     total_urls_get = []
-    with open('../text/所有文章的url.txt', mode='r') as f:
+    with open('../../text/所有文章的url.txt', mode='r') as f:
         for line in f.readlines():
             total_urls_get.append(line[:-1])
     # print(len(total_urls_get))

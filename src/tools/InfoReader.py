@@ -2,7 +2,7 @@ import re
 
 from openpyxl import load_workbook
 
-from src.Student import Student
+from src.others.Student import Student
 
 
 class InfoReader:

@@ -1,6 +1,7 @@
 import json
 import random
 import re
+from pprint import pprint
 from typing import Union
 import bs4
 from bs4 import BeautifulSoup
@@ -8,7 +9,7 @@ from datetime import datetime
 import time
 
 from src.tools import Clean, GetWebResource, HTML
-from src import Global
+from src.others import Global
 
 
 def clean_to_search_keywords(keywords: str) -> str:
@@ -36,7 +37,7 @@ def get_next_baidu_url(baidu_html: str) -> str:
 
 
 def get_related_head_and_text(text_head: str, update_time: str, head_number: int = 10,
-                              text_number: int = 10, page_limit: int = 3, url: str = "", verbose: bool = True) \
+                              text_number: int = 10, page_limit: int = 4, url: str = "", verbose: bool = True) \
         -> Union[tuple[list, list], tuple[None, None]]:
     """
     根据标题在百度搜索time之前的相关文章，取出前head_number篇文章的标题以及text_number篇文章的全文
@@ -172,7 +173,8 @@ def get_related_codes(code: str, update_time: str, number: int = 10, limit: int 
             repo = result['repo']
             this_update_time = get_github_time(repo, verbose=True)
             if this_update_time is None or datetime.strptime(this_update_time, "%Y-%m-%d") > update_time:
-                print('\033[0;35;40-m<<< ' + repo + ' >>>\033[0m')
+                if verbose:
+                    print('\033[0;35;40-m<<< ' + repo + ' >>>\033[0m')
                 continue
             if verbose:
                 print('\033[0;32;40-m<<< ' + repo + ' >>>\033[0m')
@@ -199,7 +201,7 @@ def get_related_codes(code: str, update_time: str, number: int = 10, limit: int 
 
 def get_related_paragraphs_and_sentences(original_sentence: str, update_time: str, paragraph_number: int = 5,
                                          sentence_number: int = 10,
-                                         page_limit: int = 2,
+                                         page_limit: int = 4,
                                          url: str = "",
                                          verbose: bool = True) -> ([], []):
     """
@@ -344,16 +346,15 @@ def get_github_time(url: str, verbose: bool = True):
         return None
     blocks = url.split('/')
     if re.match('.+\\.git', blocks[4]):
-        blocks[4] = blocks[4][:len(blocks[4])-4]
+        blocks[4] = blocks[4][:len(blocks[4]) - 4]
     github_api = 'https://api.github.com/repos/{}/{}'.format(blocks[3], blocks[4])
     html = HTML.get_raw_html_origin(github_api, verbose)
-    api_result = json.loads(html)
-    update_time = api_result['updated_at'][:10]
-    if verbose:
-        print(url, ' >>> ', update_time)
-    return update_time
-
-
-if __name__ == '__main__':
-    url = 'https://github.com/effine/eclipse.jdt.core.git'
-    print(get_github_time(url))
+    try:
+        api_result = json.loads(html)
+        update_time = api_result['updated_at'][:10]
+        if verbose:
+            print(url, ' >>> ', update_time)
+        return update_time
+    except Exception as e:
+        print("github-api返回结果出错>>>", github_api, e)
+        return None

@@ -303,10 +303,10 @@ class SimilarityFromBERT:
         if not verbose:
             notice.close()
         if save is not None:
-            if os.path.exists('../src/text/存档{}.txt'.format(save)):
-                print("\n" + '../src/text/存档{}.txt'.format(save) + ">>>已存在\n", end="")
+            if os.path.exists('../../text/存档{}.txt'.format(save)):
+                print("\n" + '../../text/存档{}.txt'.format(save) + ">>>已存在\n", end="")
             else:
-                f = open('../src/text/存档{}.txt'.format(save), 'w')
+                f = open('../../text/存档{}.txt'.format(save), 'w')
                 f.write(json.dumps(search_result, ensure_ascii=False, indent=2))
                 f.close()
         return similarity
@@ -391,11 +391,11 @@ if __name__ == '__main__':
 
     # url = 'https://blog.csdn.net/Louis210/article/details/118071148'
     url = 'https://blog.csdn.net/GongchuangSu/article/details/51514389'
-    head_number = 3
-    text_number = 3
-    paragraph_number = 3
-    sentence_number = 3
-    code_number = 3
+    head_number = 10
+    text_number = 10
+    paragraph_number = 10
+    sentence_number = 10
+    code_number = 10
     result = SimilarityFromBERT.get_5d_similarities(url, head_number, text_number, paragraph_number,
                                                     sentence_number,
                                                     code_number,

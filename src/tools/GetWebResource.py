@@ -4,7 +4,7 @@ from typing import Union, Any, Optional
 
 from bs4 import BeautifulSoup
 
-from src import Global
+from src.others import Global
 from src.tools import Clean, HTML
 from src.EDU import demo
 from src.tools.SeparateCode import SeparateCode

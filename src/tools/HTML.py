@@ -5,7 +5,7 @@ import requests
 import time
 from bs4 import BeautifulSoup
 
-from src import Global
+from src.others import Global
 
 
 def is_valid_baidu(proxy: str, url: str, verbose: bool = True) -> str:
