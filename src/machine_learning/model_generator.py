@@ -97,7 +97,7 @@ def get_model_dense(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
         tf.keras.layers.InputLayer(input_shape=(embedding_len,)),
         tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
-        tf.keras.layers.Dense(256, activation='relu'),
+        tf.keras.layers.Dense(128, activation='relu'),
         tf.keras.layers.Dropout(drop_out_rate),
         tf.keras.layers.Dense(512, activation='relu'),
         tf.keras.layers.Dropout(drop_out_rate),

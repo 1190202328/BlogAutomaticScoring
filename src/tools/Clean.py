@@ -48,6 +48,8 @@ def clean_code(code: str, limit=7) -> []:
     for line in lines:
         line = re.sub(blank_pattern, "", line)
         line = re.sub(" +", " ", line)
+        line = line.replace('\\u003c', '')
+        line = line.replace('\\u003e', '')
         java_start = line.find("//")
         python_start = line.find("#")
         if java_start != -1:
@@ -117,3 +119,9 @@ def clean_with_low_frequency(documents: [], stopwords_set: set = "") -> [[]]:
             text.append(word)
         texts.append(text)
     return texts
+
+
+if __name__ == '__main__':
+    code = 'List t = new ArrayList\u003c\u003e()'
+    print(code)
+    print(clean_code(code))

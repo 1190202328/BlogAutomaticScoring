@@ -37,7 +37,7 @@ def get_next_baidu_url(baidu_html: str) -> str:
 
 
 def get_related_head_and_text(text_head: str, update_time: str, head_number: int = 10,
-                              text_number: int = 10, page_limit: int = 4, url: str = "", verbose: bool = True) \
+                              text_number: int = 10, page_limit: int = 3, url: str = "", verbose: bool = True) \
         -> Union[tuple[list, list], tuple[None, None]]:
     """
     根据标题在百度搜索time之前的相关文章，取出前head_number篇文章的标题以及text_number篇文章的全文
@@ -159,7 +159,7 @@ def get_related_codes(code: str, update_time: str, number: int = 10, limit: int 
     while count < number and p < page_limit:
         api = "https://searchcode.com/api/codesearch_I/?q=" + code + "&p=" + p.__str__() + "&per_page=100&src=2"
         p += 1
-        text = HTML.get_raw_html_origin(api)
+        text = HTML.get_raw_html_origin(api, verbose=verbose)
         if text == "":
             print('此代码到此搜索不到了[因为ip被封]>>>', text)
             return related_codes
@@ -171,7 +171,7 @@ def get_related_codes(code: str, update_time: str, number: int = 10, limit: int 
         for result in rs:
             lines = result['lines']
             repo = result['repo']
-            this_update_time = get_github_time(repo, verbose=True)
+            this_update_time = get_github_time(repo, verbose=verbose)
             if this_update_time is None or datetime.strptime(this_update_time, "%Y-%m-%d") > update_time:
                 if verbose:
                     print('\033[0;35;40-m<<< ' + repo + ' >>>\033[0m')
@@ -201,7 +201,7 @@ def get_related_codes(code: str, update_time: str, number: int = 10, limit: int 
 
 def get_related_paragraphs_and_sentences(original_sentence: str, update_time: str, paragraph_number: int = 5,
                                          sentence_number: int = 10,
-                                         page_limit: int = 4,
+                                         page_limit: int = 3,
                                          url: str = "",
                                          verbose: bool = True) -> ([], []):
     """
@@ -231,7 +231,7 @@ def get_related_paragraphs_and_sentences(original_sentence: str, update_time: st
         if len(related_paragraphs) >= paragraph_number and len(related_sentences) >= sentence_number:
             return related_paragraphs, related_sentences
         article_urls = list()
-        html = HTML.get_raw_html(baidu_url, verbose=True)
+        html = HTML.get_raw_html(baidu_url, verbose=verbose)
         bf = BeautifulSoup(html, "html.parser")
         if re.match(Global.not_find, bf.get_text(), flags=re.S):
             return [], []
@@ -281,9 +281,8 @@ def get_related_paragraphs_and_sentences(original_sentence: str, update_time: st
                 update_time_this = datetime.strptime(result['date'], "%Y-%m-%d")
                 if update_time_this > update_time:
                     continue
-
-                print('\033[0;32;40-m<<< ' + real_url + ' >>>\033[0m')
-
+                if verbose:
+                    print('\033[0;32;40-m<<< ' + real_url + ' >>>\033[0m')
                 paragraphs = result.get('paragraphs')
                 if paragraphs is not None:
                     for paragraph in paragraphs:
@@ -320,7 +319,8 @@ def get_related_paragraphs_and_sentences(original_sentence: str, update_time: st
         if verbose:
             print("url共有{}个".format(len(article_urls)))
         if len(article_urls) == 0:
-            print("\n此url第{}次暂时无法访问>>>{}\n".format(invalid + 1, pre_baidu_url), end="")
+            invalid += 1
+            print("\n此url第{}次暂时无法访问>>>{}\n".format(invalid, pre_baidu_url), end="")
             baidu_url = pre_baidu_url
             if invalid == 1:
                 pn -= 1
@@ -330,25 +330,24 @@ def get_related_paragraphs_and_sentences(original_sentence: str, update_time: st
             else:
                 time.sleep(random.randrange(100, 200, 1))
                 return None, None
-            invalid += 1
     return related_paragraphs, related_sentences
 
 
-def get_github_time(url: str, verbose: bool = True):
+def get_github_time(url: str, verbose: bool = False):
     """
     获得github仓库的推送时间
     :param verbose: 是否繁杂输出
     :param url: github仓库地址
     :return: 时间字符串:yyyy-mm-dd
     """
-    if not re.match('https://github.com/.+', url):
-        print('不是github的url！')
+    if not (re.match('https://github.com/.+', url) or re.match('git://github.com/.+', url)):
+        print('不是github的url！', url)
         return None
     blocks = url.split('/')
     if re.match('.+\\.git', blocks[4]):
         blocks[4] = blocks[4][:len(blocks[4]) - 4]
     github_api = 'https://api.github.com/repos/{}/{}'.format(blocks[3], blocks[4])
-    html = HTML.get_raw_html_origin(github_api, verbose)
+    html = HTML.get_raw_html(github_api, HTML.is_valid_github, verbose)
     try:
         api_result = json.loads(html)
         update_time = api_result['updated_at'][:10]
@@ -356,5 +355,13 @@ def get_github_time(url: str, verbose: bool = True):
             print(url, ' >>> ', update_time)
         return update_time
     except Exception as e:
-        print("github-api返回结果出错>>>", github_api, e)
+        if verbose:
+            print("github-api返回结果出错>>>", github_api, e)
         return None
+
+
+if __name__ == '__main__':
+    # url = 'https://github.com/Ed-Burley/android_frameworks_base'
+    # get_github_time(url, verbose=True)
+
+    sentence = '详情参见煊煊的源码分析博客'

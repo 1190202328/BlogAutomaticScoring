@@ -1,3 +1,4 @@
+import json
 import random
 import re
 import bs4
@@ -102,24 +103,25 @@ def is_valid_github(proxy: str, url: str, verbose: bool = True) -> str:
                              headers=headers,
                              proxies={"http": "http://{}".format(proxy), "https": "https://{}".format(proxy)},
                              timeout=5)
+            if r.status_code == 404 or r.status_code == 451:
+                return 'not_find'
+            if r.status_code == 403:
+                time.sleep(random.randrange(60, 90))
+                return 'not_find'
             r.raise_for_status()
             html = r.text
-            bf = BeautifulSoup(html, "html.parser")
-            result = bf.find('relative-time')
-            if not result or result.attrs['datetime'] is None:
-                if verbose:
-                    print("访问github失败")
-                retry_count -= 1
-                time.sleep(random.randrange(3, 6, 1))
-                continue
+            if re.match('.+Not Found.+', html, flags=re.S) or re.match('.+Repository access blocked.+', html,
+                                                                       flags=re.S):
+                return 'not_find'
+            api_result = json.loads(html)
+            update_time = api_result['updated_at'][:10]
             if verbose:
-                print("成功!")
+                print(url, ' >>> ', update_time)
             return html
         except Exception as e:
             time.sleep(random.randrange(3, 6, 1))
             if verbose:
-                print(e.args)
-                print("ip是坏的，失败")
+                print("github-api返回结果出错或ip是坏的>>>", url, e)
             retry_count -= 1
             continue
     return ""
@@ -158,13 +160,15 @@ def get_raw_html(url: str, is_valid=is_valid_baidu, verbose: bool = True) -> str
         'Connection': 'keep-alive',
         'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0'
     }
-    retry_count = 30
+    retry_count = 25
     proxy = get_proxy().get("proxy")
     html = ""
     while proxy and retry_count > 0:
         if verbose:
-            print("<第{}次尝试>".format(31 - retry_count))
+            print("<第{}次尝试>".format(26 - retry_count))
         html = is_valid(proxy, url, verbose=verbose)
+        if html == 'not_find':
+            return ''
         if html == "":
             if verbose:
                 print("ip地址被删除>>>", proxy)
@@ -243,3 +247,5 @@ def get_real_url(url: str, verbose: bool = False) -> str:
 
 if __name__ == '__main__':
     original_sentence = "java"
+    print(get_raw_html('https://api.github.com/repos/Bukkit/CraftBukkit', is_valid=is_valid_github))
+    # print(get_raw_html('https://api.github.com/repositories/641377', is_valid=is_valid_github))

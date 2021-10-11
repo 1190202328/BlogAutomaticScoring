@@ -81,7 +81,11 @@ def split_txt(txt_url: str, EDU: bool = False, verbose: bool = True) -> Optional
         #         else:
         #             text += child.get_text(separator="\n")
         # date
-        update_date = bf.find("span", id="post-date").text[0:10]
+        try:
+            update_date = bf.find("span", id="post-date").text[0:10]
+        except Exception as e:
+            print(e.args)
+            return None
         # codes
         contents = bf.find_all("pre")
         for content in contents:

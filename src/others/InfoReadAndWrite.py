@@ -116,16 +116,16 @@ class InfoReadAndWrite:
         plt.show()
 
     @staticmethod
-    def write_similarity_to_file(similarity, file_path, paragraph_len=80, sentence_len=80, code_len=60):
+    def write_similarity_to_file(similarity, file_path, sentence_len=80, code_len=60):
         """
         将similarity格式化地写入到文件中
         :param similarity: 相似度列表
         :param file_path: 文件路径
-        :param paragraph_len: 标准段落数
         :param sentence_len: 标准句子数
         :param code_len: 标准代码数
         :return: 无
         """
+        paragraph_len = sentence_len
         heads = similarity['head']
         texts = similarity['text']
         paragraphs = similarity['paragraph']
@@ -164,19 +164,26 @@ class InfoReadAndWrite:
         return np.array(similarities).astype(np.float)
 
     @staticmethod
-    def get_similarities_and_write(url, num, data_filepath, verbose=True, pre_verbose=True):
+    def get_similarities_and_write(url, num, data_filepath, sentence_len=20, code_len=20, verbose=False,
+                                   pre_verbose=True):
         """
         获取similarity并且将其格式化地写入文件，文件名称为similarities_num.csv
+        :param code_len: 取多少个代码
+        :param sentence_len: 取多少个段落与句子
         :param data_filepath: 文件名称
         :param url: url地址
         :param num: 第多少个url
         :return: 无
         """
-        similarity = SimilarityFromBERT.get_5d_similarities(url, EDU=False, verbose=verbose, pre_verbose=pre_verbose)
+
+        similarity = SimilarityFromBERT.get_5d_similarities(url, EDU=False, verbose=True, pre_verbose=False,
+                                                            sentence_len=sentence_len, code_len=code_len)
         if not similarity:
             print("\n到此url停止>>>{}\n".format(url), end="")
             return 0
-        InfoReadAndWrite.write_similarity_to_file(similarity, data_filepath[:len(data_filepath)-4]+'{}.csv'.format(num))
+        InfoReadAndWrite.write_similarity_to_file(similarity,
+                                                  data_filepath[:len(data_filepath) - 4] + '_{}.csv'.format(num),
+                                                  sentence_len=sentence_len, code_len=code_len)
 
     @staticmethod
     def merge_to_main_csv(start, end, data_filepath):
@@ -190,7 +197,7 @@ class InfoReadAndWrite:
         """
         similarities = list()
         for i in range(start, end):
-            with open(data_filepath[:len(data_filepath)-4]+'{}.csv'.format(i), 'r') as f:
+            with open(data_filepath[:len(data_filepath) - 4] + '_{}.csv'.format(i), 'r') as f:
                 reader = csv.reader(f)
                 for row in reader:
                     similarities.append(row)
@@ -199,12 +206,14 @@ class InfoReadAndWrite:
             writer.writerows(similarities)
 
     @staticmethod
-    def n_threads_run(urls, number_list, data_filepath, num_worker=20):
+    def n_threads_run(urls, number_list, data_filepath, sentence_len, code_len, num_worker=20):
         """
         保持总有num_worker个线程在运行
         :param data_filepath: 文件名
         :param urls: url列表
         :param number_list: 序号列表
+        :param code_len: 取多少个代码
+        :param sentence_len: 取多少个段落与句子
         :param num_worker: 线程数
         :return: 无
         """
@@ -214,7 +223,8 @@ class InfoReadAndWrite:
                     break
                 i = min(number_list)
                 number_list.remove(i)
-                thread = threading.Thread(target=InfoReadAndWrite.get_similarities_and_write, args=(urls[i], i, data_filepath))
+                thread = threading.Thread(target=InfoReadAndWrite.get_similarities_and_write,
+                                          args=(urls[i], i, data_filepath, sentence_len, code_len))
                 thread.start()
             time.sleep(60)
 
@@ -229,7 +239,7 @@ class InfoReadAndWrite:
         """
         number_list = []
         for i in range(min_num, max_num):
-            if not os.path.exists(template_filepath + i.__str__() + ".csv"):
+            if not os.path.exists(template_filepath + '_' + i.__str__() + ".csv"):
                 number_list.append(i)
         return number_list
 
@@ -261,15 +271,18 @@ class InfoReadAndWrite:
 
 if __name__ == '__main__':
     filepath = "../../text/按原创性分类.txt"
-    data_filepath = "../../text/similarities_bigger_new.csv"
+    data_filepath = "../../text/similarities_small.csv"
+    sentence_len = 20
+    code_len = 20
+    start = 0
     urls = InfoReadAndWrite.get_urls(filepath)
     print("shape=", end="")
     print(InfoReadAndWrite.get_similarities(data_filepath).shape)
-    number_list = InfoReadAndWrite.get_number_list(data_filepath[:len(data_filepath)-4], 0, 0)
+    number_list = InfoReadAndWrite.get_number_list(data_filepath[:len(data_filepath) - 4], start, 650)
     print("[{}]>>>".format(len(number_list)), end="")
     print("未完成爬虫的序号>>>", end="")
     print(number_list)
-    # InfoReadAndWrite.n_threads_run(urls, number_list, data_filepath, num_worker=30)
+    # InfoReadAndWrite.n_threads_run(urls, number_list, data_filepath, sentence_len, code_len, num_worker=20)
 
-    # InfoReadAndWrite.merge_to_main_csv(0, 0, data_filepath)
+    # InfoReadAndWrite.merge_to_main_csv(start, 650, data_filepath)
     # print(InfoReadAndWrite.get_similarities(data_filepath).shape)

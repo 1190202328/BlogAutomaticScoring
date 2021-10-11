@@ -101,7 +101,7 @@ class SimilarityFromBERT:
 
     @staticmethod
     def get_5d_similarities(url, head_number=10, text_number=10, paragraph_number=10, sentence_number=10,
-                            code_number=10,
+                            code_number=10, sentence_len=80, code_len=60,
                             sentence_lenth_limit=5, EDU=False, result=None, verbose=True, pre_verbose=False, save=None):
         """
         通过url链接获取5个维度的相似度：1。标题 2。全文 3。段落 4。句子 5。代码（都进行了停用词处理）（搜索结果中不包含自己）（随机采样）
@@ -117,11 +117,10 @@ class SimilarityFromBERT:
         :param text_number: 相关文章数
         :param head_number: 相关标题数
         :param url: url链接
+        :param code_len: 取多少行代码
+        :param sentence_len: 取多少个句子以及段落
         :return: 字典，head:标题对应相似度。text:全文对应相似度。paragraph:段落对应相似度。sentence:句子对应相似度。code:代码对应相似度
         """
-        sentence_len = 80
-        code_len = 60
-
         total_count = 1
         similarity = dict()
         num = "ukn"
@@ -147,7 +146,8 @@ class SimilarityFromBERT:
         paragraphs = SimilarityFromBERT.get_text_related(paragraphs, text, limit=0.80, verbose=verbose)
         to_search_sentences = []
         if pre_verbose:
-            notice = tqdm(total=len(paragraphs), bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.BLUE, Fore.RESET),
+            notice = tqdm(total=len(paragraphs),
+                          bar_format='%s{l_bar}%s{bar}%s{r_bar}' % (Fore.CYAN, Fore.YELLOW, Fore.CYAN),
                           position=True)
             notice.set_description("[{}] ".format(num) + url + " >>>Pre")
         index = 0
@@ -185,8 +185,8 @@ class SimilarityFromBERT:
                 for sentence in to_search_sentences[i]:
                     if count in sample_list:
                         temp_sentences.append(sentence)
+                        total_count += 1
                     count += 1
-                    total_count += 1
                 to_search_sentences_sample.append(temp_sentences)
             to_search_sentences = to_search_sentences_sample
         to_search_codes = []
@@ -198,12 +198,13 @@ class SimilarityFromBERT:
                     to_search_codes.append(line)
                     total_count += 1
         if len(to_search_codes) > code_len:
-            total_count = total_count_pre+code_len
+            total_count = total_count_pre + code_len
             sample_list = [i for i in range(len(to_search_codes))]
             sample_list = random.sample(sample_list, code_len)
             to_search_codes = list(np.array(to_search_codes)[sample_list])
         if not verbose:
-            notice = tqdm(total=total_count, bar_format='{l_bar}%s{bar}%s{r_bar}' % (Fore.GREEN, Fore.RESET),
+            notice = tqdm(total=total_count,
+                          bar_format='%s{l_bar}%s{bar}%s{r_bar}' % (Fore.CYAN, Fore.MAGENTA, Fore.CYAN),
                           position=True)
             notice.set_description("[{}] ".format(num) + url + " >>>")
         # 标题相似度
@@ -246,7 +247,8 @@ class SimilarityFromBERT:
                     (sentence, update_time, paragraph_number=paragraph_number, sentence_number=sentence_number, url=url,
                      verbose=verbose)
                 if related_paragraphs is None:
-                    notice.close()
+                    if not verbose:
+                        notice.close()
                     return None
                 if save is not None:
                     search_result['paragraphs'][paragraphs[i]] = related_paragraphs

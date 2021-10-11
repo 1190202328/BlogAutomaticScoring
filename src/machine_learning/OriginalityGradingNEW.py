@@ -9,7 +9,7 @@ from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau
 from openpyxl import load_workbook
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import KFold, train_test_split
+from sklearn.model_selection import KFold, train_test_split, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -219,7 +219,7 @@ class OriginalityGradingNEW:
         new_vectors = []
         for vector in vectors:
             new_vector = []
-            for i in range(0, 2220, 10):
+            for i in range(0, vectors.shape[1], 10):
                 if mode == 'max':
                     new_vector.append(np.max(vector[i:i + 10]))
                 if mode == 'min':
@@ -521,9 +521,14 @@ def traditional_ml_new(data_filepath, label_filepath):
     random_state = 40
 
     labels = OriginalityGradingNEW.get_labels_xlsx(label_filepath, 650)
-    labels = OriginalityGradingNEW.merge_labels(labels)
+    # labels = OriginalityGradingNEW.merge_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='max')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='median')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='min')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='mean')
+
     k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
     total_y_predict_knn = []
     total_y_predict_DT = []
@@ -633,11 +638,11 @@ def traditional_ml_new(data_filepath, label_filepath):
         answer_svm = svm.predict(x_test)
         total_y_predict_SVM.extend(answer_svm)
 
-        rf = RandomForestClassifier(n_estimators=190).fit(x_train, y_train)
+        rf = RandomForestClassifier(n_estimators=160).fit(x_train, y_train)
         answer_rf = rf.predict(x_test)
         total_y_predict_RF.extend(answer_rf)
 
-        knn = KNeighborsClassifier(n_neighbors=23).fit(x_train, y_train)
+        knn = KNeighborsClassifier(n_neighbors=27).fit(x_train, y_train)
         answer_knn = knn.predict(x_test)
         total_y_predict_knn.extend(answer_knn)
 
@@ -707,34 +712,39 @@ def train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vec
 
 def dense(data_filepath, label_filepath):
     verbose = 1
-    nd = 3
+    nd = 5
     filepath = "../saved_model/originality_grading_model.h5"
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
                                                       patience=100, verbose=verbose, mode='auto',
                                                       baseline=None, restore_best_weights=False)
     check_pointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
-    learning_rate_reduction = ReduceLROnPlateau(monitor='loss', patience=5, verbose=verbose,
+    learning_rate_reduction = ReduceLROnPlateau(monitor='loss', patience=10, verbose=verbose,
                                                 factor=0.5, min_lr=1e-5)
     callbacks = []
     labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
-    labels = OriginalityGradingNEW.change_labels(labels)
-    labels = OriginalityGradingNEW.merge_labels(labels)
+    # labels = OriginalityGradingNEW.merge_labels(labels)
+    labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
+    vectors = OriginalityGradingNEW.one_dimension(vectors, mode='max')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='median')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='min')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='mean')
 
-    # vectors, labels = OriginalityGradingNEW.merge_labels(vectors, labels)
-    # nd = 4
+    # data_analysis.to_2d_show(vectors, labels, 1)
+    # data_analysis.to_3d_show(vectors, labels, 1)
+    # return 0
 
     labels = np.array(labels, dtype=int)
     vectors = np.array(vectors, dtype=float)
 
-    embedding_len = 2220
+    embedding_len = 62
     # random_state = 1  # 测试
     random_state = 40  # 一直使用的
     validation_freq = 1
     n_splits = 5
-    drop_out_rate = 0.05
+    drop_out_rate = 0.01
     l1 = 0
-    l2 = 0.1
+    l2 = 0
     # callbacks.append(early_stopping)
     # callbacks.append(check_pointer)
     callbacks.append(learning_rate_reduction)
@@ -940,25 +950,29 @@ def dense_new(data_filepath, label_filepath):
                                                       patience=100, verbose=verbose, mode='auto',
                                                       baseline=None, restore_best_weights=False)
     check_pointer = ModelCheckpoint(filepath=filepath, verbose=verbose, save_best_only=True, monitor='accuracy')
-    learning_rate_reduction = ReduceLROnPlateau(monitor='loss', patience=5, verbose=verbose,
+    learning_rate_reduction = ReduceLROnPlateau(monitor='loss', patience=10, verbose=verbose,
                                                 factor=0.5, min_lr=1e-5)
     callbacks = []
     labels = OriginalityGradingNEW.get_labels_xlsx(label_filepath, 650)
-    labels = OriginalityGradingNEW.merge_labels(labels)
+    # labels = OriginalityGradingNEW.merge_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
+    vectors = OriginalityGradingNEW.one_dimension(vectors, mode='max')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='median')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='min')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='mean')
 
-    data_analysis.to_2d_show(vectors, labels)
-    data_analysis.to_3d_show(vectors, labels)
-    return 0
+    # data_analysis.to_2d_show(vectors, labels, 1)
+    # data_analysis.to_3d_show(vectors, labels, 1)
+    # return 0
 
-    embedding_len = 2220
+    embedding_len = 62
     # random_state = 1  # 测试
     random_state = 40  # 一直使用的
     n_splits = 5
-    drop_out_rate = 0.05
+    drop_out_rate = 0.01
     l1 = 0
-    l2 = 0.1
+    l2 = 0.01
     # callbacks.append(early_stopping)
     # callbacks.append(check_pointer)
     callbacks.append(learning_rate_reduction)
@@ -982,29 +996,35 @@ def dense_new(data_filepath, label_filepath):
 
     learning_rate = 1e-1
     batch_size = 256
-    epochs = 500
-    # 总的准确率0.82
+    epochs = 400
     train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vectors, model_generator.get_model_dense,
           embedding_len, drop_out_rate, learning_rate, l1, l2, verbose)
 
 
 if __name__ == '__main__':
-    data_filepath = "../text/similarities_bigger.csv"
-    data_filepath_new = '../text/similarities_bigger_new.csv'
-    label_filepath = "../text/按原创性分类.txt"
-    label_filepath_new = "../text/按原创性分类_改.xlsx"
+    data_filepath = "../../text/similarities_bigger.csv"
+    data_filepath_new = '../../text/similarities_bigger_new.csv'
+    data_filepath_small = "../../text/similarities_small.csv"
+    label_filepath = "../../text/按原创性分类.txt"
+    label_filepath_new = "../../text/按原创性分类_改.xlsx"
 
     # 旧的数据
     # traditional_ml(data_filepath, label_filepath)  # 已完成，旧的标签
     # traditional_ml_new(data_filepath, label_filepath_new)  # 已完成，新的标签
     # dense(data_filepath, label_filepath)  # 已完成，旧的标签
-    dense_new(data_filepath, label_filepath_new)  # 已完成，新的标签
+    # dense_new(data_filepath, label_filepath_new)  # 已完成，新的标签
 
-    # 新的的数据
+    # 新的数据
     # traditional_ml(data_filepath_new, label_filepath)  # 已完成，旧的标签
     # traditional_ml_new(data_filepath_new, label_filepath_new)  # 已完成，新的标签
     # dense(data_filepath_new, label_filepath)  # 已完成，旧的标签
     # dense_new(data_filepath_new, label_filepath_new)  # 已完成，新的标签
+
+    # 维度为620维的数据
+    # traditional_ml(data_filepath_small, label_filepath)  # 已完成，旧的标签
+    # traditional_ml_new(data_filepath_small, label_filepath_new)  # 已完成，新的标签
+    dense(data_filepath_small, label_filepath)  # 已完成，旧的标签
+    # dense_new(data_filepath_small, label_filepath_new)  # 已完成，新的标签
 
     # cnn(data_filepath, label_filepath)
     # gru(data_filepath, label_filepath)
