@@ -1,6 +1,7 @@
 import os
 import random
 import re
+from pprint import pprint
 
 import cv2
 import numpy as np
@@ -76,7 +77,7 @@ class OriginalityGradingNEW:
         :return: 更改后的labels
         """
         new_labels = list(labels)
-        with open('../text/差距大的文章.txt', 'r') as f:
+        with open('../../text/差距大的文章.txt', 'r') as f:
             for line in f.readlines():
                 line = re.sub('\\t+', '\\t', line)
                 line = line.split('\t')
@@ -93,8 +94,8 @@ class OriginalityGradingNEW:
         :param vector: 1320维的向量，其值在0-1之间
         :return:
         """
-        im_array = np.expand_dims(np.reshape(vector, [60, 37]), axis=-1)
-        cv2.imshow(" ", cv2.resize(im_array, (2400, 1480)))
+        im_array = np.expand_dims(np.reshape(vector, [31, 20]), axis=-1)
+        cv2.imshow(" ", cv2.resize(im_array, (1550, 1000)))
         cv2.waitKey(0)
 
     @staticmethod
@@ -109,16 +110,16 @@ class OriginalityGradingNEW:
         print('全文相似度')
         print(vector[10:20])
         print('段落相似度')
-        for i in range(20, 820, 10):
+        for i in range(20, 220, 10):
             print('{}>>>'.format((i - 20) / 10), end='')
             print(vector[i: i + 10])
         print('句子相似度')
-        for i in range(820, 1620, 10):
-            print('{}>>>'.format((i - 820) / 10), end='')
+        for i in range(220, 420, 10):
+            print('{}>>>'.format((i - 220) / 10), end='')
             print(vector[i: i + 10])
         print('代码相似度')
-        for i in range(1620, 2220, 10):
-            print('{}>>>'.format((i - 1620) / 10), end='')
+        for i in range(420, 620, 10):
+            print('{}>>>'.format((i - 420) / 10), end='')
             print(vector[i: i + 10])
 
     @staticmethod
@@ -196,15 +197,15 @@ class OriginalityGradingNEW:
         for vector in vectors:
             new_vector = []
             if head:
-                new_vector.extend(vector[:10])
+                new_vector.extend(vector[:1])
             if text:
-                new_vector.extend(vector[10:20])
+                new_vector.extend(vector[1:2])
             if paragraphs:
-                new_vector.extend(vector[20:820])
+                new_vector.extend(vector[2:22])
             if sentences:
-                new_vector.extend(vector[820:1620])
+                new_vector.extend(vector[22:42])
             if codes:
-                new_vector.extend(vector[1620:])
+                new_vector.extend(vector[42:])
             new_vectors.append(new_vector)
         return np.float32(new_vectors)
 
@@ -280,13 +281,13 @@ class OriginalityGradingNEW:
         for i in range(len(y_predict)):
             if y_true[i] == 0 and (y_predict[i] == 0 or y_predict[i] == 1):
                 y_predict_new[i] = 0
-            if y_true[i] == 1 and (y_predict[i] == 0 or y_predict[i] == 1 or y_predict[i] == 2):
+            elif y_true[i] == 1 and (y_predict[i] == 0 or y_predict[i] == 1 or y_predict[i] == 2):
                 y_predict_new[i] = 1
             elif y_true[i] == 2 and (y_predict[i] == 1 or y_predict[i] == 2 or y_predict[i] == 3):
                 y_predict_new[i] = 2
             elif y_true[i] == 3 and (y_predict[i] == 2 or y_predict[i] == 3 or y_predict[i] == 4):
                 y_predict_new[i] = 3
-            elif y_predict[i] == 4 and (y_predict[i] == 3 or y_predict[i] == 4):
+            elif y_true[i] == 4 and (y_predict[i] == 3 or y_predict[i] == 4):
                 y_predict_new[i] = 4
         return classification_report(y_true, y_predict_new)
 
@@ -365,10 +366,14 @@ def traditional_ml(data_filepath, label_filepath):
     random_state = 40
 
     labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
-    labels = OriginalityGradingNEW.change_labels(labels)
     labels = OriginalityGradingNEW.merge_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
+    vectors = OriginalityGradingNEW.one_dimension(vectors, mode='max')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='median')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='min')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='mean')
+
     k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
     total_y_predict_knn = []
     total_y_predict_DT = []
@@ -390,7 +395,7 @@ def traditional_ml(data_filepath, label_filepath):
         answer_gnb = gnb.predict(x_test)
         total_y_predict_Bayes.extend(answer_gnb)
 
-        clf = LogisticRegression(penalty='l1', solver='liblinear').fit(x_train, y_train)
+        clf = LogisticRegression().fit(x_train, y_train)
         answer_clf = clf.predict(x_test)
         total_y_predict_clf.extend(answer_clf)
 
@@ -479,11 +484,11 @@ def traditional_ml(data_filepath, label_filepath):
         answer_svm = svm.predict(x_test)
         total_y_predict_SVM.extend(answer_svm)
 
-        rf = RandomForestClassifier(n_estimators=80).fit(x_train, y_train)
+        rf = RandomForestClassifier(n_estimators=190).fit(x_train, y_train)
         answer_rf = rf.predict(x_test)
         total_y_predict_RF.extend(answer_rf)
 
-        knn = KNeighborsClassifier(n_neighbors=19).fit(x_train, y_train)
+        knn = KNeighborsClassifier(n_neighbors=17).fit(x_train, y_train)
         answer_knn = knn.predict(x_test)
         total_y_predict_knn.extend(answer_knn)
 
@@ -524,10 +529,13 @@ def traditional_ml_new(data_filepath, label_filepath):
     # labels = OriginalityGradingNEW.merge_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
-    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='max')
+    vectors = OriginalityGradingNEW.one_dimension(vectors, mode='max')
     # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='median')
     # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='min')
     # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='mean')
+    # vectors = OriginalityGradingNEW.reduce_dimension(vectors,
+    #                                                  head=False, text=False, paragraphs=False, sentences=False,
+    #                                                  codes=True)
 
     k_fold = KFold(n_splits=n_splits, random_state=random_state, shuffle=True)
     total_y_predict_knn = []
@@ -550,7 +558,7 @@ def traditional_ml_new(data_filepath, label_filepath):
         answer_gnb = gnb.predict(x_test)
         total_y_predict_Bayes.extend(answer_gnb)
 
-        clf = LogisticRegression(penalty='l1', solver='liblinear').fit(x_train, y_train)
+        clf = LogisticRegression(penalty='l2', solver='liblinear').fit(x_train, y_train)
         answer_clf = clf.predict(x_test)
         total_y_predict_clf.extend(answer_clf)
 
@@ -638,11 +646,11 @@ def traditional_ml_new(data_filepath, label_filepath):
         answer_svm = svm.predict(x_test)
         total_y_predict_SVM.extend(answer_svm)
 
-        rf = RandomForestClassifier(n_estimators=160).fit(x_train, y_train)
+        rf = RandomForestClassifier(n_estimators=130).fit(x_train, y_train)
         answer_rf = rf.predict(x_test)
         total_y_predict_RF.extend(answer_rf)
 
-        knn = KNeighborsClassifier(n_neighbors=27).fit(x_train, y_train)
+        knn = KNeighborsClassifier(n_neighbors=24).fit(x_train, y_train)
         answer_knn = knn.predict(x_test)
         total_y_predict_knn.extend(answer_knn)
 
@@ -698,21 +706,21 @@ def train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vec
         # print(OriginalityGradingNEW.loose_report(y_test, y_predict))
         data_analysis.plot_confusion_matrix(y_test, y_predict, [0, 1, 2, 3, 4])
         # OriginalityGradingNEW.get_results(y_test, y_predict, test_index=test_index, label_filepath=label_filepath,
-        #                                   filepath='../text/差距大的文章_2021-10-05.txt')
+        #                                   filepath='../../text/差距大的文章_2021-10-13.txt')
         total_y_predict.extend(y_predict)
         total_y_test.extend(y_test)
         # OriginalityGradingNEW.split_result_show(labels, model, test_index, vectors)
-        return 0
+        # return 0
     print("总结果")
     print(classification_report(total_y_test, total_y_predict))
-    # print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict))
+    print(OriginalityGradingNEW.loose_report(total_y_test, total_y_predict))
     data_analysis.plot_confusion_matrix(total_y_test, total_y_predict, [0, 1, 2, 3, 4])
     print(OriginalityGradingNEW.get_results(total_y_test, total_y_predict))
 
 
 def dense(data_filepath, label_filepath):
     verbose = 1
-    nd = 5
+    nd = 3
     filepath = "../saved_model/originality_grading_model.h5"
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0,
                                                       patience=100, verbose=verbose, mode='auto',
@@ -722,13 +730,14 @@ def dense(data_filepath, label_filepath):
                                                 factor=0.5, min_lr=1e-5)
     callbacks = []
     labels = OriginalityGradingNEW.get_labels(label_filepath, 650)
-    # labels = OriginalityGradingNEW.merge_labels(labels)
+    labels = OriginalityGradingNEW.change_labels(labels)
+    labels = OriginalityGradingNEW.merge_labels(labels)
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
-    vectors = OriginalityGradingNEW.one_dimension(vectors, mode='max')
+    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='max')
     # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='median')
     # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='min')
-    # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='mean')
+    vectors = OriginalityGradingNEW.one_dimension(vectors, mode='mean')
 
     # data_analysis.to_2d_show(vectors, labels, 1)
     # data_analysis.to_3d_show(vectors, labels, 1)
@@ -742,7 +751,7 @@ def dense(data_filepath, label_filepath):
     random_state = 40  # 一直使用的
     validation_freq = 1
     n_splits = 5
-    drop_out_rate = 0.01
+    drop_out_rate = 0.001
     l1 = 0
     l2 = 0
     # callbacks.append(early_stopping)
@@ -958,6 +967,7 @@ def dense_new(data_filepath, label_filepath):
     labels = np.array(labels, dtype=int)
     vectors = InfoReadAndWrite.get_similarities(data_filepath)
     vectors = OriginalityGradingNEW.one_dimension(vectors, mode='max')
+    # vectors = np.exp(vectors)
     # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='median')
     # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='min')
     # vectors = OriginalityGradingNEW.one_dimension(vectors, mode='mean')
@@ -982,8 +992,8 @@ def dense_new(data_filepath, label_filepath):
     sentence_len = 50
     code_len = 50
     # vectors = OriginalityGradingNEW.reduce_dimension(vectors,
-    #                                                  head=True, text=True, paragraphs=True, sentences=True, codes=False)
-    # embedding_len = 1620
+    #                                                  head=True, text=True, paragraphs=False, sentences=False, codes=False)
+    # embedding_len = 2
     # vectors = OriginalityGradingNEW.reshape(vectors, similarity_len, paragraph_len, sentence_len, code_len)
     # vectors = OriginalityGradingNEW.random_select(vectors, 100)
     # vectors = OriginalityGradingNEW.one_dimension(vectors, 'max')
@@ -996,7 +1006,7 @@ def dense_new(data_filepath, label_filepath):
 
     learning_rate = 1e-1
     batch_size = 256
-    epochs = 400
+    epochs = 500
     train(batch_size, callbacks, epochs, labels, n_splits, nd, random_state, vectors, model_generator.get_model_dense,
           embedding_len, drop_out_rate, learning_rate, l1, l2, verbose)
 
@@ -1023,15 +1033,15 @@ if __name__ == '__main__':
     # 维度为620维的数据
     # traditional_ml(data_filepath_small, label_filepath)  # 已完成，旧的标签
     # traditional_ml_new(data_filepath_small, label_filepath_new)  # 已完成，新的标签
-    dense(data_filepath_small, label_filepath)  # 已完成，旧的标签
-    # dense_new(data_filepath_small, label_filepath_new)  # 已完成，新的标签
+    # dense(data_filepath_small, label_filepath)  # 已完成，旧的标签
+    dense_new(data_filepath_small, label_filepath_new)  # 已完成，新的标签
 
     # cnn(data_filepath, label_filepath)
     # gru(data_filepath, label_filepath)
     # rnn(data_filepath, label_filepath)
     # lstm(data_filepath, label_filepath)
 
-    # vectors = InfoReadAndWrite.get_similarities(data_filepath_new)
-    # i = 493
+    # vectors = InfoReadAndWrite.get_similarities(data_filepath_small)
+    # i = 26
     # OriginalityGradingNEW.data_show(vectors[i])
     # OriginalityGradingNEW.img_show(vectors[i])

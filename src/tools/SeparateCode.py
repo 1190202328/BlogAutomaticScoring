@@ -228,9 +228,9 @@ def machine_learning():
                 vocab.add(word)
         # 深度学习分类
         vocab_list = list()
-        vocab_list.append("<paddle>")
-        vocab_list.append("<unk>")
-        vocab_list += list(sorted(vocab))
+        # vocab_list.append("<paddle>")
+        # vocab_list.append("<unk>")
+        # vocab_list += list(sorted(vocab))
 
         # f = open("../src/text/vocab_list_1.txt", 'w')
         # for vocab in vocab_list:
@@ -238,12 +238,18 @@ def machine_learning():
         #     f.write("\n")
         # f.close()
 
+        f = open("../../text/vocab_list.txt", 'r')
+        for line in f.readlines():
+            vocab_list.append(line[:-1])
+        f.close()
+
         # embedding_len = 100
         # output_dim = 64
         # learning_rate = 0.1
         # batch_size = 330
         # epochs = 1
-        embedding_len = 50
+        embedding_len = 100
+        # embedding_len = 50
         output_dim = 32
         learning_rate = 1e-5
         batch_size = 32
@@ -278,15 +284,15 @@ def machine_learning():
         x_train = SeparateCode.get_sequences(x_train, embedding_len, vocab_list)
         x_test = SeparateCode.get_sequences(x_test, embedding_len, vocab_list)
         x_valid_sequences = SeparateCode.get_sequences(x_valid, embedding_len, vocab_list)
-        history = model.fit(x_train, y_train, epochs=epochs, validation_data=(x_valid_sequences, y_valid),
-                            verbose=verbose,
-                            batch_size=batch_size, callbacks=call_backs)
-        data_analysis.show_history(history, is_accuracy=True)
+        # history = model.fit(x_train, y_train, epochs=epochs, validation_data=(x_valid_sequences, y_valid),
+        #                     verbose=verbose,
+        #                     batch_size=batch_size, callbacks=call_backs)
+        # data_analysis.show_history(history, is_accuracy=True)
 
-        # path = "../src/saved_model/"
-        # filename = "code_separate_model_1.h5"
+        path = "../saved_model/"
+        filename = "code_separate_model.h5"
         # model.save(path + filename)
-        # model = tf.keras.models.load_model(path + filename)
+        model = tf.keras.models.load_model(path + filename)
 
         y_predict = list(tf.argmax(model.predict(x_test), axis=-1))
         print(classification_report(y_test, y_predict))
@@ -298,23 +304,23 @@ def machine_learning():
 
 
 if __name__ == '__main__':
-    # machine_learning()
+    machine_learning()
 
     # f = open("../src/text/江江.txt")
     # text = f.read()
     # f.close()
     # print(text)
 
-    f = open("../../text/代码分离测试.txt")
-    text = f.read()
-    f.close()
-    print(text)
-
-    text = re.sub("(\\xa0)|(\\u200b)|(\\u2003)|(\\u3000)", "", text)
-    text = re.sub("[\\t ]+", " ", text)
-    text = re.sub("\n+", "\n", text)
-    text = re.sub("(\n +)|( +\n)", "\n", text)
-    to_search_code_text = Clean.clean_code_for_text(text)
-    print('--------------------------------')
-    print(to_search_code_text)
-    pprint(SeparateCode.get_codes(to_search_code_text))
+    # f = open("../../text/代码分离测试.txt")
+    # text = f.read()
+    # f.close()
+    # print(text)
+    #
+    # text = re.sub("(\\xa0)|(\\u200b)|(\\u2003)|(\\u3000)", "", text)
+    # text = re.sub("[\\t ]+", " ", text)
+    # text = re.sub("\n+", "\n", text)
+    # text = re.sub("(\n +)|( +\n)", "\n", text)
+    # to_search_code_text = Clean.clean_code_for_text(text)
+    # print('--------------------------------')
+    # print(to_search_code_text)
+    # pprint(SeparateCode.get_codes(to_search_code_text))

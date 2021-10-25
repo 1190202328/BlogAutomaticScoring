@@ -95,13 +95,13 @@ def get_model_cnn(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
 def get_model_dense(embedding_len, drop_out_rate, learning_rate, l1, l2, nd):
     model = tf.keras.Sequential([
         tf.keras.layers.InputLayer(input_shape=(embedding_len,)),
-        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ActivityRegularization(l1=l1, l2=l2),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.Dense(128, activation='relu'),
         tf.keras.layers.Dropout(drop_out_rate),
         tf.keras.layers.Dense(512, activation='relu'),
         tf.keras.layers.Dropout(drop_out_rate),
-        tf.keras.layers.Dense(64, activation='relu'),
+        tf.keras.layers.Dense(128, activation='relu'),
         tf.keras.layers.Dropout(drop_out_rate),
         tf.keras.layers.Dense(nd, activation='softmax')
     ])
